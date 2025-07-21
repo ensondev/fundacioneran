@@ -1,0 +1,39 @@
+<main>
+    <div class="container-form-login">
+        <div class="container-logo">
+            <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+        </div>
+
+        <div class="container-form">
+            <form [formGroup]="form" (ngSubmit)="submit()">
+                <div class="container-title">
+                    <h2 class="form-title">Iniciar Sesión</h2>
+                </div>
+                <div class="form-group">
+                    <label for="username" class="input-label">Nombre de usuarios <span>*</span></label>
+                    <input id="username" name="username" formControlName="username" type="text"
+                        placeholder="Nombre de usuario" class="input-text" required minlength="4" maxlength="20"
+                        pattern="[a-zA-Z0-9]+" title="Mínimo 4 caracteres, solo letras y números">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="input-label">Contraseña <span>*</span></label>
+                    <input id="password" name="password" formControlName="password" type="password"
+                        placeholder="••••••••" class="input-text" required minlength="8"
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$"
+                        title="Mínimo 8 caracteres con mayúsculas, minúsculas y números">
+                </div>
+                <div *ngIf="errorMessage" class="error-message">
+                    {{ errorMessage }}
+                </div>
+                <button type="submit" class="submit-button">
+                    <span class="button-text">Iniciar sesión</span>
+                    <span class="button-loader hidden"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="container_color-blue">
+        <h2>Fundación Erán</h2>
+        <p>© 2025 Fundación Erán - Todos los derechos reservados</p>
+    </div>
+</main>

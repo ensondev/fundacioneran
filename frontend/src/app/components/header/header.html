@@ -1,0 +1,123 @@
+<header>
+    <div class="container-nav">
+        <button class="menu-toggle" (click)="toggleMenu()" aria-label="Menú">
+            <fa-icon [icon]="faBars"></fa-icon>
+        </button>
+        <div class="container_logo">
+            <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+        </div>
+    </div>
+    <div class="sidebar" [class.active]="isMenuOpen()">
+        <div class="container-user-information">
+            <div class="circle-perfil">
+                <p>{{ iniciales }}</p>
+            </div>
+            <div class="container-information">
+                <h3>{{ usuario }}</h3>
+                <p>{{ rol }}</p>
+            </div>
+        </div>
+        <nav class="menu">
+            <div class="container-home">
+                <div class="title-module">
+                    <h3>HOME</h3>
+                </div>
+                <a (click)="closeMenu()" routerLink="home" title="Home">
+                    <fa-icon [icon]="faHouse"></fa-icon><span>Inicio</span>
+                </a>
+            </div>
+
+            <div class="container-modules">
+                <div class="title-module">
+                    <h3>MÓDULOS</h3>
+                </div>
+                <ul>
+                    <li>
+                        <div class="menu-toggle" (click)="toggleSubmenu('donaciones')">
+                            <fa-icon [icon]="faHeart"></fa-icon>
+                            <span>Donaciones</span>
+                            <span class="arrow" [class.rotate]="isDonacionesOpen">></span>
+                        </div>
+                        <ul *ngIf="isDonacionesOpen">
+                            <li>
+                                <a (click)="closeMenu()" routerLink="/donations">
+                                    <fa-icon [icon]="faHeartCirclePlus"></fa-icon><span>Registrar Donaciones</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a (click)="closeMenu()" routerLink="/donors">
+                                    <fa-icon [icon]="faUserPlus"></fa-icon><span>Registrar Donador</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a (click)="closeMenu()" routerLink="/beneficiaries">
+                            <fa-icon [icon]="faUserGroup"></fa-icon><span>Beneficiarios</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <div class="menu-toggle" (click)="toggleSubmenu('inventario')">
+                            <fa-icon [icon]="faBoxArchive"></fa-icon>
+                            <span>Inventario</span>
+                            <span class="arrow" [class.rotate]="isInventarioOpen">></span>
+                        </div>
+                        <ul *ngIf="isInventarioOpen">
+                            <li>
+                                <a (click)="closeMenu()" routerLink="/inventory-register-product">
+                                    <fa-icon [icon]="faPlus"></fa-icon><span>Registrar Productos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a (click)="closeMenu()" routerLink="/inventory-insert-product">
+                                    <fa-icon [icon]="faTerminal"></fa-icon><span>Ingresar Inventarario</span>
+                                </a>
+                            </li>
+                            <!--                             <li>
+                                <a (click)="closeMenu()" routerLink="/inventory-sale-product">
+                                    <fa-icon [icon]="faCartShopping"></fa-icon><span>Vender Productos</span>
+                                </a>
+                            </li> -->
+                            <li>
+                                <a (click)="closeMenu()" routerLink="/warehouse-inventory">
+                                    <fa-icon [icon]="faWarehouse"></fa-icon><span>Bodega</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a (click)="closeMenu()" routerLink="/sales-made">
+                            <fa-icon [icon]="faDollarSign"></fa-icon><span>Ventas Realizadas</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a (click)="closeMenu()" routerLink="/cash-system">
+                            <fa-icon [icon]="faCashRegister"></fa-icon><span>Caja</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a (click)="closeMenu()" routerLink="/manage-users">
+                            <fa-icon [icon]="faUserShield"></fa-icon><span>Administrar Usuario</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="container-session">
+                    <div class="title-module">
+                        <h3>SESIÓN</h3>
+                    </div>
+                    <a (click)="logout()">
+                        <fa-icon [icon]="faUsers"></fa-icon><span>Cerrar Sesión</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="backdrop" *ngIf="isMenuOpen()" (click)="closeMenu()"> </div>
+
+</header>

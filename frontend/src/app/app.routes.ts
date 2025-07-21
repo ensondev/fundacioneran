@@ -1,0 +1,11 @@
+import { Routes } from '@angular/router';
+import { privateGuard, publicGuard } from './shared/guards/auth.guard';
+
+export const routes: Routes = [
+    { path: 'auth', canActivate: [publicGuard], loadChildren: () => import('./auth/auth.routes') },
+    { path: 'users', canActivate: [privateGuard], loadComponent: () => import('../app/pages/users/users') },
+    { path: 'home', canActivate: [privateGuard], loadComponent: () => import('./pages/home/home') },
+    { path: 'donors', canActivate: [privateGuard], loadComponent: () => import('./pages/donors/donors') },
+    { path: 'donations', canActivate: [privateGuard], loadComponent: () => import('./pages/donations/donations') },
+    { path: '**', redirectTo: 'home' }
+];
