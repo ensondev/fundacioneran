@@ -1,1 +1,107 @@
-<p>beneficiaries works!</p>
+<main>
+    <div class="container-filter">
+        <div class="search-container">
+            <input type="text" placeholder="Buscar beneficiario por cédula" [(ngModel)]="searchCedula"
+                (keyup.enter)="searchByCedula()">
+            <button class="btn-filter" (click)="searchByCedula()"><fa-icon
+                    [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
+            <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+        </div>
+    </div>
+    <div class="donors-container">
+        <div class="header-container">
+            <h2>Lista de Beneficiarios</h2>
+            <!-- <button class="btn-open-modal" (click)="abrirModal()">+ Donador</button> -->
+        </div>
+        <div class="table-responsive">
+            <table class="donors-table">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Beneficiario</th>
+                        <th>Cédula</th>
+                        <th>Direción</th>
+                        <th>Teléfono</th>
+                        <th>Fecha</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let bene of beneficiaries; let i = index">
+                        <td>{{ bene.id_beneficiario }}</td>
+                        <td>{{ bene.nombres_beneficiario }}</td>
+                        <td>{{ bene.cedula_beneficiario }}</td>
+                        <td>{{ bene.direccion_beneficiario }}</td>
+                        <td>{{ bene.telefono_beneficiario }}</td>
+                        <td>{{ bene.fecha_registro | date:'dd/MM/yyyy' }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button title="editar" class="btn-editar" (click)="abrirEditModal(bene)"><fa-icon
+                                        [icon]="faPen"></fa-icon></button>
+                                <!-- Botón Eliminar visible solo para Administrador -->
+                                <button *ngIf="userRole === 'Administrador'" class="btn-eliminar"
+                                    (click)="deleteBeneficiarie(bene.id_beneficiario)"><fa-icon
+                                        [icon]="faTrash"></fa-icon></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para editar donador -->
+    @if (mostrarEditModal) {
+    <div class="overlay">
+        <div class="modal-container">
+            <div class="container-header-modal">
+                <p class="required-text">El campo con <span>*</span> es obligatorio</p>
+            </div>
+
+            <form [formGroup]="editForm" (ngSubmit)="updateBeneficiarie()">
+                <h2>Editar beneficiario</h2>
+                <div class="form-group">
+                    <label>Nombres</label>
+                    <input type="text" [value]="selectedBeneficiarie.nombres_beneficiario" readonly
+                        class="readonly-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Cédula</label>
+                    <input type="text" [value]="selectedBeneficiarie.cedula_beneficiario" readonly
+                        class="readonly-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Dirección actual</label>
+                    <input type="text" [value]="selectedBeneficiarie.direccion_beneficiario" readonly
+                        class="readonly-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono actual</label>
+                    <input type="text" [value]="selectedBeneficiarie.telefono_beneficiario" readonly
+                        class="readonly-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Nueva Dirección <span>*</span></label>
+                    <input type="text" formControlName="direccion_beneficiario" placeholder="Ingrese la nueva dirección"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nuevo Teléfono <span>*</span></label>
+                    <input type="text" formControlName="telefono_beneficiario" placeholder="Ingrese el nuevo teléfono"
+                        required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="editForm.invalid">Actualizar beneficiario</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+</main>

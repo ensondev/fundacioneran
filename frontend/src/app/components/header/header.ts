@@ -21,6 +21,8 @@ import {
   faHouse,
   faUsers,
   faTerminal,
+  faPrint,
+  faBoxesStacked
 } from '@fortawesome/free-solid-svg-icons';
 import { AuthStateService } from '../../shared/service/auth-state.service';
 
@@ -55,6 +57,9 @@ export class Header {
   faBars = faBars;
   faHouse = faHouse;
   faUsers = faUsers;
+  faBoxesStacked = faBoxesStacked;
+  faPrint = faPrint;
+
 
   usuario: string = '';
   rol: string = '';
@@ -78,6 +83,7 @@ export class Header {
   }
 
   isDonacionesOpen = false;
+  isBeneficiariesOpen = false;
   isInventarioOpen = false;
   isMenuOpen = signal(false);
 
@@ -86,6 +92,8 @@ export class Header {
       this.isDonacionesOpen = !this.isDonacionesOpen;
     } else if (menu === 'inventario') {
       this.isInventarioOpen = !this.isInventarioOpen;
+    } else if (menu === 'beneficiarios') {
+      this.isBeneficiariesOpen = !this.isBeneficiariesOpen;
     }
   }
 

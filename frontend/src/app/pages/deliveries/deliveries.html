@@ -1,30 +1,14 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
-            <!-- Búsqueda por cédula -->
-            <input type="text" [(ngModel)]="searchCedula" placeholder="Cédula donante">
-
-            <!-- Selector de tipo de donación -->
-            <select [(ngModel)]="searchType">
-                <option value="" disabled selected>Tipo donación</option>
-                <option value="Monetaria">Monetaria</option>
-                <option value="Producto">Producto</option>
-            </select>
-
-            <!-- Selector de fecha -->
-            <input type="date" [(ngModel)]="searchDate">
-
-            <!-- Botones -->
-            <!-- <button (click)="searchDonations()"><fa-icon [icon]="faMagnifyingGlass"></fa-icon></button>
-                <button (click)="clearFilters()">Limpiar</button> -->
         </div>
     </div>
     <div class="donations-container">
         <div class="header-container">
             <h2>Registrar donacion</h2>
             <div class="container-button-register">
-                <button class="btn-open-modal" (click)="abrirModalDonor()">+ Donador</button>
-                <button class="btn-open-modal" (click)="abrirModal()">+ Donación</button>
+                <button class="btn-open-modal" (click)="abrirModalBeneficiarie()">+ Beneficiario</button>
+                <button class="btn-open-modal" (click)="abrirModal()">+ Entrega</button>
             </div>
         </div>
         <div class="table-responsive">
@@ -42,7 +26,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let donation of donations">
+                    <tr *ngFor="let donation of deliveries">
                         <td>{{ donation.id_donacion }}</td>
                         <td>{{ donation.donante.nombres }}</td>
                         <td>{{ donation.donante.numero_identificacion }}</td>
@@ -119,7 +103,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group form-monto" *ngIf="showMonetaryFields">
+                        <div class="form-group form-monto" *ngIf="">
                             <label>Monto <span>*</span></label>
                             <input type="number" formControlName="valor_estimado" step="0.01" required>
                         </div>
@@ -153,36 +137,42 @@
     </div>
     }
 
-    @if (mostrarModalDonor) {
+    @if (mostrarModalBeneficiarie) {
     <div class="overlay">
         <div class="modal-container">
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
-            <form [formGroup]="formDonor" (ngSubmit)="submitDonor()">
-                <h2>Registrar Donador</h2>
+            <form [formGroup]="formBeneficiarie" (ngSubmit)="submitBeneficiarie()">
+                <h2>Registrar Beneficiario</h2>
                 <div class="form-group">
-                    <label>Nombre <span>*</span></label>
-                    <input type="text" name="nombre" formControlName="nombres" required
-                        placeholder="Nombres completo del donante">
+                    <label>Nombres <span>*</span></label>
+                    <input type="text" name="nombre" formControlName="nombres_beneficiario" required
+                        placeholder="Nombres completo del beneficiario">
                 </div>
 
                 <div class="form-group">
                     <label>Cédula <span>*</span></label>
-                    <input type="text" name="cedula" formControlName="numero_identificacion" required
-                        placeholder="Cédula del donante">
+                    <input type="text" name="cedula" formControlName="cedula_beneficiario" required
+                        placeholder="Cédula del beneficiario">
+                </div>
+
+                <div class="form-group">
+                    <label>Dirección <span>*</span></label>
+                    <input type="text" name="cedula" formControlName="direccion_beneficiario" required
+                        placeholder="Direccion del beneficiario">
                 </div>
 
                 <div class="form-group">
                     <label>Teléfono <span>*</span></label>
-                    <input type="text" name="telefono" formControlName="telefono" placeholder="Teléfono del donante"
-                        required>
+                    <input type="text" name="telefono" formControlName="telefono_beneficiario"
+                        placeholder="Teléfono del beneficiario" required>
                 </div>
 
                 <div class="button-container">
-                    <button type="submit" [disabled]="formDonor.invalid">Registrar donador</button>
-                    <button type="button" class="cancel-btn" (click)="cerrarModalDonor()">Cancelar</button>
+                    <button type="submit" [disabled]="formBeneficiarie.invalid">Registrar beneficiario</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarModalBeneficiarie()">Cancelar</button>
                 </div>
             </form>
         </div>

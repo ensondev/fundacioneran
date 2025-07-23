@@ -46,17 +46,33 @@
                             </li>
                             <li>
                                 <a (click)="closeMenu()" routerLink="/donors">
-                                    <fa-icon [icon]="faUserPlus"></fa-icon><span>Registrar Donador</span>
+                                    <fa-icon [icon]="faUserGroup"></fa-icon><span>Donadores</span>
                                 </a>
                             </li>
                         </ul>
                     </li>
 
+
                     <li>
-                        <a (click)="closeMenu()" routerLink="/beneficiaries">
-                            <fa-icon [icon]="faUserGroup"></fa-icon><span>Beneficiarios</span>
-                        </a>
+                        <div class="menu-toggle" (click)="toggleSubmenu('beneficiarios')">
+                            <fa-icon [icon]="faUserGroup"></fa-icon>
+                            <span>Beneficiarios</span>
+                            <span class="arrow" [class.rotate]="isBeneficiariesOpen">></span>
+                        </div>
+                        <ul *ngIf="isBeneficiariesOpen">
+                            <li>
+                                <a (click)="closeMenu()" routerLink="/deliveries">
+                                    <fa-icon [icon]="faBoxesStacked"></fa-icon><span>Registrar Entrega</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a (click)="closeMenu()" routerLink="/beneficiaries">
+                                    <fa-icon [icon]="faUserGroup"></fa-icon><span>Beneficiarios</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+
 
                     <li>
                         <div class="menu-toggle" (click)="toggleSubmenu('inventario')">

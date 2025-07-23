@@ -7,5 +7,7 @@ export const routes: Routes = [
     { path: 'home', canActivate: [privateGuard], loadComponent: () => import('./pages/home/home') },
     { path: 'donors', canActivate: [privateGuard], loadComponent: () => import('./pages/donors/donors') },
     { path: 'donations', canActivate: [privateGuard], loadComponent: () => import('./pages/donations/donations') },
+    { path: 'beneficiaries', canActivate: [privateGuard], loadComponent: () => import('./pages/beneficiaries/beneficiaries') },
+    {path:'deliveries', canActivate: [privateGuard], loadComponent: () => import('./pages/deliveries/deliveries')},
     { path: '**', redirectTo: 'home' }
 ];

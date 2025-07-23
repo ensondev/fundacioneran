@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BeneficiariesService } from './beneficiaries.service';
 import { InsertBeneficiarieDto } from './dto/insert-beneficiarie.dto';
@@ -20,6 +20,15 @@ export class BeneficiariesController {
     @ApiBody({ type: InsertBeneficiarieDto })
     async insertBeneficiarie(@Body() dto: InsertBeneficiarieDto) {
         return this.beneficiariesService.insertBeneficiarie(dto);
+    }
+
+    @Post('cedula')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Obtener beneficiario por cédula' })
+    @ApiResponse({ status: 200, description: 'Beneficiario obtenido correctamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor.' })
+    async getBeneficiarieByCedula(@Req() req, @Res() res) {
+        return this.beneficiariesService.getBeneficiarieByCedula(req, res);
     }
 
     @Public()

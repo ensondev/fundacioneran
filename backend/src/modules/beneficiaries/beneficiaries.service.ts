@@ -59,6 +59,37 @@ export class BeneficiariesService {
         }
     }
 
+    async getBeneficiarieByCedula(req, res) {
+        const { cedula_beneficiario } = req.body;
+        const query = `SELECT id_beneficiario, nombres_beneficiario, cedula_beneficiario, direccion_beneficiario, telefono_beneficiario, fecha_registro
+                    FROM public.beneficiarios
+                    WHERE cedula_beneficiario = $1;`;
+        const values = [cedula_beneficiario];
+        try {
+            const result = await this.databaseService.query(query, values);
+
+            if (result.rows.length === 0) {
+                return res.status(404).json({
+                    p_message: 'Beneficiario no encontrado',
+                    p_status: false,
+                    p_data: { beneficiario: [] }
+                });
+            }
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    beneficiario: result.rows
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                p_message: error.message,
+                p_data: {}
+            });
+        }
+    }
+
     async updateBeneficiarie(dto: UpdateBeneficiarieDto) {
         const { nombres_beneficiario, cedula_beneficiario, direccion_beneficiario, telefono_beneficiario, id_beneficiario } = dto;
         const query = `UPDATE public.beneficiarios
