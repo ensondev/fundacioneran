@@ -1,6 +1,6 @@
 //HECHO
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNumber, IsString, Matches } from "class-validator";
+import { IsBoolean, IsInt, IsNumber, IsString, Matches } from "class-validator";
 
 export class UpdateDonationDto {
     @ApiProperty({ description: 'Actualizar ID del donador', example: '40', })

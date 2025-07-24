@@ -57,7 +57,7 @@ export default class LogIn {
           this.errorMessage = response.p_message || 'Usuario o contraseña incorrecta';
           setTimeout(() => {
             this.errorMessage = null;
-          }, 3000);
+          }, 1000);
         }
       },
       error: (error) => {

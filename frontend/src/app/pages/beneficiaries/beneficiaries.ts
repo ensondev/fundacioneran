@@ -123,7 +123,7 @@ export default class Beneficiaries implements OnInit {
 
     this.beneficiarieService.deleteBeneficiarie(id_beneficiario).subscribe({
       next: () => {
-        this.successMessage = 'Beneficiario eliminado exitosamente';
+        this.successMessage = 'Beneficiario eliminado correctamente';
         this.loadsBeneficiares();
         this.isLoading = false;
       },

@@ -4,6 +4,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { InsertDonationDto } from './dto/insert-donation.dto';
 import { UpdateDonationDto } from './dto/update-donation.dto';
 import { DeleteDonationDto } from './dto/delete-donation.dto';
+import { UpdateAvailabilityDto } from './dto/update-availability.dto';
 
 @Injectable()
 export class DonationsService {
@@ -12,7 +13,7 @@ export class DonationsService {
     //CRUD SENCILLO (CREATE - READ - UPDATE - DELETE)
 
     async insertDonation(dto: InsertDonationDto) {
-        const { id_donante, tipo_donacion, valor_estimado, metodo_pago, detalle_donacion, url_image, disponible} = dto;
+        const { id_donante, tipo_donacion, valor_estimado, metodo_pago, detalle_donacion, url_image, disponible } = dto;
 
         const query = `INSERT INTO public.donaciones (id_donante, tipo_donacion, valor_estimado, metodo_pago, detalle_donacion, url_image, disponible, fecha_donacion)
                     VALUES ($1, $2, $3, $4, $5, $6, $7, now())
@@ -45,22 +46,23 @@ export class DonationsService {
     }
 
     async getDonations(res) {
-        const query = `SELECT id_donacion, id_donante, tipo_donacion, valor_estimado, metodo_pago, detalle_donacion, url_image, entregado, fecha_donacion
+        const query = `SELECT id_donacion, id_donante, tipo_donacion, valor_estimado, metodo_pago, detalle_donacion, url_image, disponible, fecha_donacion
                     FROM public.donaciones;`;
+        const values = [];
         try {
-            const result = await this.databaseService.query(query, []);
-            return {
+            const result = await this.databaseService.query(query, values);
+            res.status(200).json({
                 p_message: null,
                 p_status: true,
                 p_data: {
                     donations: result.rows,
                 }
-            }
+            });
         } catch (error) {
-            return {
+            res.status(500).json({
                 p_message: error.message,
                 p_data: {}
-            }
+            })
         }
     }
 
@@ -80,10 +82,36 @@ export class DonationsService {
                 p_data: {
                     donador: donacion.id_donante,
                     tipo: donacion.tipo_donacion,
-                    monto: donacion.monto_monetario,
-                    descripcion: donacion.descripcion_producto,
-                    estado: donacion.estado_producto,
+                    monto: donacion.valor_estimado,
                     metodo: donacion.metodo_pago,
+                    detalle: donacion.detalle_donacion,
+                    image: donacion.url_image,
+                    disponible: donacion.disponible
+                }
+            }
+        } catch (error) {
+            return {
+                p_message: error.message,
+                p_data: {}
+            }
+        }
+    }
+
+    async updateDonationAvailability(dto: UpdateAvailabilityDto) {
+        const { disponible, id_donacion } = dto;
+        const query = `UPDATE public.donaciones
+                    SET disponible = $1
+                    WHERE id_donacion = $2
+                    RETURNING disponible;`;
+        const values = [disponible, id_donacion];
+        try {
+            const result = await this.databaseService.query(query, values);
+            const donacion = result.rows[0]
+            return {
+                p_messaje: 'Disponibilidad actualizada correctamente',
+                p_status: true,
+                p_data: {
+                    disponible: donacion.disponible,
                 }
             }
         } catch (error) {

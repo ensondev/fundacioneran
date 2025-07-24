@@ -1,11 +1,24 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
+            <input type="text" placeholder="Buscar entrega por cédula" [(ngModel)]="searchCedula"
+                (keyup.enter)="searchDeliverieByCedula()">
+
+            <!-- Nueva sección: filtro por fecha -->
+            <input type="date" [(ngModel)]="startDate" />
+            <input type="date" [(ngModel)]="endDate" />
+
+            <button class="btn-filter" (click)="searchDeliverieByCedula()">
+                <fa-icon [icon]="faMagnifyingGlass"></fa-icon>Filtrar
+            </button>
+            <button class="btn-clear" (click)="clearSearch()">
+                <fa-icon [icon]="faXmark"></fa-icon>Eliminar
+            </button>
         </div>
     </div>
     <div class="donations-container">
         <div class="header-container">
-            <h2>Registrar donacion</h2>
+            <h2>Registrar entrega</h2>
             <div class="container-button-register">
                 <button class="btn-open-modal" (click)="abrirModalBeneficiarie()">+ Beneficiario</button>
                 <button class="btn-open-modal" (click)="abrirModal()">+ Entrega</button>
@@ -16,25 +29,30 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Donador</th>
+                        <th>Beneficiario</th>
                         <th>Cédula</th>
-                        <th>Tipo</th>
-                        <th>Valor</th>
-                        <th>Método</th>
-                        <th>Detalle</th>
+                        <th>Donación entregada</th>
                         <th>Fecha</th>
+                        <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let donation of deliveries">
-                        <td>{{ donation.id_donacion }}</td>
-                        <td>{{ donation.donante.nombres }}</td>
-                        <td>{{ donation.donante.numero_identificacion }}</td>
-                        <td>{{ donation.tipo_donacion }}</td>
-                        <td>{{ donation.valor_estimado }}</td>
-                        <td>{{ donation.metodo_pago }}</td>
-                        <td>{{ donation.detalle_donacion }}</td>
-                        <td>{{ donation.fecha_donacion | date:'shortDate' }}</td>
+                    <tr *ngFor="let deli of deliveries">
+                        <td>{{ deli.entrega.id_entrega }}</td>
+                        <td>{{ deli.nombres_beneficiario }}</td>
+                        <td>{{ deli.cedula_beneficiario }}</td>
+                        <td>{{ deli.detalle_donacion }}</td>
+                        <td>{{ deli.entrega.fecha_entrega | date:'shortDate' }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(bene)"><fa-icon
+                                        [icon]="faPen"></fa-icon></button> -->
+                                <!-- Botón Eliminar visible solo para Administrador -->
+                                <button *ngIf="userRole === 'Administrador'" class="btn-eliminar"
+                                    (click)="deleteDeliverie(deli.entrega.id_entrega)"><fa-icon
+                                        [icon]="faTrash"></fa-icon></button>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -44,91 +62,72 @@
     <!-- Modal con nuevo control flow @if -->
     @if (mostrarModal) {
     <div class="overlay">
-        <div class="modal-container">
+        <div class="modal-container-deliverie">
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
-            <form (ngSubmit)="submit()" [formGroup]="form">
-                <!-- Sección Buscar Donante -->
+            <form class="form-deliverie" (ngSubmit)="submit()" [formGroup]="form">
+                <!--1. Sección Buscar Beneficiario -->
                 <div class="form-group" class="search-donor">
-                    <label>Buscar Donante <span>*</span></label>
+                    <label>Buscar beneficiario <span>*</span></label>
                     <div class="input-group input-search-donor">
-                        <input type="text" [(ngModel)]="searchCedulaDonante" [ngModelOptions]="{ standalone: true }"
-                            name="searchCedula" placeholder="Cédula del donante" required>
+                        <div class="container-search">
+                            <input type="text" [(ngModel)]="searchCedulaBeneficiario"
+                                [ngModelOptions]="{ standalone: true }" name="searchCedula"
+                                placeholder="Cédula del donante" required>
 
-                        <button type="button" (click)="checkDonor()" [disabled]="!searchCedulaDonante">
-                            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
-                        </button>
-
+                            <button type="button" (click)="checkBeneficiario()" [disabled]="!searchCedulaBeneficiario">
+                                <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+                            </button>
+                        </div>
                         <!-- Mensajes de estado -->
-                        <div style="color: green;" *ngIf="successMessage" class="alert alert-success">
-                            {{ successMessage }}
-                        </div>
-                        <div style="color: red;" *ngIf="errorMessage" class="alert alert-danger">
-                            {{ errorMessage }}
-                        </div>
+
+                            <div style="color: green;" *ngIf="successMessage" class="alert alert-success">
+                                {{ successMessage }}
+                            </div>
+                            <div style="color: red;" *ngIf="errorMessage" class="alert alert-danger">
+                                {{ errorMessage }}
+                            </div>
+
                     </div>
                 </div>
                 <!-- Sección Datos Donante -->
                 <div class="container-info-donor">
                     <div class="form-group">
                         <label>Donador</label>
-                        <input type="text" formControlName="nombres" placeholder="Nombres del donante" readonly
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label>Cédula</label>
-                        <input type="text" formControlName="numero_identificacion" placeholder="Cédula del donante"
+                        <input type="text" formControlName="nombres_beneficiario" placeholder="Nombres del beneficiario"
                             readonly required>
                     </div>
                     <div class="form-group">
+                        <label>Cédula</label>
+                        <input type="text" formControlName="cedula_beneficiario" placeholder="Cédula del beneficiario"
+                            readonly required>
+                    </div>
+                    <div class="form-group">
+                        <label>Dirección</label>
+                        <input type="text" formControlName="direccion_beneficiario"
+                            placeholder="dirección del beneficiario" readonly required>
+                    </div>
+                    <div class="form-group">
                         <label>Teléfono</label>
-                        <input type="text" formControlName="telefono" placeholder="Teléfono del donante" readonly
-                            required>
+                        <input type="text" formControlName="telefono_beneficiario"
+                            placeholder="Teléfono del beneficiario" readonly required>
                     </div>
                 </div>
                 <!-- Sección Donación -->
-                <div class="container-info-donation">
-                    <div class="container-donation">
-                        <div class="form-group form-radio">
-                            <label>Tipo de Aporte <span>*</span></label>
-                            <div class="container-option">
-                                <label>
-                                    <input type="radio" formControlName="tipo_donacion" value="Monetaria">Monetaria
-                                </label>
-                                <label>
-                                    <input type="radio" formControlName="tipo_donacion" value="Producto">Producto
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group form-monto" *ngIf="">
-                            <label>Monto <span>*</span></label>
-                            <input type="number" formControlName="valor_estimado" step="0.01" required>
-                        </div>
-
-                        <div class="form-group" *ngIf="showMonetaryFields">
-                            <label>Método de pago <span>*</span></label>
-                            <select formControlName="metodo_pago" required>
-                                <option value="" disabled selected>Seleccione método</option>
-                                <option value="Efectivo">Efectivo</option>
-                                <option value="Transferencia">Transferencia</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" *ngIf="showProductFields">
-                            <label>Descripcion del producto <span>*</span></label>
-                            <input type="text" formControlName="detalle_donacion" placeholder="Nombre del producto"
-                                required>
-                        </div>
-                    </div>
-                    <div class="container-image">
-                        <input type="file" placeholder="imagen" formControlName="url_image">
-                    </div>
+                <div class="form-group">
+                    <label>Producto a entregar <span>*</span></label>
+                    <select formControlName="id_donacion" required>
+                        <option value="" disabled selected>Seleccione un producto</option>
+                        <option *ngFor="let product of products" [ngValue]="product.id_donacion">
+                            {{ product.detalle_donacion }}
+                        </option>
+                    </select>
                 </div>
+
                 <div class="button-container">
-                    <button type="submit" [disabled]="form.invalid">Registrar donación</button>
+                    <button type="submit" [disabled]="form.invalid">Registrar</button>
                     <button type="button" class="cancel-btn" (click)="cerrarModal()"
                         [disabled]="isLoading">Cancelar</button>
                 </div>
@@ -139,12 +138,12 @@
 
     @if (mostrarModalBeneficiarie) {
     <div class="overlay">
-        <div class="modal-container">
+        <div class="modal-container-beneficiarie">
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
-            <form [formGroup]="formBeneficiarie" (ngSubmit)="submitBeneficiarie()">
+            <form class="form-beneficiarie" [formGroup]="formBeneficiarie" (ngSubmit)="submitBeneficiarie()">
                 <h2>Registrar Beneficiario</h2>
                 <div class="form-group">
                     <label>Nombres <span>*</span></label>
@@ -171,7 +170,7 @@
                 </div>
 
                 <div class="button-container">
-                    <button type="submit" [disabled]="formBeneficiarie.invalid">Registrar beneficiario</button>
+                    <button type="submit" [disabled]="formBeneficiarie.invalid">Registrar</button>
                     <button type="button" class="cancel-btn" (click)="cerrarModalBeneficiarie()">Cancelar</button>
                 </div>
             </form>

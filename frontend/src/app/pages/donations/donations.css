@@ -8,15 +8,6 @@ main {
     flex-direction: column;
 }
 
-.container-filter {
-    width: 100%;
-}
-
-.container-filter .search-container input,
-.container-filter .search-container select {
-    padding: 5px 20px;
-}
-
 .donations-container {
     width: 100%;
     margin-top: 10px;
@@ -92,59 +83,26 @@ main {
     background-color: #f8f9fa;
 }
 
-
-
-/* DESPUES SE PONE EL BUSCADOR*/
-.search-container input,
-.search-container select {
-    margin-right: 20px;
-    padding: 8px 10px;
-    width: 200px;
-}
-
-.search-container button:nth-last-child(3) {
-    margin-right: 20px;
-    background-color: #0a375e;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 0;
-    cursor: pointer;
-    font-size: 15px;
-}
-
-.search-container button:nth-last-child(2) {
-    background-color: #0b5e0a;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 0;
-    cursor: pointer;
-    font-size: 15px;
-}
-
-
-
-
 /* Botones de acción */
-.btn-editar {
-    padding: 6px 12px;
+.btn-editar,
+.btn-eliminar {
+    padding: 0;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 15px;
     font-weight: 500;
-}
-
-.btn-editar {
-    background-color: #ffc107;
-    color: #ffffff;
+    color: #000;
+    background-color: transparent;
 }
 
 .btn-editar:hover {
-    background-color: #e0a800;
+    color: #e0a800;
 }
 
+.btn-eliminar:hover {
+    color: red;
+}
 
 /* Estilos del modal */
 .overlay {
@@ -160,7 +118,9 @@ main {
     z-index: 1050;
 }
 
-.modal-container {
+
+/*FORMULARIO DONACIONES*/
+.modal-container-donation {
     background-color: #fff;
     border-radius: 0;
     padding: 40px 20px;
@@ -171,10 +131,127 @@ main {
     animation: modalFadeIn 0.3s ease-out;
 }
 
+.form-donation .search-donor label {
+    font-weight: bold;
+}
+
+.form-donation .input-search-donor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.form-donation .input-search-donor input {
+    width: 250px;
+    padding: 5px 20px;
+}
+
+.form-donation .input-search-donor button {
+    padding: 5px 10px;
+    border-radius: 0;
+    background-color: #0a375e;
+    color: #fff;
+}
+
+.form-donation .container-info-donor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.form-donation .container-info-donor .form-group {
+    width: 240px;
+}
+
+.form-donation .container-info-donation {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.form-donation .container-info-donation .container-donation {
+    width: 60%;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+}
+
+.form-donation .container-donation .form-radio {
+    width: 100%;
+    display: flex;
+    gap: 40px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.container-donation .form-radio .container-option {
+    display: flex;
+    gap: 40px;
+}
+
+.form-donation .form-group label {
+    font-weight: bold;
+}
+
+.form-radio .container-option label {
+    display: flex;
+    font-weight: 500;
+    gap: 10px;
+}
+
+.container-info-donation .container-image {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+}
+
+.form-donation .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+
+/*FORMULARIO DEL DONADOR*/
+.modal-donor-container{
+    background-color: #fff;
+    border-radius: 0;
+    padding: 30px 20px;
+    width: 100%;
+    max-width: 350px;
+}
+
+.modal-donor-container .form-donor h2{
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.modal-donor-container .form-donor label{
+    font-weight: 500;
+}
+
+.modal-donor-container .form-donor .form-group{
+    margin-bottom: 10px;
+}
+
+.form-donor .button-container{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/*GLOBALES*/
 .container-header-modal {
     background-color: #B5FAFF;
     border: 1px solid #3CD0E0;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .container-header-modal .required-text {
@@ -187,76 +264,6 @@ main {
     color: red;
 }
 
-.input-search-donor {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.input-search-donor input {
-    width: 250px;
-    padding: 5px 20px;
-}
-
-.input-search-donor button {
-    padding: 5px 10px;
-    border-radius: 0;
-    background-color: #0a375e;
-    color: #fff;
-}
-
-.search-donor label {
-    font-weight: bold;
-    margin-bottom: 2px;
-}
-
-.container-info-donor {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px;
-    border: 1px solid #e0e0e0;
-    margin-bottom: 20px;
-}
-
-.container-info-donor .form-group {
-    width: 240px;
-}
-
-.container-info-donation {
-    width: 100%;
-    display: flex;
-    gap: 10px;
-}
-
-.container-info-donation .container-donation {
-    width: 60%;
-    padding: 15px;
-    border: 1px solid #e0e0e0;
-}
-
-.container-donation .form-radio {
-    width: 100%;
-    display: flex;
-    gap: 40px;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #e0e0e0;
-    /* border: 1px solid #e0e0e0; */
-}
-
-.container-donation .form-radio .container-option {
-    display: flex;
-    gap: 40px;
-}
-
-.form-radio .container-option label {
-    display: flex;
-    font-weight: 500;
-    gap: 10px;
-}
-
 .form-group input,
 .form-group select {
     width: 100%;
@@ -265,29 +272,8 @@ main {
     border: 1px solid #e0e0e0;
 }
 
-.form-group label {
-    font-weight: bold;
-    margin-bottom: 2px;
-}
-
 .form-group label span {
     color: #d32f2f;
-}
-
-.container-info-donation .container-image {
-    width: 40%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #ccc;
-}
-
-/* Contenedor de botones del modal */
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    gap: 10px;
 }
 
 button {

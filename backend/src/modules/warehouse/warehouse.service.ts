@@ -56,7 +56,7 @@ export class WarehouseService {
 
     async updateWarehouse(dto: UpdateWarehouseDto) {
         const { nombre_bodega, ubicacion, id_bodega } = dto;
-        const query = `UPDATE FROM public.bodega
+        const query = `UPDATE public.bodega
                     SET nombre_bodega = $1, ubicacion = $2
                     WHERE id_bodega = $3 RETURNING nombre_bodega, ubicacion;`;
         const values = [nombre_bodega, ubicacion, id_bodega];

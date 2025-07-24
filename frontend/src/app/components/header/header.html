@@ -73,7 +73,6 @@
                         </ul>
                     </li>
 
-
                     <li>
                         <div class="menu-toggle" (click)="toggleSubmenu('inventario')">
                             <fa-icon [icon]="faBoxArchive"></fa-icon>
@@ -82,13 +81,13 @@
                         </div>
                         <ul *ngIf="isInventarioOpen">
                             <li>
-                                <a (click)="closeMenu()" routerLink="/inventory-register-product">
-                                    <fa-icon [icon]="faPlus"></fa-icon><span>Registrar Productos</span>
+                                <a (click)="closeMenu()" routerLink="/inventory-insert-product">
+                                    <fa-icon [icon]="faTerminal"></fa-icon><span>Inventarario</span>
                                 </a>
                             </li>
                             <li>
-                                <a (click)="closeMenu()" routerLink="/inventory-insert-product">
-                                    <fa-icon [icon]="faTerminal"></fa-icon><span>Ingresar Inventarario</span>
+                                <a (click)="closeMenu()" routerLink="/inventory-register-product">
+                                    <fa-icon [icon]="faPlus"></fa-icon><span>Productos</span>
                                 </a>
                             </li>
                             <!--                             <li>
@@ -96,12 +95,13 @@
                                     <fa-icon [icon]="faCartShopping"></fa-icon><span>Vender Productos</span>
                                 </a>
                             </li> -->
-                            <li>
-                                <a (click)="closeMenu()" routerLink="/warehouse-inventory">
-                                    <fa-icon [icon]="faWarehouse"></fa-icon><span>Bodega</span>
-                                </a>
-                            </li>
                         </ul>
+                    </li>
+
+                    <li>
+                        <a (click)="closeMenu()" routerLink="/warehouse">
+                            <fa-icon [icon]="faWarehouse"></fa-icon><span>Bodega</span>
+                        </a>
                     </li>
 
                     <li>
@@ -117,7 +117,7 @@
                     </li>
 
                     <li>
-                        <a (click)="closeMenu()" routerLink="/manage-users">
+                        <a (click)="closeMenu()" routerLink="/users">
                             <fa-icon [icon]="faUserShield"></fa-icon><span>Administrar Usuario</span>
                         </a>
                     </li>

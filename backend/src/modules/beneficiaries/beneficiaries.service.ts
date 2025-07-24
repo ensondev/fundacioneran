@@ -138,4 +138,52 @@ export class BeneficiariesService {
     }
 
     //CONSULTAS COMPLEJAS
+    async getAllBeneficiariesWithDeliveries(res) {
+        const query = `SELECT 
+                    b.id_beneficiario,
+                    b.nombres_beneficiario,
+                    b.cedula_beneficiario,
+                    b.direccion_beneficiario,
+                    b.telefono_beneficiario,
+                    e.id_entrega,
+                    e.beneficiario_id,
+                    e.donacion_id,
+                    e.fecha_entrega,
+                    dn.detalle_donacion
+                FROM public.beneficiarios b
+                INNER JOIN public.entregas e ON b.id_beneficiario = e.beneficiario_id
+                INNER JOIN public.donaciones dn ON e.donacion_id = dn.id_donacion
+                ORDER BY e.fecha_entrega ASC;`;
+        try {
+            const result = await this.databaseService.query(query, []);
+
+            const beneficiariesWithDeliveries = result.rows.map(row => ({
+                id_beneficiario: row.id_beneficiario,
+                nombres_beneficiario: row.nombres_beneficiario,
+                cedula_beneficiario: row.cedula_beneficiario,
+                direccion_beneficiario: row.direccion_beneficiario,
+                telefono_beneficiario: row.telefono_beneficiario,
+                detalle_donacion: row.detalle_donacion,
+                entrega: {
+                    id_entrega: row.id_entrega,
+                    beneficiario_id: row.beneficiario_id,
+                    donacion_id: row.donacion_id,
+                    fecha_entrega: row.fecha_entrega
+                }
+            }));
+
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    beneficiaries_with_deliveries: beneficiariesWithDeliveries,
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                p_message: error.message,
+                p_data: {}
+            });
+        }
+    }
 }

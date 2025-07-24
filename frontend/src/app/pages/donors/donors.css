@@ -8,39 +8,6 @@ main {
     align-items: center;
 }
 
-.container-filter {
-    width: 100%;
-}
-
-.search-container {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.search-container input {
-    width: 300px;
-    padding: 5px 20px;
-}
-
-.search-container button {
-    height: 20px;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 0px;
-    cursor: pointer;
-    color: #fff;
-    border: none;
-    background-color: #0a375e;
-}
-
-.search-container button fa-icon{
-    font-size: 12px;
-}
-
 .donors-container {
     width: 100%;
     margin-top: 10px;

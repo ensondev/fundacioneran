@@ -8,7 +8,7 @@ main {
     flex-direction: column;
 }
 
-.donations-container {
+.warehouse-container {
     width: 100%;
     margin-top: 10px;
     background: white;
@@ -43,7 +43,6 @@ main {
     margin-left: 20px;
 }
 
-.search-container button:hover,
 .btn-open-modal:hover {
     background-color: #0d4b7a;
 }
@@ -55,13 +54,13 @@ main {
     height: calc(100vh - 250px);
 }
 
-.donations-table {
+.warehouse-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
 }
 
-.donations-table th {
+.warehouse-table th {
     background-color: #0a375e;
     color: white;
     font-weight: 500;
@@ -69,22 +68,21 @@ main {
     /*   text-align: left; */
 }
 
-.donations-table td {
+.warehouse-table td {
     padding: 7px 15px;
     border-bottom: 1px solid #e0e0e0;
     color: #333;
     text-align: center;
 }
 
-.donations-table tr:not(:last-child) td {
+.warehouse-table tr:not(:last-child) td {
     border-bottom: 1px solid #e0e0e0;
 }
 
-.donations-table tr:hover {
+.warehouse-table tr:hover {
     background-color: #f8f9fa;
 }
 
-/* Botones de acción */
 .action-buttons {
     display: flex;
     align-items: center;
@@ -92,6 +90,8 @@ main {
     gap: 10px;
 }
 
+
+/* Botones de acción */
 .btn-editar,
 .btn-eliminar {
     padding: 0;
@@ -126,8 +126,9 @@ main {
     z-index: 1050;
 }
 
-/*FORMULARIO ENTREGAS*/
-.modal-container-deliverie {
+
+/*FORMULARIO BODEGA*/
+.modal-container-warehouse{
     background-color: #fff;
     border-radius: 0;
     padding: 30px 20px;
@@ -138,68 +139,25 @@ main {
     animation: modalFadeIn 0.3s ease-out;
 }
 
-.search-donor label {
-    font-weight: bold;
-    margin-bottom: 2px;
-}
-
-.search-donor label span {
-    color: red;
-}
-
-.form-deliverie .input-search-donor {
-    display: flex;
-    flex-direction: column;
+.form-warehouse h2{
     margin-bottom: 10px;
 }
 
-.form-deliverie .input-search-donor .container-search {
+.form-warehouse .form-group{
+    margin-bottom: 15px;
+}
+
+.form-warehouse .button-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.form-deliverie .input-search-donor .container-search input {
-    width: 250px;
-    padding: 5px 20px;
-    border: 1px solid #e0e0e0;
-}
-
-.form-deliverie .input-search-donor .container-search button {
-    padding: 5px 10px;
-    border-radius: 0;
-    background-color: #0a375e;
-    color: #fff;
-}
-
-.form-deliverie .container-info-donor {
-    padding: 15px;
-    padding-bottom: 0;
-    border: 1px solid #e0e0e0;
-    margin-bottom: 20px;
-}
-
-/*FORMULARIO BENEFICIARIO*/
-.modal-container-beneficiarie {
-    background-color: #fff;
-    border-radius: 0;
-    padding: 30px 20px;
-    height: auto;
-    width: 100%;
-    max-width: 350px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    animation: modalFadeIn 0.3s ease-out;
-}
-
-.form-beneficiarie h2{
-    margin-bottom: 10px;
+    gap: 10px;
 }
 
 /*GLOBALES*/
 .container-header-modal {
     background-color: #B5FAFF;
     border: 1px solid #3CD0E0;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .container-header-modal .required-text {
@@ -212,22 +170,15 @@ main {
     color: red;
 }
 
-.form-group input,
-.form-group select {
+.form-group input {
     width: 100%;
     padding: 5px 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border: 1px solid #e0e0e0;
 }
 
 .form-group label span {
     color: #d32f2f;
-}
-
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
 }
 
 button {

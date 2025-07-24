@@ -39,7 +39,7 @@ export class DonationsService {
 
     getDonations(): Observable<any[]> {
         return this._http.get(`${environment.API_URL}/donations`).pipe(
-            map((response: any) => response.p_data?.donors || []),
+            map((response: any) => response.p_data?.donations || []),
             catchError((error) => {
                 console.error('Error en getDonations:', error);
                 return of([]);
@@ -57,4 +57,21 @@ export class DonationsService {
         );
     }
 
+    updateDonationAvailability(disponible: boolean, id_donacion: number ): Observable<any> {
+        return this._http.put(`${environment.API_URL}/donations/update-availability`, {
+            disponible,
+            id_donacion,
+        }).pipe(
+            catchError(err => {
+                console.error('Error en updateDonationAvailability:', err);
+                return of(null);
+            })
+        );
+    }
+
+    deleteDonation(id_donacion: number): Observable<any>{
+        return this._http.request('delete', `${environment.API_URL}/donations/delete`, {
+            body: {id_donacion}
+        });
+    }
 }

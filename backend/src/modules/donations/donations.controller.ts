@@ -5,6 +5,7 @@ import { Public } from 'src/authentication/auth/guard/auth.guard';
 import { InsertDonationDto } from './dto/insert-donation.dto';
 import { UpdateDonationDto } from './dto/update-donation.dto';
 import { DeleteDonationDto } from './dto/delete-donation.dto';
+import { UpdateAvailabilityDto } from './dto/update-availability.dto';
 
 @ApiTags('Donaciones')
 @Controller('donations')
@@ -51,6 +52,17 @@ export class DonationsController {
     @ApiBody({ type: UpdateDonationDto })
     async updateDonation(@Body() dto: UpdateDonationDto) {
         return this.donationsService.updateDonation(dto);
+    }
+
+    @Public()
+    @Put('update-availability')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Actualizar disponibilidad de una donación' })
+    @ApiResponse({ status: 200, description: 'Disponibilidad actualizada correctamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    @ApiBody({ type: UpdateAvailabilityDto })
+    async updateDonationAvailability(@Body() dto: UpdateAvailabilityDto) {
+        return this.donationsService.updateDonationAvailability(dto);
     }
 
     @Public()

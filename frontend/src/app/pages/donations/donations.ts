@@ -7,9 +7,13 @@ import { DonationsService } from '../../services/donations.service';
 import {
   faTrash,
   faPen,
-  faMagnifyingGlass
+  faMagnifyingGlass,
+  faXmark,
+  faTicket
 } from '@fortawesome/free-solid-svg-icons';
 import { catchError, firstValueFrom, of } from 'rxjs';
+import { AuthStateService } from '../../shared/service/auth-state.service';
+
 
 @Component({
   selector: 'app-donations',
@@ -22,24 +26,30 @@ export default class Donations implements OnInit {
   faTrash = faTrash;
   faPen = faPen;
   faMagnifyingGlass = faMagnifyingGlass;
+  faXmark = faXmark;
+  faTicket = faTicket;
 
   constructor(private cdr: ChangeDetectorRef) { }
   private _formBuilder = inject(FormBuilder);
   private donationsService = inject(DonationsService);
   private donorService = inject(DonorsService);
+  private authStateService = inject(AuthStateService);
 
+  allDonations: any[] = [];
   donations: any[] = [];
   donors: any[] = [];
   isLoading = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
   searchCedulaDonante: string = '';
+  searchCedula: string = '';
+  startDate: string = '';
+  endDate: string = '';
+  userRole: string = '';
   mostrarModal = false;
   mostrarModalDonor = false;
   donorExists = false;
-  searchCedula = '';
   searchType = '';
-  searchDate = '';
 
   DonationsForm!: FormGroup;
 
@@ -63,6 +73,9 @@ export default class Donations implements OnInit {
 
   ngOnInit(): void {
     this.loadDonations();
+
+    const session = this.authStateService.getSession();
+    this.userRole = session ? session?.rol : '';
 
     // Escucha cambios en tipo_donacion y ajusta los campos relacionados
     this.form.get('tipo_donacion')!.valueChanges.subscribe(tipo => {
@@ -106,6 +119,7 @@ export default class Donations implements OnInit {
 
     this.donationsService.getDonationsWithDonors().subscribe({
       next: (data) => {
+        this.allDonations = data;
         this.donations = data;
         this.isLoading = false;
       },
@@ -140,10 +154,16 @@ export default class Donations implements OnInit {
           telefono: donor.telefono
         });
         this.successMessage = 'Donante encontrado';
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 1000);
         this.searchCedulaDonante = ''; // Limpia el input de búsqueda
       } else {
         this.donorExists = false;
         this.errorMessage = 'Donante no registrado';
+        setTimeout(() => {
+          this.errorMessage = null;
+        }, 1000);
         this.form.patchValue({
           nombres: '',
           numero_identificacion: '',
@@ -158,6 +178,30 @@ export default class Donations implements OnInit {
       this.isLoading = false;
     }
   }
+
+  searchDonationsByCedula() {
+    const cedula = this.searchCedula.trim().toLowerCase();
+    const start = this.startDate ? new Date(this.startDate) : null;
+    const end = this.endDate ? new Date(this.endDate) : null;
+
+    this.donations = this.allDonations.filter(donation => {
+      const matchesCedula = cedula ? donation.donante.numero_identificacion.toLowerCase().includes(cedula) : true;
+
+      const donationDate = new Date(donation.fecha_donacion);
+      let matchesDate = true;
+
+      if (start && end) {
+        matchesDate = donationDate >= start && donationDate <= end;
+      } else if (start && !end) {
+        matchesDate = donationDate >= start;
+      } else if (!start && end) {
+        matchesDate = donationDate <= end;
+      }
+
+      return matchesCedula && matchesDate;
+    });
+  }
+
 
   async submit() {
     if (this.form.invalid) return;
@@ -239,19 +283,18 @@ export default class Donations implements OnInit {
     this.successMessage = null;
   }
 
-  // Método para limpiar filtros
-  clearFilters() {
+  clearSearch() {
     this.searchCedula = '';
-    this.searchType = '';
-    this.searchDate = '';
-    this.loadDonations();
+    this.startDate = '';
+    this.endDate = '';
+    this.donations = this.allDonations;
   }
 
   cerrarModal() {
     this.mostrarModal = false;
   }
 
-/*Parte para el modal donador*/
+  /*Parte para el modal donador*/
 
   submitDonor() {
     if (this.formDonor.invalid) return;
@@ -273,6 +316,27 @@ export default class Donations implements OnInit {
       error: (error) => {
         this.errorMessage = 'Error al registrar el donador.';
         console.error('Error al crear donador:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  deleteDonation(id_donacion: number) {
+    if (!confirm('¿Seguro que quieres eliminar esta donacion?')) return;
+
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    this.donationsService.deleteDonation(id_donacion).subscribe({
+      next: () => {
+        this.successMessage = 'Donación eliminada correctamente';
+        this.loadDonations();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage = 'Error al eliminar la donación.';
+        console.error('Error al eliminar donación:', error);
         this.isLoading = false;
       }
     });

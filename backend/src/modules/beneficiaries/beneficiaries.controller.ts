@@ -42,6 +42,16 @@ export class BeneficiariesController {
     }
 
     @Public()
+    @Get('with-deliveries')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ description: 'Obtener todos los beneficiarios con sus entregas' })
+    @ApiResponse({ status: 200, description: 'Lista de beneficiarios con entregas obtenidas correctamente.' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor.' })
+    async getAllBeneficiariesWithDeliveries(@Res() res) {
+        return this.beneficiariesService.getAllBeneficiariesWithDeliveries(res);
+    }
+
+    @Public()
     @Put('update')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Actualizar un beneficiario' })

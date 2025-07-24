@@ -38,17 +38,7 @@ export class BeneficiariesService {
             })
         );
     }
-
-    getBeneficiariesWithDeliveries(): Observable<any[]> {
-        return this._http.get(`${environment.API_URL}/beneficiaries/with-deliveries`).pipe(
-            map((res: any) => res.p_data?.beneficiaries_with_deliveries || []),
-            catchError(err => {
-                console.error('Error en getBeneficiariesWithDeliveries:', err);
-                return of([]);
-            })
-        );
-    }
-
+    
     getBeneficiarieByCedula(cedula_beneficiario: string): Observable<any> {
         return this._http.post(`${environment.API_URL}/beneficiaries/cedula`, { cedula_beneficiario }).pipe(
             map((res: any) =>  {
@@ -60,6 +50,18 @@ export class BeneficiariesService {
             })
         )
     }
+
+    
+    getBeneficiariesWithDeliveries(): Observable<any[]> {
+        return this._http.get(`${environment.API_URL}/beneficiaries/with-deliveries`).pipe(
+            map((res: any) => res.p_data?.beneficiaries_with_deliveries || []),
+            catchError(err => {
+                console.error('Error en getBeneficiariesWithDeliveries:', err);
+                return of([]);
+            })
+        );
+    }
+
 
     updateBeneficiarie(updateBeneficiarie: {
         id_beneficiario: number,
