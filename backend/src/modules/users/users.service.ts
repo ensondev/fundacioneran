@@ -34,15 +34,31 @@ export class UsersService {
 
     async updateUsers(dto: UpdateUsersDto) {
         const { nombre_usuario, password, id_usuario } = dto;
-        console.log('DTO recibido:', dto); // 👈 Agrega esto
-        const hashedPassword = await encrypt(password);
-        const query = `UPDATE public.usuarios SET nombre_usuario = $1, password = $2, fecha_actualizacion = now()
-                    WHERE id_usuario = $3
-                    RETURNING nombre_usuario, fecha_actualizacion;`;
+        console.log('DTO recibido:', dto); // 👈 Para debug
 
-        const values = [nombre_usuario, hashedPassword, id_usuario];
+        let query: string;
+        let values: any[];
 
         try {
+            if (password) {
+                const hashedPassword = await encrypt(password);
+                query = `
+                UPDATE public.usuarios
+                SET nombre_usuario = $1, password = $2, fecha_actualizacion = now()
+                WHERE id_usuario = $3
+                RETURNING nombre_usuario, fecha_actualizacion;
+            `;
+                values = [nombre_usuario, hashedPassword, id_usuario];
+            } else {
+                query = `
+                UPDATE public.usuarios
+                SET nombre_usuario = $1, fecha_actualizacion = now()
+                WHERE id_usuario = $2
+                RETURNING nombre_usuario, fecha_actualizacion;
+            `;
+                values = [nombre_usuario, id_usuario];
+            }
+
             const result = await this.databaseService.query(query, values);
             const userUpdate = result.rows[0];
 
@@ -53,14 +69,15 @@ export class UsersService {
                     usuario: userUpdate.nombre_usuario,
                     actualizado: userUpdate.fecha_actualizacion
                 }
-            }
+            };
         } catch (error) {
             return {
                 p_message: error.message,
                 p_data: {}
-            }
+            };
         }
     }
+
 
     async deleteUser(dto: DeleteUsersDto) {
         const { id_usuario } = dto;
