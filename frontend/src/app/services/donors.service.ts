@@ -1,7 +1,7 @@
 // src/app/services/donor-service/donor.service.ts
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
@@ -21,7 +21,7 @@ export class DonorsService {
             map((res: any) => res.p_data || res),
             catchError(err => {
                 console.error('Error en createDonor:', err);
-                return of(null);
+                return throwError(() => err);
             })
         );
     }

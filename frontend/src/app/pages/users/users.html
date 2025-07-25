@@ -14,7 +14,7 @@
                         <th>Rol</th>
                         <th>Activo</th>
                         <th>Fecha</th>
-                        <th>Opciones</th>
+                        <th *ngIf="userRole === 'Administrador'" >Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,12 +24,12 @@
                         <td>{{ user.rol_usuario }}</td>
                         <td>{{ user.cuenta_activa }}</td>
                         <td>{{ user.fecha_creacion }}</td>
-                        <td>
+                        <td *ngIf="userRole === 'Administrador'">
                             <div class="action-buttons">
                                 <button title="editar" class="btn-editar" (click)="abrirEditModal(user)"><fa-icon
                                         [icon]="faPen"></fa-icon></button>
                                 <!-- Botón Eliminar visible solo para Administrador -->
-                                <button *ngIf="userRole === 'Administrador'" class="btn-eliminar"
+                                <button class="btn-eliminar"
                                     (click)="deleteUser(user.id_usuario)"><fa-icon [icon]="faTrash"></fa-icon></button>
                             </div>
                         </td>

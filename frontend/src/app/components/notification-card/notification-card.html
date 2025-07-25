@@ -1,0 +1,10 @@
+<div class="toast-notification" *ngIf="isVisible">
+  <div class="header-notification" [ngClass]="{ 'success-header': isSuccess, 'error-header': isError }">
+    <fa-icon *ngIf="isSuccess" [icon]="faBell"></fa-icon>
+    <fa-icon *ngIf="isError" [icon]="faCircleExclamation"></fa-icon>
+    <span>Notificación</span>
+  </div>
+  <div [ngClass]="{ 'toast-success': isSuccess, 'toast-error': isError }">
+    <p>{{ notification.message() }}</p>
+  </div>
+</div>

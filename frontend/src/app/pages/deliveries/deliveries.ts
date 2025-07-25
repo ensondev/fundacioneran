@@ -13,6 +13,7 @@ import { catchError, firstValueFrom, of } from 'rxjs';
 import { DonationsService } from '../../services/donations.service';
 import { deliveriesService } from '../../services/deliveries.service';
 import { AuthStateService } from '../../shared/service/auth-state.service';
+import { NotificationService } from '../../services/notification.service';
 @Component({
   selector: 'app-deliveries',
   imports: [CommonModule, ReactiveFormsModule, FormsModule, FontAwesomeModule],
@@ -31,21 +32,26 @@ export default class Deliveries implements OnInit {
   private donationService = inject(DonationsService);
   private deliveriesService = inject(deliveriesService);
   private authStateService = inject(AuthStateService);
+  private notification = inject(NotificationService);
+
+  isLoading = false;
+  userRole: string = '';
+
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
+
+  searchCedulaBeneficiario: string = '';
+  searchCedula: string = '';
+  startDate: string = '';
+  endDate: string = '';
+
+  mostrarModal = false;
+  beneficiarieExists = false;
+  mostrarModalBeneficiarie = false;
 
   allDeliveries: any[] = [];
   deliveries: any[] = [];
   products: any[] = [];
-  startDate: string = ''; // formato: yyyy-MM-dd
-  endDate: string = '';
-  userRole: string = '';
-  isLoading = false;
-  errorMessage: string | null = null;
-  successMessage: string | null = null;
-  mostrarModal = false;
-  beneficiarieExists = false;
-  mostrarModalBeneficiarie = false;
-  searchCedulaBeneficiario: string = '';
-  searchCedula: string = '';
 
   DeliverieForm!: FormGroup;
 
@@ -120,10 +126,7 @@ export default class Deliveries implements OnInit {
         )
       );
 
-      if (!beneficiario) {
-        this.errorMessage = 'El beneficiario no existe';
-        return;
-      }
+      if (!beneficiario) return;
 
       const beneficiario_id = beneficiario.id_beneficiario;
 
@@ -134,17 +137,16 @@ export default class Deliveries implements OnInit {
       await firstValueFrom(
         this.donationService.updateDonationAvailability(false, id_donacion)
       );
-      /* this.successMessage = 'Entrega registrada y producto actualizado correctamente ✅'; */
-      alert('Entrega registrada y producto actualizado correctamente ✅');
+
+      this.notification.showSuccess('Entrega registrada correctamente');
       this.loadBeneficiariesWithDeliveries();
       this.loadAvailableProducts();
       this.cerrarModal();
       this.form.reset();
 
     } catch (error) {
-      alert('Error al registrar la entrega ⛔');
-      /* this.errorMessage = 'Error al registrar la entrega'; */
-      console.error('Error en submit entrega:', error);
+      this.notification.showError('Error al registrar la entrega');
+      console.error('Error en registrar la entrega:', error);
     } finally {
       this.isLoading = false;
     }
@@ -159,16 +161,14 @@ export default class Deliveries implements OnInit {
     this.successMessage = null;
     this.beneficiarieService.registerBeneficiaries(nombres_beneficiario, cedula_beneficiario, direccion_beneficiario, telefono_beneficiario).subscribe({
       next: (response) => {
-        alert('Beneficiario registrado correctamente✅');
-        this.successMessage = 'Beneficiario registrado correctamente';
+        this.notification.showSuccess('Beneficiario registrado correctamente')
         this.cerrarModalBeneficiarie();
         this.formBeneficiarie.reset();
         this.isLoading = false;
       },
       error: (error) => {
-        alert('Error al registrar al beneficiario⛔');
-        this.errorMessage = 'Error al registrar al beneficiario.';
-        console.error('Error al crear donador:', error);
+        this.notification.showError('Error al registrar al beneficiario');
+        console.error('Error al registrar al beneficiario:', error);
         this.isLoading = false;
       }
     })
@@ -267,7 +267,7 @@ export default class Deliveries implements OnInit {
       } else {
         this.beneficiarieExists = false;
         this.errorMessage = 'Beneficiario no registrado';
-        setTimeout(() =>{
+        setTimeout(() => {
           this.errorMessage = null;
         }, 1000);
         this.form.patchValue({

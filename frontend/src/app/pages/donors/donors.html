@@ -3,7 +3,8 @@
     <div class="search-container">
       <input type="text" placeholder="Buscar donador por cédula" [(ngModel)]="searchCedula"
         (keyup.enter)="searchByCedula()">
-      <button class="btn-filter" (click)="searchByCedula()"><fa-icon [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
+      <button class="btn-filter" (click)="searchByCedula()"><fa-icon
+          [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
       <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
     </div>
   </div>
@@ -46,42 +47,6 @@
     </div>
   </div>
 
-<!--   @if (mostrarModal) {
-  <div class="overlay">
-    <div class="modal-container">
-      <div class="container-header-modal">
-        <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
-      </div>
-
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <h2>Registrar Donador</h2>
-        <div class="form-group">
-          <label>Nombre <span>*</span></label>
-          <input type="text" name="nombre" formControlName="nombres" required
-            placeholder="Nombres completo del donante">
-        </div>
-
-        <div class="form-group">
-          <label>Cédula <span>*</span></label>
-          <input type="text" name="cedula" formControlName="numero_identificacion" required
-            placeholder="Cédula del donante">
-        </div>
-
-        <div class="form-group">
-          <label>Teléfono <span>*</span></label>
-          <input type="text" name="telefono" formControlName="telefono" placeholder="Teléfono del donante"
-            required>
-        </div>
-
-        <div class="button-container">
-          <button type="submit" [disabled]="form.invalid">Registrar donador</button>
-          <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  } -->
-
   <!-- Modal para editar donador -->
   @if (mostrarEditModal) {
   <div class="overlay">
@@ -120,4 +85,5 @@
     </div>
   </div>
   }
+
 </main>

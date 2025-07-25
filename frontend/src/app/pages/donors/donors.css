@@ -244,6 +244,13 @@ button[type="submit"]:disabled {
     border-color: #ddd;
 }
 
+
+
+
+
+
+
+
 /* Animación opcional para el modal */
 @keyframes modalFadeIn {
     from {
@@ -256,6 +263,10 @@ button[type="submit"]:disabled {
         transform: translateY(0);
     }
 }
+
+
+
+
 
 /* Responsive */
 @media (max-width: 768px) {

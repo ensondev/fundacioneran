@@ -36,7 +36,7 @@
                         <th>Método</th>
                         <th>Detalle</th>
                         <th>Fecha</th>
-                        <th>Opciones</th>
+                        <th *ngIf="userRole === 'Administrador'">Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,12 +49,12 @@
                         <td>{{ donation.metodo_pago }}</td>
                         <td>{{ donation.detalle_donacion }}</td>
                         <td>{{ donation.fecha_donacion | date:'shortDate' }}</td>
-                        <td>
+                        <td *ngIf="userRole === 'Administrador'">
                             <div class="action-buttons">
                                 <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(bene)"><fa-icon
                                         [icon]="faPen"></fa-icon></button> -->
                                 <!-- Botón Eliminar visible solo para Administrador -->
-                                <button *ngIf="userRole === 'Administrador'" class="btn-eliminar"
+                                <button  class="btn-eliminar"
                                     (click)="deleteDonation(donation.id_donacion)"><fa-icon
                                         [icon]="faTrash"></fa-icon></button>
                             </div>

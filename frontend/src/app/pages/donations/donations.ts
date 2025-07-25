@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import { AuthStateService } from '../../shared/service/auth-state.service';
+import { NotificationService } from '../../services/notification.service';
 
 
 @Component({
@@ -34,22 +35,27 @@ export default class Donations implements OnInit {
   private donationsService = inject(DonationsService);
   private donorService = inject(DonorsService);
   private authStateService = inject(AuthStateService);
+  private notification = inject(NotificationService);
 
-  allDonations: any[] = [];
-  donations: any[] = [];
-  donors: any[] = [];
+  userRole: string = '';
+  searchType = '';
   isLoading = false;
+
   errorMessage: string | null = null;
   successMessage: string | null = null;
+
   searchCedulaDonante: string = '';
   searchCedula: string = '';
   startDate: string = '';
   endDate: string = '';
-  userRole: string = '';
+
   mostrarModal = false;
   mostrarModalDonor = false;
   donorExists = false;
-  searchType = '';
+
+  allDonations: any[] = [];
+  donations: any[] = [];
+  donors: any[] = [];
 
   DonationsForm!: FormGroup;
 
@@ -73,11 +79,10 @@ export default class Donations implements OnInit {
 
   ngOnInit(): void {
     this.loadDonations();
-
     const session = this.authStateService.getSession();
     this.userRole = session ? session?.rol : '';
 
-    // Escucha cambios en tipo_donacion y ajusta los campos relacionados
+    // se escuchan cambios en tipo_donacion y ajusta los campos relacionados
     this.form.get('tipo_donacion')!.valueChanges.subscribe(tipo => {
       if (tipo === 'Monetaria') {
         this.form.get('valor_estimado')!.setValidators([Validators.required]);
@@ -103,14 +108,13 @@ export default class Donations implements OnInit {
         this.form.get('metodo_pago')!.disable();
         this.form.get('detalle_donacion')!.disable();
       }
-
       // Actualiza validaciones
       this.form.get('valor_estimado')!.updateValueAndValidity();
       this.form.get('metodo_pago')!.updateValueAndValidity();
       this.form.get('detalle_donacion')!.updateValueAndValidity();
-
       this.cdr.detectChanges(); // Fuerza la sincronización de la vista
     });
+
   }
 
   loadDonations() {
@@ -126,6 +130,103 @@ export default class Donations implements OnInit {
       error: (error) => {
         this.errorMessage = 'Error al cargar los donadores. Intente nuevamente.';
         console.error('Error al cargar donadores:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  submitDonor() {
+    if (this.formDonor.invalid) return;
+
+    const { nombres, numero_identificacion, telefono } = this.formDonor.getRawValue();
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    this.donorService.createDonor(nombres, numero_identificacion, telefono).subscribe({
+      next: (response) => {
+        this.notification.showSuccess('Donador registrado correctamente');
+        this.cerrarModalDonor();
+        this.formDonor.reset();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.notification.showError('Error al registrar donador')
+        console.error('Error al registrar donador:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  async submit() {
+    if (this.form.invalid) return;
+
+    const tipo_donacion = this.form.value.tipo_donacion!;
+    const isMonetaria = tipo_donacion === 'Monetaria';
+
+    if (isMonetaria && (!this.form.value.valor_estimado || this.form.value.valor_estimado <= 0)) {
+      this.notification.showError('Debe ingresar un monto válido');
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    try {
+      const numero_identificacion = this.form.value.numero_identificacion!;
+      const existingDonor = await firstValueFrom(
+        this.donorService.getDonorByCedula(numero_identificacion).pipe(catchError(() => of(null)))
+      );
+
+      const donorId = existingDonor.id_donante;
+      const valor_estimado: number = isMonetaria ? this.form.value.valor_estimado ?? 0 : 0;
+      const detalle_donacion: string = isMonetaria ? '' : this.form.value.detalle_donacion ?? '';
+      const metodo_pago: string = this.form.value.metodo_pago!;
+      const url_image: string = this.form.value.url_image ?? '';
+      const disponible: boolean = true;
+
+      await firstValueFrom(
+        this.donationsService.createDonations(
+          donorId,
+          tipo_donacion,
+          valor_estimado,
+          metodo_pago,
+          detalle_donacion,
+          url_image,
+          disponible
+        )
+      );
+
+      this.notification.showSuccess('Donación registrada correctamente');
+      await this.loadDonations();
+      this.cerrarModal();
+
+    } catch (error: any) {
+      this.notification.showError('Error al registrar la donación');
+      console.error('Error al registar donación:', error);
+    } finally {
+      this.isLoading = false;
+    }
+
+  }
+
+  deleteDonation(id_donacion: number) {
+    if (!confirm('⚠️¿Seguro que quieres eliminar esta donacion?⚠️')) return;
+
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    this.donationsService.deleteDonation(id_donacion).subscribe({
+      next: () => {
+        this.notification.showSuccess('Donación eliminada correctamente');
+        this.loadDonations();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.notification.showError('Error al eliminar la donación');
+        console.error('Error al eliminar donación:', error);
         this.isLoading = false;
       }
     });
@@ -157,23 +258,23 @@ export default class Donations implements OnInit {
         setTimeout(() => {
           this.successMessage = null;
         }, 1000);
-        this.searchCedulaDonante = ''; // Limpia el input de búsqueda
+        this.searchCedulaDonante = '';
       } else {
         this.donorExists = false;
         this.errorMessage = 'Donante no registrado';
         setTimeout(() => {
           this.errorMessage = null;
         }, 1000);
+        this.searchCedulaDonante = '';
         this.form.patchValue({
           nombres: '',
           numero_identificacion: '',
           telefono: ''
         });
       }
-
     } catch (error) {
       this.errorMessage = 'Error al verificar donante';
-      console.error('Error checking donor:', error);
+      console.error('Error al verificar donante:', error);
     } finally {
       this.isLoading = false;
     }
@@ -186,7 +287,6 @@ export default class Donations implements OnInit {
 
     this.donations = this.allDonations.filter(donation => {
       const matchesCedula = cedula ? donation.donante.numero_identificacion.toLowerCase().includes(cedula) : true;
-
       const donationDate = new Date(donation.fecha_donacion);
       let matchesDate = true;
 
@@ -200,74 +300,17 @@ export default class Donations implements OnInit {
 
       return matchesCedula && matchesDate;
     });
+
+    if (this.donations.length === 0) {
+      this.notification.showError('No se encontraron donaciones con esos criterios.');
+    }
   }
 
-
-  async submit() {
-    if (this.form.invalid) return;
-
-    const tipo_donacion = this.form.value.tipo_donacion!;
-    const isMonetaria = tipo_donacion === 'Monetaria';
-
-    // Validación adicional si es monetaria
-    if (isMonetaria && (!this.form.value.valor_estimado || this.form.value.valor_estimado <= 0)) {
-      this.errorMessage = 'Debe ingresar un monto válido';
-      return;
-    }
-
-    this.isLoading = true;
-    this.errorMessage = null;
-    this.successMessage = null;
-
-    try {
-      const numero_identificacion = this.form.value.numero_identificacion!;
-      let donorId: number;
-
-      const existingDonor = await firstValueFrom(
-        this.donorService.getDonorByCedula(numero_identificacion).pipe(catchError(() => of(null)))
-      );
-
-      if (existingDonor) {
-        donorId = existingDonor.id_donante;
-      } else {
-        const newDonor = await firstValueFrom(
-          this.donorService.createDonor(
-            this.form.value.nombres!,
-            numero_identificacion,
-            this.form.value.telefono!
-          )
-        );
-        donorId = newDonor.id_donante;
-      }
-
-      const valor_estimado: number = isMonetaria ? this.form.value.valor_estimado ?? 0 : 0;
-      const detalle_donacion: string = isMonetaria ? '' : this.form.value.detalle_donacion ?? '';
-      const metodo_pago: string = this.form.value.metodo_pago!;
-      const url_image: string = this.form.value.url_image ?? ''; // puede ser string vacío si no se usa
-      const disponible: boolean = true; // Puedes ajustar esto según necesidad
-
-      await firstValueFrom(
-        this.donationsService.createDonations(
-          donorId,
-          tipo_donacion,
-          valor_estimado,
-          metodo_pago,
-          detalle_donacion,
-          url_image,
-          disponible
-        )
-      );
-
-      this.successMessage = 'Donación registrada exitosamente';
-      await this.loadDonations();
-      this.cerrarModal();
-
-    } catch (error: any) {
-      this.errorMessage = 'Error al registrar la donación';
-      console.error('Error submitting donation:', error);
-    } finally {
-      this.isLoading = false;
-    }
+  clearSearch() {
+    this.searchCedula = '';
+    this.startDate = '';
+    this.endDate = '';
+    this.donations = this.allDonations;
   }
 
   abrirModal() {
@@ -283,63 +326,8 @@ export default class Donations implements OnInit {
     this.successMessage = null;
   }
 
-  clearSearch() {
-    this.searchCedula = '';
-    this.startDate = '';
-    this.endDate = '';
-    this.donations = this.allDonations;
-  }
-
   cerrarModal() {
     this.mostrarModal = false;
-  }
-
-  /*Parte para el modal donador*/
-
-  submitDonor() {
-    if (this.formDonor.invalid) return;
-
-    const { nombres, numero_identificacion, telefono } = this.formDonor.getRawValue();
-    this.isLoading = true;
-    this.errorMessage = null;
-    this.successMessage = null;
-
-    this.donorService.createDonor(nombres, numero_identificacion, telefono).subscribe({
-      next: (response) => {
-        alert('Donador registrado exitosamente')
-        this.successMessage = 'Donador registrado exitosamente';
-        /* this.loadDonors(); */
-        this.cerrarModalDonor();
-        this.formDonor.reset();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.errorMessage = 'Error al registrar el donador.';
-        console.error('Error al crear donador:', error);
-        this.isLoading = false;
-      }
-    });
-  }
-
-  deleteDonation(id_donacion: number) {
-    if (!confirm('¿Seguro que quieres eliminar esta donacion?')) return;
-
-    this.isLoading = true;
-    this.errorMessage = null;
-    this.successMessage = null;
-
-    this.donationsService.deleteDonation(id_donacion).subscribe({
-      next: () => {
-        this.successMessage = 'Donación eliminada correctamente';
-        this.loadDonations();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.errorMessage = 'Error al eliminar la donación.';
-        console.error('Error al eliminar donación:', error);
-        this.isLoading = false;
-      }
-    });
   }
 
   abrirModalDonor() {

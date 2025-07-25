@@ -2,4 +2,5 @@
 <main>
     <router-outlet></router-outlet>
 </main>
+<app-notification-card *ngIf="!isLoginPage"></app-notification-card>
 <app-footer *ngIf="!isLoginPage"></app-footer>

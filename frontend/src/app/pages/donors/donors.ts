@@ -6,10 +6,13 @@ import {
   faTrash,
   faPen,
   faMagnifyingGlass,
-  faXmark
+  faXmark,
+  faBell,
+  faCircleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
 import { DonorsService } from '../../services/donors.service';
 import { AuthStateService } from '../../shared/service/auth-state.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-donors',
@@ -23,10 +26,13 @@ export default class Donors implements OnInit {
   faPen = faPen;
   faMagnifyingGlass = faMagnifyingGlass;
   faXmark = faXmark;
+  faBell = faBell;
+  faCircleExclamation = faCircleExclamation;
 
   private _formBuilder = inject(FormBuilder);
   private donorService = inject(DonorsService);
   private authStateService = inject(AuthStateService);
+  private notification = inject(NotificationService);
 
   donors: any[] = [];
   userRole: string = '';
@@ -46,7 +52,6 @@ export default class Donors implements OnInit {
 
   ngOnInit(): void {
     this.loadDonors();
-    // Obtener el rol desde la sesión
     const session = this.authStateService.getSession();
     this.userRole = session ? session.rol : '';
   }
@@ -68,19 +73,6 @@ export default class Donors implements OnInit {
     });
   }
 
-  abrirEditModal(donor: any) {
-    this.selectedDonor = donor;
-    this.editForm.patchValue({
-      telefono: donor.telefono
-    });
-    this.mostrarEditModal = true;
-  }
-
-  cerrarEditModal() {
-    this.mostrarEditModal = false;
-    this.selectedDonor = null;
-  }
-
   updateDonor() {
     if (this.editForm.invalid || !this.selectedDonor) return;
 
@@ -99,14 +91,37 @@ export default class Donors implements OnInit {
 
     this.donorService.updateDonor(updatedDonor).subscribe({
       next: (response) => {
-        this.successMessage = 'Teléfono del donador actualizado exitosamente';
+        this.notification.showSuccess('Donador actualizado correctamente');
+        /* this.successMessage = 'Donador actualizado'; */
         this.loadDonors();
         this.cerrarEditModal();
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error al actualizar el teléfono del donador.';
+        this.notification.showError('Error al actualizar el donador');
+        /* this.errorMessage = 'Error al actualizar donador'; */
         console.error('Error al actualizar donador:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  eliminarDonor(id_donante: number) {
+    if (!confirm('⚠️¿Seguro que quieres eliminar este donador?⚠️')) return;
+
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    this.donorService.deleteDonor(id_donante).subscribe({
+      next: () => {
+        this.notification.showSuccess('Donador eliminado correctamente')
+        this.loadDonors();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.notification.showError('Error al eliminar donador');
+        console.error('Error al eliminar donador:', error);
         this.isLoading = false;
       }
     });
@@ -114,7 +129,7 @@ export default class Donors implements OnInit {
 
   searchByCedula() {
     if (!this.searchCedula.trim()) {
-      this.loadDonors(); // Si está vacío, carga todos los donantes
+      this.loadDonors();
       return;
     }
 
@@ -124,10 +139,10 @@ export default class Donors implements OnInit {
     this.donorService.getDonorByCedula(this.searchCedula).subscribe({
       next: (donor) => {
         if (donor) {
-          this.donors = [donor]; // Muestra solo el donante encontrado
+          this.donors = [donor];
         } else {
-          this.donors = []; // No se encontró ningún donante
-          this.errorMessage = 'No se encontró ningún donante con esa cédula';
+          this.donors = [];
+          this.notification.showError('Donador no registrado');
         }
         this.isLoading = false;
       },
@@ -139,25 +154,17 @@ export default class Donors implements OnInit {
     });
   }
 
-  eliminarDonor(id_donante: number) {
-    if (!confirm('¿Seguro que quieres eliminar este donador?')) return;
-
-    this.isLoading = true;
-    this.errorMessage = null;
-    this.successMessage = null;
-
-    this.donorService.deleteDonor(id_donante).subscribe({
-      next: () => {
-        this.successMessage = 'Donador eliminado exitosamente';
-        this.loadDonors();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.errorMessage = 'Error al eliminar el donador.';
-        console.error('Error al eliminar donador:', error);
-        this.isLoading = false;
-      }
+  abrirEditModal(donor: any) {
+    this.selectedDonor = donor;
+    this.editForm.patchValue({
+      telefono: donor.telefono
     });
+    this.mostrarEditModal = true;
+  }
+
+  cerrarEditModal() {
+    this.mostrarEditModal = false;
+    this.selectedDonor = null;
   }
 
   clearSearch() {
@@ -165,4 +172,5 @@ export default class Donors implements OnInit {
     this.loadDonors(); // vuelve a cargar la lista completa
     this.errorMessage = null;
   }
+
 }

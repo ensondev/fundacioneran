@@ -3,10 +3,11 @@ import { Router, RouterOutlet } from '@angular/router';
 import { Header } from "./components/header/header";
 import { Footer } from "./components/footer/footer";
 import { CommonModule } from '@angular/common';
+import { NotificationCard } from './components/notification-card/notification-card';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule ,RouterOutlet, Header, Footer],
+  imports: [CommonModule ,RouterOutlet, Header, Footer, NotificationCard],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
