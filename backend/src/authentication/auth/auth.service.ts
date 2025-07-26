@@ -42,7 +42,7 @@ export class AuthService {
                     usuario: newUser.nombre_usuario,
                     rol: newUser.rol_usuario,
                     creado: newUser.fecha_creacion,
-                    access_token: access_token
+                    token: access_token
                 }
             }
         } catch (error) {
@@ -96,6 +96,7 @@ export class AuthService {
             console.error('Error al hacer login:', error);
             return {
                 p_message: `Error interno del servidor ${error.message}`,
+                p_status: false,
                 p_data: {}
             }
         }
