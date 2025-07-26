@@ -10,6 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { WarehouseService } from '../../services/warehouses.service';
 import { AuthStateService } from '../../shared/service/auth-state.service';
+import { NotificationService } from '../../services/notification.service';
 @Component({
   selector: 'app-warehouse',
   imports: [ReactiveFormsModule, CommonModule, FormsModule, FontAwesomeModule],
@@ -26,6 +27,7 @@ export default class Warehouse implements OnInit {
   private _formBuilder = inject(FormBuilder);
   private authStateService = inject(AuthStateService);
   private warehouseService = inject(WarehouseService);
+  private notification = inject(NotificationService);
 
   warehouses: any[] = [];
   isLoading = false;
@@ -77,17 +79,63 @@ export default class Warehouse implements OnInit {
 
     this.warehouseService.createWarehouse(nombre_bodega, ubicacion).subscribe({
       next: (response) => {
-        alert('Bodega creada correctamente✅');
-        this.successMessage = 'Bodega creada correctamete';
-        this.cerrarModal();
+        this.notification.showSuccess('Bodega creada correctamente');
         this.loadWarehouses();
+        this.cerrarModal();
         this.form.reset();
         this.isLoading = false;
       },
       error: (error) => {
-        alert('Error al crear la bodega⛔');
-        this.errorMessage = 'Error al crear la bodega';
+        this.notification.showError('Error al crear la bodega');
         console.error('error al crear la bodega:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  updateWarehouse() {
+    if (this.form.invalid || !this.selectedWarehouse) return;
+
+    const { nombre_bodega, ubicacion } = this.form.getRawValue();
+
+    const id_bogeda = this.selectedWarehouse.id_bodega;
+
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    this.warehouseService.updateWarehouse(nombre_bodega, ubicacion, id_bogeda).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.notification.showSuccess('Bodega actualizada correctamente');
+        this.loadWarehouses();
+        this.cerrarEditModal();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.notification.showError('Error al actualizar la bodega');
+        console.error('Error al actualizar la bodega:', error);
+        this.isLoading = false;
+      }
+    })
+  }
+
+  deleteWarehouse(id_bodega: number) {
+    if (!confirm('⚠️¿Seguro que quieres eliminar esta bodega?⚠️')) return;
+
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    this.warehouseService.deleteWarehouse(id_bodega).subscribe({
+      next: () => {
+        this.notification.showSuccess('Bodega eliminada correctamente');
+        this.loadWarehouses();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.notification.showError('Error al eliminar la bodega');
+        console.error('Error al eliminar bodega:', error);
         this.isLoading = false;
       }
     });
@@ -106,56 +154,6 @@ export default class Warehouse implements OnInit {
     this.form.reset();
     this.mostrarEditModal = false;
     this.selectedWarehouse = null;
-  }
-
-  updateWarehouse() {
-    if (this.form.invalid || !this.selectedWarehouse) return;
-
-    const { nombre_bodega, ubicacion } = this.form.getRawValue();
-
-    const id_bogeda = this.selectedWarehouse.id_bodega;
-
-    this.isLoading = true;
-    this.errorMessage = null;
-    this.successMessage = null;
-
-    this.warehouseService.updateWarehouse(nombre_bodega, ubicacion, id_bogeda).subscribe({
-      next: (response) => {
-        console.log(response);
-        alert('Bodega actualizada correctamente✅');
-        this.successMessage = 'Bodega actualizada correctamente';
-        this.cerrarEditModal();
-        this.loadWarehouses();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        alert('Error al actualizar la bodega⛔');
-        console.error('Error al actualizar la bodega:', error);
-        this.errorMessage = 'Error al actualizar la bodega';
-        this.isLoading = false;
-      }
-    })
-  }
-
-  deleteWarehouse(id_bodega: number) {
-    if (!confirm('⚠️¿Seguro que quieres eliminar esta bodega?⚠️')) return;
-
-    this.isLoading = true;
-    this.errorMessage = null;
-    this.successMessage = null;
-
-    this.warehouseService.deleteWarehouse(id_bodega).subscribe({
-      next: () => {
-        this.successMessage = 'Bodega eliminada correctamente';
-        this.loadWarehouses();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.errorMessage = 'Error al eliminar la bodega.';
-        console.error('Error al eliminar bodega:', error);
-        this.isLoading = false;
-      }
-    })
   }
 
   abrirModal() {

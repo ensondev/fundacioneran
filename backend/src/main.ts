@@ -6,7 +6,10 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors();
+  app.enableCors({
+    origin: ['https://fundacioneran.onrender.com/'], // reemplaza por tu URL real
+    credentials: true, // si usas cookies o autenticación con credenciales
+  });
 
   // ✅ Aplica validaciones globales
   app.useGlobalPipes(

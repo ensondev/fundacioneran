@@ -83,12 +83,12 @@
                         </div>
                         <!-- Mensajes de estado -->
 
-                            <div style="color: green;" *ngIf="successMessage" class="alert alert-success">
-                                {{ successMessage }}
-                            </div>
-                            <div style="color: red;" *ngIf="errorMessage" class="alert alert-danger">
-                                {{ errorMessage }}
-                            </div>
+                        <div style="color: green;" *ngIf="successMessage" class="alert alert-success">
+                            {{ successMessage }}
+                        </div>
+                        <div style="color: red;" *ngIf="errorMessage" class="alert alert-danger">
+                            {{ errorMessage }}
+                        </div>
 
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                 <div class="form-group">
                     <label>Producto a entregar <span>*</span></label>
                     <select formControlName="id_donacion" required>
-                        <option value="" disabled selected>Seleccione un producto</option>
+                        <option [ngValue]="null" disabled>Seleccione un producto</option>
                         <option *ngFor="let product of products" [ngValue]="product.id_donacion">
                             {{ product.detalle_donacion }}
                         </option>

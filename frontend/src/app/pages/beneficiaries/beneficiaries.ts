@@ -10,6 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { BeneficiariesService } from '../../services/beneficiaries.service';
 import { AuthStateService } from '../../shared/service/auth-state.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-beneficiaries',
@@ -27,6 +28,7 @@ export default class Beneficiaries implements OnInit {
   private _formBuilder = inject(FormBuilder);
   private beneficiarieService = inject(BeneficiariesService);
   private authStateService = inject(AuthStateService);
+  private notification = inject(NotificationService);
 
   beneficiaries: any[] = [];
   isLoading = false;
@@ -46,7 +48,6 @@ export default class Beneficiaries implements OnInit {
 
   ngOnInit(): void {
     this.loadsBeneficiares();
-    // Obtener el rol desde la sesión
     const session = this.authStateService.getSession();
     this.userRole = session ? session.rol : '';
   }
@@ -68,20 +69,6 @@ export default class Beneficiaries implements OnInit {
     })
   }
 
-  abrirEditModal(bene: any) {
-    this.selectedBeneficiarie = bene;
-    this.editForm.patchValue({
-      direccion_beneficiario: bene.direccion_beneficiario,
-      telefono_beneficiario: bene.telefono_beneficiario
-    });
-    this.mostrarEditModal = true;
-  }
-
-  cerrarEditModal() {
-    this.mostrarEditModal = false;
-    this.selectedBeneficiarie = null;
-  }
-
   updateBeneficiarie() {
     if (this.editForm.invalid || !this.selectedBeneficiarie) return;
 
@@ -101,13 +88,13 @@ export default class Beneficiaries implements OnInit {
 
     this.beneficiarieService.updateBeneficiarie(updateBene).subscribe({
       next: (response) => {
-        this.successMessage = 'direccion y telefono del beneficiario actualizado exitosamente';
+        this.notification.showSuccess('Beneficiario actualizado correctamente')
         this.loadsBeneficiares();
         this.cerrarEditModal();
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error al actualizar la direccion y el telefono del benefciario.';
+        this.notification.showError('Error al actualizar beneficiario');
         console.error('Error al actualizar beneficiario:', error);
         this.isLoading = false;
       }
@@ -115,7 +102,7 @@ export default class Beneficiaries implements OnInit {
   }
 
   deleteBeneficiarie(id_beneficiario: number) {
-    if (!confirm('¿Seguro que quieres eliminar este beneficiario?')) return;
+    if (!confirm('⚠️¿Seguro que quieres eliminar este beneficiario?⚠️')) return;
 
     this.isLoading = true;
     this.errorMessage = null;
@@ -123,12 +110,12 @@ export default class Beneficiaries implements OnInit {
 
     this.beneficiarieService.deleteBeneficiarie(id_beneficiario).subscribe({
       next: () => {
-        this.successMessage = 'Beneficiario eliminado correctamente';
+        this.notification.showSuccess('Beneficiario eliminado correctamente')
         this.loadsBeneficiares();
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error al eliminar el beneficiario.';
+        this.notification.showError('Error al eliminar el beneficiario');
         console.error('Error al eliminar beneficiario:', error);
         this.isLoading = false;
       }
@@ -137,7 +124,7 @@ export default class Beneficiaries implements OnInit {
 
   searchByCedula() {
     if (!this.searchCedula.trim()) {
-      this.loadsBeneficiares(); // Si está vacío, carga todos los donantes
+      this.loadsBeneficiares();
       return;
     }
 
@@ -147,19 +134,32 @@ export default class Beneficiaries implements OnInit {
     this.beneficiarieService.getBeneficiarieByCedula(this.searchCedula).subscribe({
       next: (bene) => {
         if (bene) {
-          this.beneficiaries = [bene]; // Muestra solo el donante encontrado
+          this.beneficiaries = [bene];
         } else {
-          this.beneficiaries = []; // No se encontró ningún donante
-          this.errorMessage = 'No se encontró ningún beneficiario con esa cédula';
+          /* this.beneficiaries = [this.loadsBeneficiares()]; */
+          this.notification.showError('No se encontró ningún beneficiario con esa cédula');
         }
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error al buscar el beneficiario. Intente nuevamente.';
         console.error('Error al buscar beneficiario:', error);
         this.isLoading = false;
       }
     });
+  }
+
+  abrirEditModal(bene: any) {
+    this.selectedBeneficiarie = bene;
+    this.editForm.patchValue({
+      direccion_beneficiario: bene.direccion_beneficiario,
+      telefono_beneficiario: bene.telefono_beneficiario
+    });
+    this.mostrarEditModal = true;
+  }
+
+  cerrarEditModal() {
+    this.mostrarEditModal = false;
+    this.selectedBeneficiarie = null;
   }
 
   clearSearch() {

@@ -141,13 +141,12 @@ export default class Donors implements OnInit {
         if (donor) {
           this.donors = [donor];
         } else {
-          this.donors = [];
+          /* this.donors = [this.loadDonors()]; */
           this.notification.showError('Donador no registrado');
         }
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error al buscar el donante. Intente nuevamente.';
         console.error('Error al buscar donante:', error);
         this.isLoading = false;
       }

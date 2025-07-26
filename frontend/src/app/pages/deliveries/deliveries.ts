@@ -107,13 +107,12 @@ export default class Deliveries implements OnInit {
   async submit() {
     if (this.form.invalid) return;
 
-    const {
-      nombres_beneficiario,
-      cedula_beneficiario,
-      direccion_beneficiario,
-      telefono_beneficiario,
-      id_donacion
-    } = this.form.getRawValue();
+    const { cedula_beneficiario, id_donacion } = this.form.getRawValue();
+
+    if (!id_donacion) {
+      this.notification.showError('Debe seleccionar un producto a entregar');
+      return;
+    }
 
     this.isLoading = true;
     this.errorMessage = null;
@@ -171,7 +170,7 @@ export default class Deliveries implements OnInit {
         console.error('Error al registrar al beneficiario:', error);
         this.isLoading = false;
       }
-    })
+    });
   }
 
   deleteDeliverie(id_entrega: number) {
@@ -183,36 +182,24 @@ export default class Deliveries implements OnInit {
 
     this.deliveriesService.deleteDeliverie(id_entrega).subscribe({
       next: () => {
-        this.successMessage = 'Entrega eliminado correctamente';
+        this.notification.showSuccess('Entrega eliminado correctamente')
         this.loadBeneficiariesWithDeliveries();
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error al eliminar la entrga';
+        this.notification.showError('Error al eliminar la entrga');
         console.error('Error al eliminar la entrega:', error);
         this.isLoading = false;
       }
-    })
+    });
   }
-
-  /*   searchDeliverieByCedula() {
-      const cedula = this.searchCedula.trim();
-      if (!cedula) {
-        this.deliveries = this.allDeliveries;
-        return;
-      }
-  
-      this.deliveries = this.allDeliveries.filter(d =>
-        d.cedula_beneficiario.includes(cedula)
-      );
-    } */
 
   searchDeliverieByCedula() {
     const cedula = this.searchCedula.trim().toLowerCase();
     const start = this.startDate ? new Date(this.startDate) : null;
-    const end = this.endDate ? new Date(this.endDate) : new Date(); // si no hay fin y hay inicio, usamos hoy
+    const end = this.endDate ? new Date(this.endDate) : new Date(); // si no hay fin, usamos hoy
 
-    this.deliveries = this.allDeliveries.filter(d => {
+    const filtered = this.allDeliveries.filter(d => {
       const matchesCedula = cedula ? d.cedula_beneficiario.toLowerCase().includes(cedula) : true;
 
       let matchesDate = true;
@@ -227,14 +214,14 @@ export default class Deliveries implements OnInit {
 
       return matchesCedula && matchesDate;
     });
+
+    if (filtered.length === 0) {
+      this.notification.showError('No se encontraron entregas con esos criterios.');
+    } else {
+      this.deliveries = filtered;
+    }
   }
 
-  clearSearch() {
-    this.searchCedula = '';
-    this.startDate = '';
-    this.endDate = '';
-    this.deliveries = this.allDeliveries;
-  }
 
   async checkBeneficiario() {
     const cedula_beneficiario = this.searchCedulaBeneficiario;
@@ -260,7 +247,7 @@ export default class Deliveries implements OnInit {
           telefono_beneficiario: beneficiarie.telefono_beneficiario
         });
         this.successMessage = 'Donante encontrado';
-        this.searchCedulaBeneficiario = ''; // Limpia el input de búsqueda
+        this.searchCedulaBeneficiario = '';
         setTimeout(() => {
           this.successMessage = null;
         }, 1000);
@@ -283,6 +270,13 @@ export default class Deliveries implements OnInit {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  clearSearch() {
+    this.searchCedula = '';
+    this.startDate = '';
+    this.endDate = '';
+    this.deliveries = this.allDeliveries;
   }
 
   abrirModalBeneficiarie() {
