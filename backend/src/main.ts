@@ -6,8 +6,13 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const allowedOrigins = [
+    'http://localhost:4200', // Angular local dev
+    'https://fundacioneran.onrender.com', // tu frontend en producción
+  ];
+
   app.enableCors({
-    origin: ['https://fundacioneran.onrender.com/'], // reemplaza por tu URL real
+    origin: allowedOrigins, // reemplaza por tu URL real
     credentials: true, // si usas cookies o autenticación con credenciales
   });
 
