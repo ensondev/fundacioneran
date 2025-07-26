@@ -3,29 +3,29 @@ import { Pool } from 'pg';
 
 @Injectable()
 export class DatabaseService {
-    
+
     private pool: Pool;
 
-    constructor(){
-        
+    constructor() {
+
         this.pool = new Pool({
             host: process.env.DB_HOST,
             port: Number(process.env.DB_PORT),
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
             database: process.env.DB_NAME,
-            ssl: true,
+            ssl: process.env.DB_SSL === 'true',
         })
     };
 
     async query(queryText: string, params: any[] = []): Promise<any> {
         const client = await this.pool.connect();
-        try{
+        try {
             const result = await client.query(queryText, params);
             return result;
-        }catch(error){
+        } catch (error) {
             throw new Error(`Error en la conexion ${error.message}`);
-        }finally{
+        } finally {
             client.release();
         }
     }
