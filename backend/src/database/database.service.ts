@@ -7,7 +7,7 @@ export class DatabaseService {
     private pool: Pool;
 
     constructor() {
-        console.log('SSL config:', process.env.DB_SSL, this.pool.options.ssl);
+
         this.pool = new Pool({
             host: process.env.DB_HOST,
             port: Number(process.env.DB_PORT),
