@@ -9,9 +9,10 @@ import {
   faPen,
   faMagnifyingGlass,
   faXmark,
-  faTicket
+  faTicket,
+  faRupiahSign
 } from '@fortawesome/free-solid-svg-icons';
-import { catchError, firstValueFrom, of } from 'rxjs';
+import { catchError, filter, firstValueFrom, of } from 'rxjs';
 import { AuthStateService } from '../../shared/service/auth-state.service';
 import { NotificationService } from '../../services/notification.service';
 
@@ -283,26 +284,27 @@ export default class Donations implements OnInit {
   searchDonationsByCedula() {
     const cedula = this.searchCedula.trim().toLowerCase();
     const start = this.startDate ? new Date(this.startDate) : null;
-    const end = this.endDate ? new Date(this.endDate) : null;
+    const end = this.endDate ? new Date(this.endDate) : new Date();
 
-    this.donations = this.allDonations.filter(donation => {
+    const filtered = this.allDonations.filter(donation => {
       const matchesCedula = cedula ? donation.donante.numero_identificacion.toLowerCase().includes(cedula) : true;
       const donationDate = new Date(donation.fecha_donacion);
       let matchesDate = true;
 
-      if (start && end) {
+      if (start && !this.endDate) {
+
         matchesDate = donationDate >= start && donationDate <= end;
-      } else if (start && !end) {
-        matchesDate = donationDate >= start;
-      } else if (!start && end) {
-        matchesDate = donationDate <= end;
+      } else if (start && this.endDate) {
+        matchesDate = donationDate >= start && donationDate <= end;
       }
 
       return matchesCedula && matchesDate;
     });
 
-    if (this.donations.length === 0) {
+    if (filtered.length === 0) {
       this.notification.showError('No se encontraron donaciones con esos criterios.');
+    } else {
+      this.donations = filtered;
     }
   }
 

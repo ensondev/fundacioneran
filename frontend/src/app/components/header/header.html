@@ -81,15 +81,16 @@
                         </div>
                         <ul *ngIf="isInventarioOpen">
                             <li>
+                                <a (click)="closeMenu()" routerLink="/products">
+                                    <fa-icon [icon]="faPlus"></fa-icon><span>Registrar productos</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a (click)="closeMenu()" routerLink="/inventory-insert-product">
                                     <fa-icon [icon]="faTerminal"></fa-icon><span>Inventarario</span>
                                 </a>
                             </li>
-                            <li>
-                                <a (click)="closeMenu()" routerLink="/inventory-register-product">
-                                    <fa-icon [icon]="faPlus"></fa-icon><span>Productos</span>
-                                </a>
-                            </li>
+
                             <!--                             <li>
                                 <a (click)="closeMenu()" routerLink="/inventory-sale-product">
                                     <fa-icon [icon]="faCartShopping"></fa-icon><span>Vender Productos</span>

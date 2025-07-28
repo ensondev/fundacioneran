@@ -7,7 +7,6 @@ import {
   faPen,
   faMagnifyingGlass,
   faXmark,
-  faL,
 } from '@fortawesome/free-solid-svg-icons';
 import { AuthStateService } from '../../shared/service/auth-state.service';
 import { UsersService } from '../../services/users.service';

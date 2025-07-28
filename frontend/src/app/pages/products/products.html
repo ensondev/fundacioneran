@@ -1,1 +1,132 @@
-<p>Eso es otro producto</p>
+<main>
+    <div class="warehouse-container">
+        <div class="header-container">
+            <h2>Registrar Producto</h2>
+            <div class="container-buttons-register">
+                <button class="btn-open-modal" (click)="abrirModalCategorie()">+ Categoria</button>
+                <button class="btn-open-modal" (click)="abrirModal()">+ Bodega</button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="warehouse-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Producto</th>
+                        <th>Categoria</th>
+                        <th>Precio</th>
+                        <th>Fecha caducidad</th>
+                        <th *ngIf="userRole === 'Administrador'">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let prod of products">
+                        <td>{{ prod.id_producto }}</td>
+                        <td>{{ prod.nombre_producto }}</td>
+                        <td>{{ prod.categoria_id }}</td>
+                        <td>{{ prod.precio_venta }}</td>
+                        <td>{{ prod.fecha_caducidad }}</td>
+                        <td *ngIf="userRole === 'Administrador'">
+                            <!-- <div class="action-buttons">
+                                <button title="editar" class="btn-editar" (click)="abrirEditModal(prod)"><fa-icon
+                                        [icon]="faPen"></fa-icon></button>
+                            
+                                <button class="btn-eliminar" (click)="deleteProduct(prod.id_producto)"><fa-icon
+                                        [icon]="faTrash"></fa-icon></button>
+                            </div> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Modal con nuevo control flow @if -->
+    @if (mostrarModal) {
+    <div class="overlay">
+        <div class="modal-container-warehouse">
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-warehouse" (ngSubmit)="submit()" [formGroup]="form">
+
+                <h2>Registrar Bodega</h2>
+
+                <div class="form-group form-radio">
+                    <label>Tipo de Producto <span>*</span></label>
+                    <div class="container-option">
+                        <label>
+                            <input type="radio" formControlName="es_caducible" [value]='true'>Caducible
+                        </label>
+                        <label>
+                            <input type="radio" formControlName="es_caducible" [value]='false'>No caducible
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Producto <span>*</span></label>
+                    <input type="text" formControlName="nombre_producto" placeholder="Nombre del producto" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Detalle<span>*</span></label>
+                    <input type="text" formControlName="detalle_producto" placeholder="detalle del producto" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Categoría <span>*</span></label>
+                    <select formControlName="categoria_id" required>
+                        <option value="" disabled selected>Seleccione categoría</option>
+                        @for (category of categories; track category.id_categoria) {
+                        <option [value]="category.id_categoria">{{ category.nombre_categoria }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha<span>*</span></label>
+                    <input type="date" formControlName="fecha_caducidad" placeholder="fecha de caducidad" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Precio <span>*</span></label>
+                    <input type="number" formControlName="precio_venta" placeholder="precio del producto" step="0.01"
+                        required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="form.invalid">Crear Bodega</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+
+    @if (mostrarModalCategorie) {
+    <div class="overlay">
+        <div class="modal-container-warehouse">
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-warehouse" (ngSubmit)="submitCategories()" [formGroup]="formCategorie">
+
+                <h2>Registrar Categoría</h2>
+
+                <div class="form-group">
+                    <label>Categoría <span>*</span></label>
+                    <input type="text" formControlName="nombre_categoria" placeholder="Nombre de la categoría" required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="formCategorie.invalid">Crear Categoría</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    }
+</main>

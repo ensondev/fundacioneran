@@ -14,9 +14,8 @@ export class DatabaseService {
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
             database: process.env.DB_NAME,
-            ssl: { rejectUnauthorized: false },
+            /* ssl: { rejectUnauthorized: false }, */
         })
-        console.log('SSL config:', process.env.DB_SSL, this.pool.options.ssl);
     };
 
     async query(queryText: string, params: any[] = []): Promise<any> {
