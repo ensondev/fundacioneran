@@ -1,0 +1,190 @@
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CashManagementService } from '../../services/cash-management.service';
+import { NotificationService } from '../../services/notification.service';
+import {
+  faTrash,
+  faPen,
+  faMagnifyingGlass,
+  faXmark,
+  faTicket,
+  faRupiahSign
+} from '@fortawesome/free-solid-svg-icons';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+@Component({
+  selector: 'app-cash-management',
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, FontAwesomeModule],
+  templateUrl: './cash-management.html',
+  styleUrl: './cash-management.css'
+})
+export default class CashManagement implements OnInit {
+  //iconos
+  faTrash = faTrash;
+  faPen = faPen;
+  faMagnifyingGlass = faMagnifyingGlass;
+  faXmark = faXmark;
+  faTicket = faTicket;
+
+  private formBuilder = inject(FormBuilder);
+  private cashService = inject(CashManagementService);
+  private notification = inject(NotificationService);
+
+  allTransaction: any[] = [];
+  transactions: any[] = [];
+  isLoading = false;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
+  saldoActual: number = 0;
+  contadorIngresos: number = 0;
+  contadorEgresos: number = 0;
+  totalIngresos: number = 0;
+  totalEgresos: number = 0;
+  searchTransactions: string = '';
+  startDate: string = '';
+  endDate: string = '';
+
+  mostrarModal = false;
+
+  TransactionForm!: FormGroup;
+
+  form = this.formBuilder.group({
+    tipo_transaccion: this.formBuilder.nonNullable.control('', Validators.required),
+    monto: this.formBuilder.control<number | null>(0, Validators.required),
+    razon: this.formBuilder.nonNullable.control('', Validators.required)
+  })
+
+  ngOnInit() {
+    this.loadTransactions();
+    this.loadTotals();
+  }
+
+  loadTransactions() {
+    this.isLoading = true;
+
+    this.cashService.getTransaction().subscribe(
+      {
+        next: (trans) => {
+          this.allTransaction = trans;
+          this.transactions = trans;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error al cargar productos:', error);
+          this.isLoading = false;
+        }
+      }
+    );
+  }
+
+  loadTotals() {
+    this.cashService.getIngresoSummary().subscribe({
+      next: (res) => {
+        this.totalIngresos = Number(res.total); // <- asegúrate de convertir a número
+        this.contadorIngresos = Number(res.cantidad);
+        this.calculateBalance();
+      },
+      error: (err) => {
+        console.error('Error al obtener ingresos:', err);
+      }
+    });
+
+    this.cashService.getEgresoSummary().subscribe({
+      next: (res) => {
+        this.totalEgresos = Number(res.total);
+        this.contadorEgresos = Number(res.cantidad);
+        this.calculateBalance();
+      },
+      error: (err) => {
+        console.error('Error al obtener egresos:', err);
+      }
+    });
+  }
+
+  registerTransaction() {
+    if (this.form.invalid) return;
+
+    const { tipo_transaccion, monto, razon } = this.form.getRawValue();
+
+    if (tipo_transaccion === 'Egreso' && monto! > this.saldoActual) {
+      this.notification.showError('El monto del egreso no puede ser mayor al saldo actual');
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.cashService.registerTransaction(tipo_transaccion, monto, razon).subscribe({
+      next: () => {
+        this.notification.showSuccess('Transacción realizada correctamente');
+        this.loadTransactions();
+        this.loadTotals();
+
+        this.cerrarModal();
+        this.form.reset();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.notification.showError('Error al realizar la transacción');
+        console.error('Error al realizar la transferencia:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  searchTransaction() {
+    const tipo = this.searchTransactions?.trim().toLowerCase();
+    const fechaInicio = this.startDate ? new Date(this.startDate) : null;
+    const fechaFin = this.endDate ? new Date(this.endDate) : new Date(); // Si no hay endDate, usa fecha actual
+
+    const filtered = this.allTransaction.filter(trans => {
+      const transFecha = new Date(trans.fecha_transaccion);
+      const transTipo = trans.tipo_transaccion?.toLowerCase();
+
+      const cumpleTipo = !tipo || transTipo === tipo;
+      const cumpleFechaInicio = !fechaInicio || transFecha >= fechaInicio;
+      const cumpleFechaFin = !fechaFin || transFecha <= fechaFin;
+
+      return cumpleTipo && cumpleFechaInicio && cumpleFechaFin;
+    });
+
+    if (filtered.length === 0) {
+      this.notification.showError('No se encontraron entregas con esos criterios.');
+    } else {
+      this.transactions = filtered;
+    }
+  }
+
+
+  calculateBalance(): void {
+    this.saldoActual = this.totalIngresos - this.totalEgresos;
+  }
+
+
+  contarIngresos(): number {
+    return this.contadorIngresos;
+  }
+
+  contarEgresos(): number {
+    return this.contadorEgresos;
+  }
+
+  clearSearch() {
+    this.searchTransactions = '';
+    this.startDate = '';
+    this.endDate = '';
+    this.transactions = this.allTransaction;
+  }
+
+  abrirModal() {
+    this.mostrarModal = true;
+    this.form.reset({
+      tipo_transaccion: '',
+      monto: null,
+      razon: '',
+    });
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+  }
+}

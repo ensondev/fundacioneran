@@ -38,18 +38,19 @@ export class TransactionsService {
         const query = `SELECT id_transaccion, tipo_transaccion, monto, razon, fecha_transaccion FROM public.transacciones;`;
         try {
             const result = await this.databaseService.query(query, []);
-            return {
+            res.status(200).json({
                 p_message: null,
                 p_status: true,
                 p_data: {
                     transaccion: result.rows,
                 }
-            }
+            })
         } catch (error) {
-            return {
+            res.status(500).json({
                 p_message: error.message,
+                p_status: false,
                 p_data: {}
-            }
+            })
         }
     }
 
@@ -98,4 +99,57 @@ export class TransactionsService {
             }
         }
     }
+
+    async getCountIngreso(res) {
+        const query = `
+        SELECT 
+            COUNT(*) AS cantidad, 
+            COALESCE(SUM(monto), 0) AS total 
+        FROM public.transacciones 
+        WHERE tipo_transaccion = 'Ingreso';
+    `;
+        try {
+            const result = await this.databaseService.query(query, []);
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    ingreso: result.rows[0]
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                p_message: error.message,
+                p_status: false,
+                p_data: {},
+            });
+        }
+    }
+
+    async getCountEgreso(res) {
+        const query = `
+        SELECT 
+            COUNT(*) AS cantidad, 
+            COALESCE(SUM(monto), 0) AS total 
+        FROM public.transacciones 
+        WHERE tipo_transaccion = 'Egreso';
+    `;
+        try {
+            const result = await this.databaseService.query(query, []);
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    egreso: result.rows[0]
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                p_message: error.message,
+                p_status: false,
+                p_data: {},
+            });
+        }
+    }
+
 }

@@ -11,5 +11,7 @@ export const routes: Routes = [
     { path: 'deliveries', canActivate: [privateGuard], loadComponent: () => import('./pages/deliveries/deliveries') },
     { path: 'warehouse', canActivate: [privateGuard], loadComponent: () => import('./pages/warehouse/warehouse') },
     { path: 'products', canActivate: [privateGuard], loadComponent: () => import('./pages/products/products') },
+    { path: 'inventory', canActivate: [privateGuard], loadComponent: () => import('./pages/inventory/inventory') },
+    { path: 'cash-management', canActivate: [privateGuard], loadComponent: () => import('./pages/cash-management/cash-management') },
     { path: '**', redirectTo: 'home' }
 ];

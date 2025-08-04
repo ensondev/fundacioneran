@@ -10,6 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { AuthStateService } from '../../shared/service/auth-state.service';
 import { UsersService } from '../../services/users.service';
+import { NotificationService } from '../../services/notification.service';
 @Component({
   selector: 'app-users',
   imports: [ReactiveFormsModule, CommonModule, FormsModule, FontAwesomeModule],
@@ -27,6 +28,7 @@ export default class Users implements OnInit {
   private _formBuilder = inject(FormBuilder);
   private authStateService = inject(AuthStateService);
   private userService = inject(UsersService);
+  private notification = inject(NotificationService);
 
   users: any[] = [];
   selectedUsers: any = null;
@@ -85,21 +87,38 @@ export default class Users implements OnInit {
 
     this.userService.createUser(nombre_usuario, rol_usuario, password).subscribe({
       next: (response) => {
-        alert('Usuario creado correctamente✅');
-        this.successMessage = 'Usuario creado correctamete';
+        // ✅ Solo muestra éxito si realmente se ejecutó correctamente
+        this.notification.showSuccess('Usuario creado correctamente');
         this.cerrarModal();
         this.loadUsers();
         this.form.reset();
         this.isLoading = false;
       },
       error: (error) => {
-        alert('Error al crear el usuario');
-        this.errorMessage = 'Error al crear el usuario';
-        console.error('error al crear el usuario:', error);
         this.isLoading = false;
+
+        // ✅ No debe ejecutar showSuccess aquí
+
+        // ✅ Procesa errores múltiples
+        if (error.error && Array.isArray(error.error.message)) {
+          const mensajes = error.error.message.join('\n');
+          this.notification.showError(mensajes);
+          this.errorMessage = mensajes;
+        } else if (typeof error.error?.message === 'string') {
+          // Por si es solo un mensaje de texto
+          this.notification.showError(error.error.message);
+          this.errorMessage = error.error.message;
+        } else {
+          this.notification.showError('Error desconocido al crear el usuario');
+          this.errorMessage = 'Error desconocido al crear el usuario';
+        }
+
+        console.error('Error al crear el usuario:', error);
       }
-    })
+    });
   }
+
+
 
   abrirEditModal(user: any) {
     this.selectedUsers = user;
@@ -138,15 +157,13 @@ export default class Users implements OnInit {
     this.userService.updateUser(payload).subscribe({
       next: (response) => {
         console.log(response)
-        alert('Usuario actualizado correctamente✅');
-        this.successMessage = 'Bodega actualizada correctamente';
+        this.notification.showSuccess('Usuario actualizado correctamente');
         this.cerrarEditModal();
         this.loadUsers();
         this.isLoading = false;
       },
       error: (err) => {
-        alert('Error al actualizar el usuario⛔');
-        this.errorMessage = 'Error al actualizar el usuario';
+        this.notification.showError('Usuario actualizado correctamente');
         console.error('Error al actualizar el usuario:', err);
         this.isLoading = false;
       }
@@ -162,14 +179,12 @@ export default class Users implements OnInit {
 
     this.userService.deleteUser(id_usuario).subscribe({
       next: () => {
-        alert('Usuario eliminada correctamente✅');
-        this.successMessage = 'Usuario eliminada correctamente';
+        this.notification.showSuccess('Usuario eliminada correctamente');
         this.loadUsers();
         this.isLoading = false;
       },
       error: (error) => {
-        alert('Error al eliminar el usuario⛔');
-        this.errorMessage = 'Error al eliminar el usuario.';
+        this.notification.showError('Usuario eliminada correctamente');
         console.error('Error al eliminar usuario:', error);
         this.isLoading = false;
       }

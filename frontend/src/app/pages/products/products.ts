@@ -5,26 +5,44 @@ import { AuthStateService } from '../../shared/service/auth-state.service';
 import { NotificationService } from '../../services/notification.service';
 import { CommonModule } from '@angular/common';
 import { CategiriesService } from '../../services/categories.service';
+import {
+  faTrash,
+  faPen,
+  faMagnifyingGlass,
+  faXmark
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-products',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, FontAwesomeModule],
   templateUrl: './products.html',
   styleUrl: './products.css'
 })
 export default class Products implements OnInit {
+  //iconos
+  faTrash = faTrash;
+  faPen = faPen;
+  faMagnifyingGlass = faMagnifyingGlass;
+  faXmark = faXmark;
 
   products: any[] = [];
   allProducts: any[] = [];
+  allCategories: any[] = [];
   categories: any[] = [];
 
   userRole: string = '';
   errorMessage: string | null = null;
   successMessage: string | null = null;
+  selectedProducts: any = null;
+  searchCategorie: string = '';
+  searchFechaCaducidad: string = '';
+  searchClasification: string = '';
 
   isLoading = false;
   mostrarModal = false;
   mostrarModalCategorie = false;
+  mostrarEditModal = false;
 
   private _formBuild = inject(FormBuilder);
   private productService = inject(productsService);
@@ -39,7 +57,16 @@ export default class Products implements OnInit {
     nombre_producto: this._formBuild.nonNullable.control('', Validators.required),
     detalle_producto: this._formBuild.nonNullable.control(''),
     categoria_id: this._formBuild.nonNullable.control<number>(0, Validators.required),
-    fecha_caducidad: this._formBuild.nonNullable.control<Date>(new Date),
+    fecha_caducidad: this._formBuild.nonNullable.control(''),
+    precio_venta: this._formBuild.nonNullable.control<number>(0, Validators.required),
+  });
+
+  formEdit = this._formBuild.group({
+    es_caducible: this._formBuild.nonNullable.control(false, Validators.required),
+    nombre_producto: this._formBuild.nonNullable.control('', Validators.required),
+    detalle_producto: this._formBuild.nonNullable.control(''),
+    categoria_id: this._formBuild.nonNullable.control<number>(0, Validators.required),
+    fecha_caducidad: this._formBuild.nonNullable.control(''),
     precio_venta: this._formBuild.nonNullable.control<number>(0, Validators.required),
   });
 
@@ -59,7 +86,7 @@ export default class Products implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
 
-    this.productService.getProducts().subscribe({
+    this.productService.getProductsWithCategories().subscribe({
       next: (product) => {
         this.allProducts = product;
         this.products = product;
@@ -114,6 +141,7 @@ export default class Products implements OnInit {
     }
 
     const { es_caducible, nombre_producto, detalle_producto, categoria_id, fecha_caducidad, precio_venta } = this.form.getRawValue();
+    const fechaFinal = es_caducible ? fecha_caducidad : null;
 
     this.isLoading = true;
     this.errorMessage = null;
@@ -124,18 +152,137 @@ export default class Products implements OnInit {
       nombre_producto,
       detalle_producto,
       categoria_id,
-      fecha_caducidad,
+      fechaFinal,
       precio_venta
     ).subscribe({
       next: (data) => {
         this.notification.showSuccess('Producto registrado correctamente');
         this.loadProducts();
         this.form.reset();
+        this.form.get('es_caducible')?.setValue(false); // reestablece checkbox
         this.isLoading = false;
+        this.cerrarModal();
       }, error: (error) => {
-
+        this.notification.showError('Error al registrar el producto');
+        this.form.reset();
+        this.isLoading = false;
       }
     })
+  }
+
+  updateProduct() {
+    if (this.formEdit.invalid || !this.selectedProducts) return;
+
+    const {
+      es_caducible,
+      nombre_producto,
+      detalle_producto,
+      categoria_id,
+      fecha_caducidad,
+      precio_venta
+    } = this.formEdit.getRawValue();
+
+    const fechaFinal = es_caducible ? fecha_caducidad : null;
+
+    this.isLoading = true;
+
+    this.productService.updateProduct(
+      this.selectedProducts.id_producto,
+      es_caducible,
+      nombre_producto,
+      detalle_producto,
+      categoria_id,
+      fechaFinal,
+      precio_venta
+    ).subscribe({
+      next: () => {
+        this.notification.showSuccess('Producto actualizado correctamente');
+        this.loadProducts();
+        this.formEdit.reset();
+        this.mostrarEditModal = false;
+        this.selectedProducts = null;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.notification.showError('Error al actualizar el producto');
+        console.error('Error al actualizar:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+
+  deleteProduct(id_producto: number) {
+    const confirmDelete = confirm('⚠️¿Estás seguro de que deseas eliminar este producto?⚠️');
+
+    if (!confirmDelete) return;
+
+    this.productService.deleteProduct(id_producto).subscribe({
+      next: () => {
+        this.notification.showSuccess('Producto eliminado correctamente');
+        this.loadProducts(); // vuelve a cargar la lista
+      },
+      error: (err) => {
+        console.error('Error al eliminar producto:', err);
+        this.notification.showError('No se pudo eliminar el producto');
+      }
+    });
+  }
+
+  searchProdutsByCategorie() {
+    const categoria = this.searchCategorie.trim().toLowerCase();
+    const clasificacionStr = this.searchClasification;
+    const clasificacion = clasificacionStr === 'true' ? true : (clasificacionStr === 'false' ? false : null);
+    const fechaFiltro = this.searchFechaCaducidad
+      ? new Date(this.searchFechaCaducidad).toISOString().split('T')[0]
+      : null;
+
+    const filtered = this.allProducts.filter(product => {
+      const matchesCategorie = categoria
+        ? product.nombre_categoria.toLowerCase() === categoria
+        : true;
+
+      const matchesClasification = clasificacion !== null
+        ? product.es_caducible === clasificacion
+        : true;
+
+      const matchesDate = fechaFiltro
+        ? new Date(product.fecha_caducidad).toISOString().split('T')[0] === fechaFiltro
+        : true;
+
+      return matchesCategorie && matchesClasification && matchesDate;
+    });
+
+    if (filtered.length === 0) {
+      this.notification.showError('No se encontraron productos con esos criterios.');
+    } else {
+      this.products = filtered;
+    }
+  }
+
+  abrirEditModal(prod: any) {
+    this.selectedProducts = prod;
+    this.formEdit.patchValue({
+      es_caducible: prod.es_caducible,
+      nombre_producto: prod.nombre_producto,
+      detalle_producto: prod.detalle_producto,
+      categoria_id: prod.categoria_id,
+      fecha_caducidad: prod.fecha_caducidad,
+      precio_venta: prod.precio_venta
+    })
+    this.mostrarEditModal = true;
+  }
+
+  cerrarEditModal() {
+    this.formEdit.reset();
+    this.mostrarEditModal = false;
+  }
+
+  clearSearch() {
+    this.searchCategorie = '';
+    this.searchClasification = ''
+    this.searchFechaCaducidad = '';
+    this.products = this.allProducts;
   }
 
   abrirModal() {
@@ -143,18 +290,18 @@ export default class Products implements OnInit {
     this.mostrarModal = true;
   }
 
-  abrirModalCategorie() {
-    this.formCategorie.reset();
-    this.mostrarModalCategorie = true;
-  }
-
   cerrarModal() {
     this.form.reset();
     this.mostrarModal = false;
   }
 
-  cerrarEditModal() {
-    this.form.reset();
+  abrirModalCategorie() {
+    this.formCategorie.reset();
+    this.mostrarModalCategorie = true;
+  }
+
+  cerrarCategorieModal() {
+    this.formCategorie.reset();
     this.mostrarModalCategorie = false;
   }
 }

@@ -33,6 +33,16 @@ export class ProductsController {
     }
 
     @Public()
+    @Get('with-categorie')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ description: 'Obtener todos los productos con sus categorias' })
+    @ApiResponse({ status: 200, description: 'Lista de productos con categorias obtenidos correctamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor.' })
+    async getProductsWithCategories(@Res() res) {
+        return this.productsService.getProductsWithCategories(res);
+    }
+
+    @Public()
     @Put('update')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Actualizar un producto' })

@@ -46,25 +46,25 @@ export class ProductsService {
         const query = `SELECT id_producto, es_caducible, nombre_producto, detalle_producto, categoria_id, fecha_caducidad, precio_venta, fecha_registro FROM public.productos;`;
         try {
             const result = await this.databaseService.query(query, []);
-            return {
+            res.status(200).json({
                 p_message: null,
                 p_status: true,
                 p_data: {
                     producto: result.rows,
                 }
-            }
+            })
         } catch (error) {
-            return {
+            res.status(500).json({
                 p_message: error.message,
                 p_data: {}
-            }
+            })
         }
     }
 
     async updateProduct(dto: UpdateProductDto) {
         const { es_caducible, nombre_producto, detalle_producto, categoria_id, fecha_caducidad, precio_venta, id_producto } = dto;
         const query = `UPDATE public.productos
-                    SET es_caducible = $1, nombre_producto = $2, detalle_producto = $3, categoria_id = $4, fecha_caducidad = $5, precio_venta = $6, 
+                    SET es_caducible = $1, nombre_producto = $2, detalle_producto = $3, categoria_id = $4, fecha_caducidad = $5, precio_venta = $6
                     WHERE id_producto = $7
                     RETURNING es_caducible, nombre_producto, detalle_producto, categoria_id, fecha_caducidad, precio_venta;`;
         const values = [es_caducible, nombre_producto, detalle_producto, categoria_id, fecha_caducidad, precio_venta, id_producto];
@@ -80,12 +80,13 @@ export class ProductsService {
                     detalle: producto.detalle_producto,
                     categoria: producto.categoria,
                     caduce: producto.fecha_caducidad,
-                    precio: producto.valor_venta,
+                    precio: producto.precio_venta,
                 }
             }
         } catch (error) {
             return {
                 p_message: error.message,
+                p_status: false,
                 p_data: {}
             }
         }
@@ -112,4 +113,37 @@ export class ProductsService {
     }
 
     //CONSULTAS COMPLEJAS
+    async getProductsWithCategories(res) {
+        const query = `
+    SELECT
+      p.id_producto,
+      p.es_caducible,
+      p.nombre_producto,
+      p.detalle_producto,
+      p.precio_venta,
+      p.fecha_caducidad,
+      p.categoria_id,
+      c.nombre_categoria
+    FROM productos p
+    LEFT JOIN categorias c ON p.categoria_id = c.id_categoria
+    ORDER BY id_producto ASC
+  `;
+        try {
+            const result = await this.databaseService.query(query, []);
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    producto: result.rows,
+                }
+            });
+        } catch (err) {
+            res.status(500).json({
+                p_status: false,
+                p_message: err.message,
+                p_data: {}
+            });
+        }
+    }
+
 }

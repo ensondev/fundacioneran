@@ -302,7 +302,7 @@ export default class Donations implements OnInit {
     });
 
     if (filtered.length === 0) {
-      this.notification.showError('No se encontraron donaciones con esos criterios.');
+      this.notification.showError('No se encontraron donaciones con esos criterios');
     } else {
       this.donations = filtered;
     }

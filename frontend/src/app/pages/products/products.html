@@ -1,10 +1,31 @@
 <main>
+    <div class="container-filter">
+        <div class="search-container">
+            <select [(ngModel)]="searchCategorie" name="searchCategorie">
+                <option value="" disabled>Buscar por categoría</option>
+                <option *ngFor="let cat of categories" [value]="cat.nombre_categoria">{{ cat.nombre_categoria }}
+                </option>
+            </select>
+            <select name="searchClasification" [(ngModel)]="searchClasification">
+                <option value="" disabled>Clasificación</option>
+                <option [value]="true">Caducible</option>
+                <option [value]="false">Duradero</option>
+            </select>
+            <input type="date" [(ngModel)]="searchFechaCaducidad" name="searchFechaCaducidad" />
+            <button class="btn-filter" (click)="searchProdutsByCategorie()">
+                <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
+            </button>
+            <button class="btn-clear" (click)="clearSearch()">
+                <fa-icon [icon]="faXmark"></fa-icon> Eliminar
+            </button>
+        </div>
+    </div>
     <div class="warehouse-container">
         <div class="header-container">
             <h2>Registrar Producto</h2>
             <div class="container-buttons-register">
                 <button class="btn-open-modal" (click)="abrirModalCategorie()">+ Categoria</button>
-                <button class="btn-open-modal" (click)="abrirModal()">+ Bodega</button>
+                <button class="btn-open-modal" (click)="abrirModal()">+ Producto</button>
             </div>
         </div>
         <div class="table-responsive">
@@ -23,17 +44,17 @@
                     <tr *ngFor="let prod of products">
                         <td>{{ prod.id_producto }}</td>
                         <td>{{ prod.nombre_producto }}</td>
-                        <td>{{ prod.categoria_id }}</td>
+                        <td>{{ prod.nombre_categoria }}</td>
                         <td>{{ prod.precio_venta }}</td>
-                        <td>{{ prod.fecha_caducidad }}</td>
+                        <td>{{ prod.fecha_caducidad | date:'shortDate'}}</td>
                         <td *ngIf="userRole === 'Administrador'">
-                            <!-- <div class="action-buttons">
+                            <div class="action-buttons">
                                 <button title="editar" class="btn-editar" (click)="abrirEditModal(prod)"><fa-icon
                                         [icon]="faPen"></fa-icon></button>
                             
                                 <button class="btn-eliminar" (click)="deleteProduct(prod.id_producto)"><fa-icon
                                         [icon]="faTrash"></fa-icon></button>
-                            </div> -->
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -50,16 +71,16 @@
 
             <form class="form-warehouse" (ngSubmit)="submit()" [formGroup]="form">
 
-                <h2>Registrar Bodega</h2>
+                <h2>Registrar producto</h2>
 
                 <div class="form-group form-radio">
-                    <label>Tipo de Producto <span>*</span></label>
+                    <label>Clasificación de producto<span>*</span></label>
                     <div class="container-option">
                         <label>
                             <input type="radio" formControlName="es_caducible" [value]='true'>Caducible
                         </label>
                         <label>
-                            <input type="radio" formControlName="es_caducible" [value]='false'>No caducible
+                            <input type="radio" formControlName="es_caducible" [value]='false'>Duradero
                         </label>
                     </div>
                 </div>
@@ -74,7 +95,7 @@
                     <input type="text" formControlName="detalle_producto" placeholder="detalle del producto" required>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group form-categorie">
                     <label>Categoría <span>*</span></label>
                     <select formControlName="categoria_id" required>
                         <option value="" disabled selected>Seleccione categoría</option>
@@ -84,9 +105,82 @@
                     </select>
                 </div>
 
+                <div *ngIf="form.get('es_caducible')?.value">
+                    <label>Fecha de caducidad:</label>
+                    <input type="date" formControlName="fecha_caducidad" />
+                    <!-- <div
+                        *ngIf="form.get('fecha_caducidad')?.hasError('required') && form.get('fecha_caducidad')?.touched">
+                        La fecha de caducidad es obligatoria
+                    </div> -->
+                </div>
+
+
                 <div class="form-group">
-                    <label>Fecha<span>*</span></label>
-                    <input type="date" formControlName="fecha_caducidad" placeholder="fecha de caducidad" required>
+                    <label>Precio <span>*</span></label>
+                    <input type="number" formControlName="precio_venta" placeholder="precio del producto" step="0.01"
+                        required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="form.invalid">Registrar producto</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+
+
+    @if (mostrarEditModal) {
+    <div class="overlay">
+        <div class="modal-container-warehouse">
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-warehouse" (ngSubmit)="updateProduct()" [formGroup]="formEdit">
+
+                <h2>Registrar producto</h2>
+
+                <div class="form-group form-radio">
+                    <label>Clasificación de producto<span>*</span></label>
+                    <div class="container-option">
+                        <label>
+                            <input type="radio" formControlName="es_caducible" [value]='true'>Caducible
+                        </label>
+                        <label>
+                            <input type="radio" formControlName="es_caducible" [value]='false'>Duradero
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Producto <span>*</span></label>
+                    <input type="text" formControlName="nombre_producto" placeholder="Nombre del producto" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Detalle<span>*</span></label>
+                    <input type="text" formControlName="detalle_producto" placeholder="detalle del producto" required>
+                </div>
+
+                <div class="form-group form-categorie">
+                    <label>Categoría <span>*</span></label>
+                    <select formControlName="categoria_id" required>
+                        <option value="" disabled selected>Seleccione categoría</option>
+                        @for (category of categories; track category.id_categoria) {
+                        <option [value]="category.id_categoria">{{ category.nombre_categoria }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div *ngIf="formEdit.get('es_caducible')?.value">
+                    <label>Fecha de caducidad:</label>
+                    <input type="date" formControlName="fecha_caducidad" />
+                    <!-- <div
+                        *ngIf="form.get('fecha_caducidad')?.hasError('required') && form.get('fecha_caducidad')?.touched">
+                        La fecha de caducidad es obligatoria
+                    </div> -->
                 </div>
 
                 <div class="form-group">
@@ -96,8 +190,8 @@
                 </div>
 
                 <div class="button-container">
-                    <button type="submit" [disabled]="form.invalid">Crear Bodega</button>
-                    <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
+                    <button type="submit" [disabled]="formEdit.invalid">Registrar producto</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -122,7 +216,7 @@
 
                 <div class="button-container">
                     <button type="submit" [disabled]="formCategorie.invalid">Crear Categoría</button>
-                    <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarCategorieModal()">Cancelar</button>
                 </div>
 
             </form>

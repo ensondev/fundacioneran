@@ -26,6 +26,7 @@ img{
     align-items: center;
 }
 
+.container-filter .search-container select,
 .container-filter .search-container input {
     width: 220px;
     padding: 5px 20px;

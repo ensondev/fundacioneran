@@ -22,7 +22,7 @@ export class InsertProductDto {
     @ApiProperty({ description: 'Fecha de caducidad (solo si es caducible)', example: '2025-12-31', required: false })
     @ValidateIf(o => o.es_caducible)
     @IsDateString()
-    fecha_caducidad?: Date;
+    fecha_caducidad?: string;
 
     @ApiProperty({ description: 'Ingresar precio del producto', example: 49.99 })
     @IsNumber()

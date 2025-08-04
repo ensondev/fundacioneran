@@ -12,7 +12,7 @@ export class TransactionsController {
     constructor(private transactionsService: TransactionsService) { };
 
     @Public()
-    @Post('insert')
+    @Post('register')
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Registrar una nueva transacción' })
     @ApiResponse({ status: 201, description: 'Transacción registrada correctamente' })
@@ -53,4 +53,25 @@ export class TransactionsController {
     async deleteTransactions(@Body() dto: DeleteTransactionDto) {
         return this.transactionsService.deleteTransactions(dto);
     }
+
+    @Public()
+    @Get('summary/ingreso')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Obtener resumen de ingresos' })
+    @ApiResponse({ status: 200, description: 'Resumen de ingresos obtenido' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    async getCountIngreso(@Res() res) {
+        return this.transactionsService.getCountIngreso(res);
+    }
+
+    @Public()
+    @Get('summary/egreso')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Obtener resumen de egresos' })
+    @ApiResponse({ status: 200, description: 'Resumen de egresos obtenido' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    async getCountEgreso(@Res() res) {
+        return this.transactionsService.getCountEgreso(res);
+    }
+
 }

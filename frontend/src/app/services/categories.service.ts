@@ -22,8 +22,8 @@ export class CategiriesService {
     }
 
     getCategories(): Observable<any[]> {
-        return this._http.get(`${environment.API_URL}/categorias`).pipe(
-            map((res: any) => res.p_data.categorias || []),
+        return this._http.get(`${environment.API_URL}/categories`).pipe(
+            map((res: any) => res.p_data.categoria || []),
             catchError(error => {
                 console.error('Error en getCategories:', error);
                 return of([]);
