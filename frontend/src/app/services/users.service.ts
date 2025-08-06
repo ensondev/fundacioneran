@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { catchError, map, Observable, of, retry } from "rxjs";
+import { catchError, map, Observable, of, retry, throwError } from "rxjs";
 import { environment } from "../../environments/environment";
 
 @Injectable({
@@ -18,7 +18,7 @@ export class UsersService {
             map((res: any) => res.p_data || res),
             catchError(err => {
                 console.error('Error en createUser:', err);
-                return of(null);
+                return throwError(() => err);
             })
         );
     }

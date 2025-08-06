@@ -19,7 +19,7 @@
     <div class="donations-container">
         <div class="header-container">
             <h2>Registrar donacion</h2>
-            <div class="container-button-register">
+            <div class="container-button-register acciones-box">
                 <button class="btn-open-modal" (click)="abrirModalDonor()">+ Donador</button>
                 <button class="btn-open-modal" (click)="abrirModal()">+ Donación</button>
             </div>
@@ -54,8 +54,7 @@
                                 <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(bene)"><fa-icon
                                         [icon]="faPen"></fa-icon></button> -->
                                 <!-- Botón Eliminar visible solo para Administrador -->
-                                <button  class="btn-eliminar"
-                                    (click)="deleteDonation(donation.id_donacion)"><fa-icon
+                                <button class="btn-eliminar" (click)="deleteDonation(donation.id_donacion)"><fa-icon
                                         [icon]="faTrash"></fa-icon></button>
                             </div>
                         </td>
@@ -78,19 +77,23 @@
                 <div class="form-group" class="search-donor">
                     <label>Buscar Donante <span>*</span></label>
                     <div class="input-group input-search-donor">
-                        <input type="text" [(ngModel)]="searchCedulaDonante" [ngModelOptions]="{ standalone: true }"
-                            name="searchCedula" placeholder="Cédula del donante" required>
+                        <div class="container-search-donor">
+                            <input type="text" [(ngModel)]="searchCedulaDonante" [ngModelOptions]="{ standalone: true }"
+                                name="searchCedula" placeholder="Cédula del donante" required>
 
-                        <button type="button" (click)="checkDonor()" [disabled]="!searchCedulaDonante">
-                            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
-                        </button>
+                            <button type="button" (click)="checkDonor()" [disabled]="!searchCedulaDonante">
+                                <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+                            </button>
+                        </div>
 
                         <!-- Mensajes de estado -->
-                        <div style="color: green;" *ngIf="successMessage" class="alert alert-success">
-                            {{ successMessage }}
-                        </div>
-                        <div style="color: red;" *ngIf="errorMessage" class="alert alert-danger">
-                            {{ errorMessage }}
+                        <div class="container-messaje">
+                            <div style="color: green;" *ngIf="successMessage" class="alert alert-success">
+                                {{ successMessage }}
+                            </div>
+                            <div style="color: red;" *ngIf="errorMessage" class="alert alert-danger">
+                                {{ errorMessage }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -116,7 +119,7 @@
                 <div class="container-info-donation">
                     <div class="container-donation">
                         <div class="form-group form-radio">
-                            <label>Tipo de Aporte <span>*</span></label>
+                            <p>Tipo de Aporte <span>*</span></p>
                             <div class="container-option">
                                 <label>
                                     <input type="radio" formControlName="tipo_donacion" value="Monetaria">Monetaria

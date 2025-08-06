@@ -16,11 +16,11 @@
             </button>
         </div>
     </div>
-    <div class="beneficiarios-container">
+    <div class="cash-container">
         <div class="header-container">
             <h2>Sistema de caja</h2>
             <div class="acciones-box">
-                <button class="btn-registrar" (click)="abrirModal()">+ Transacción</button>
+                <button class="btn-open-modal" (click)="abrirModal()">+ Transacción</button>
                 <!-- <button class="btn-descargar" (click)="descargarReportePDF()">
                     <i class="fa fa-download"></i> Descargar reporte
                 </button> -->
@@ -39,15 +39,15 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="beneficiarios-table">
+            <table class="cash-table">
                 <thead>
                     <tr>
                         <th>N°</th>
                         <th>Tipo</th>
                         <th>Monto</th>
-                        <th>Fecha Transacción</th>
+                        <th>Fecha</th>
                         <th>Razón</th>
-                        <th>Opciones</th>
+                        <!-- <th>Opciones</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -101,16 +101,17 @@
     <!-- Modal para Registrar Transacción -->
     @if (mostrarModal) {
     <div class="overlay">
-        <div class="modal-contenido-cash">
+        <div class="modal-container-cash">
             <!-- <span class="cerrar-modal" (click)="mostrarModalRegistrar = false; transactionForm.reset()">&times;</span> -->
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
-            <h3>Registrar Nueva Transacción</h3>
+
+            <h3>Registrar Transacción</h3>
 
             <form class="form-cash" [formGroup]="form" (ngSubmit)="registerTransaction()">
                 <div class="form-group">
-                    <label for="tipoTransaccion">Tipo de Transacción*</label>
+                    <label for="tipoTransaccion">Tipo de Transacción <span>*</span></label>
                     <select id="tipoTransaccion" formControlName="tipo_transaccion" required>
                         <option value="">Seleccione...</option>
                         <option value="Ingreso">Ingreso</option>
@@ -119,13 +120,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="montoTransaccion">Monto*</label>
+                    <label for="montoTransaccion">Monto <span>*</span></label>
                     <input type="number" id="montoTransaccion" formControlName="monto" step="0.01" min="0.01"
                         placeholder="Ingrese el monto" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="id_razon">Razón*</label>
+                    <label for="id_razon">Razón <span>*</span></label>
                     <input type="text" id="nombre_razon" formControlName="razon" placeholder="nombre de la razón"
                         required>
                 </div>

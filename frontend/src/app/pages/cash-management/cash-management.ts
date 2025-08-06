@@ -12,6 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AuthStateService } from '../../shared/service/auth-state.service';
 @Component({
   selector: 'app-cash-management',
   imports: [CommonModule, ReactiveFormsModule, FormsModule, FontAwesomeModule],
@@ -29,6 +30,7 @@ export default class CashManagement implements OnInit {
   private formBuilder = inject(FormBuilder);
   private cashService = inject(CashManagementService);
   private notification = inject(NotificationService);
+  private authStateService = inject(AuthStateService);
 
   allTransaction: any[] = [];
   transactions: any[] = [];
@@ -43,6 +45,7 @@ export default class CashManagement implements OnInit {
   searchTransactions: string = '';
   startDate: string = '';
   endDate: string = '';
+  userRol: string = '';
 
   mostrarModal = false;
 
@@ -57,6 +60,9 @@ export default class CashManagement implements OnInit {
   ngOnInit() {
     this.loadTransactions();
     this.loadTotals();
+
+    const session = this.authStateService.getSession();
+    this.userRol = session ? session.rol : '';
   }
 
   loadTransactions() {

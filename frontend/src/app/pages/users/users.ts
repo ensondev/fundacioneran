@@ -87,7 +87,6 @@ export default class Users implements OnInit {
 
     this.userService.createUser(nombre_usuario, rol_usuario, password).subscribe({
       next: (response) => {
-        // ✅ Solo muestra éxito si realmente se ejecutó correctamente
         this.notification.showSuccess('Usuario creado correctamente');
         this.cerrarModal();
         this.loadUsers();
@@ -95,30 +94,12 @@ export default class Users implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
+        this.notification.showError('Error al crear el usuario');
         this.isLoading = false;
-
-        // ✅ No debe ejecutar showSuccess aquí
-
-        // ✅ Procesa errores múltiples
-        if (error.error && Array.isArray(error.error.message)) {
-          const mensajes = error.error.message.join('\n');
-          this.notification.showError(mensajes);
-          this.errorMessage = mensajes;
-        } else if (typeof error.error?.message === 'string') {
-          // Por si es solo un mensaje de texto
-          this.notification.showError(error.error.message);
-          this.errorMessage = error.error.message;
-        } else {
-          this.notification.showError('Error desconocido al crear el usuario');
-          this.errorMessage = 'Error desconocido al crear el usuario';
-        }
-
         console.error('Error al crear el usuario:', error);
       }
     });
   }
-
-
 
   abrirEditModal(user: any) {
     this.selectedUsers = user;

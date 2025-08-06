@@ -1,17 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 
-*{
+* {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-body{
+body {
     background-color: #f1f1f1;
 }
 
-img{
+img {
     width: 100%;
 }
 
@@ -21,18 +21,21 @@ img{
 }
 
 .container-filter .search-container {
+    width: 100%;
     display: flex;
     gap: 10px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .container-filter .search-container select,
 .container-filter .search-container input {
-    width: 220px;
+    width: 100%;
     padding: 5px 20px;
 }
 
 .container-filter .search-container button {
+    width: 100%;
     height: 20px;
     padding: 15px 20px;
     display: flex;
@@ -50,3 +53,14 @@ img{
     font-size: 12px;
 }
 
+/*VERSION DESTOCK*/
+
+@media (min-width: 1024px) {
+    .container-filter .search-container {
+        flex-wrap: nowrap;
+    }
+
+    /* .container-filter .search-container button {
+        width: auto;
+    } */
+}

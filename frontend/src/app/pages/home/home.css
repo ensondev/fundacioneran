@@ -1,10 +1,10 @@
-main{
+main {
     width: 100vw;
     height: calc(100vh - 110px);
-    padding: 20px;
+    padding: 20px 20px 0 20px;
 }
 
-main .container-table{
+main .container-logo {
     width: 100%;
     height: 100%;
     display: flex;
@@ -14,13 +14,25 @@ main .container-table{
     background-color: #fff;
 }
 
-.container-table .logo{
-    width: 400px;
+.container-logo .logo {
+    width: 350px;
     opacity: 0.3;
 }
 
-.container-table p{
-    font-size: 25px;
+.container-logo p {
+    font-size: 15px;
     font-weight: 100;
     color: #686868;
+}
+
+/*VERSION DESTOCK*/
+
+@media (min-width: 1024px) {
+    .container-logo .logo {
+        width: 400px;
+    }
+
+    .container-logo p {
+        font-size: 25px;
+    }
 }
