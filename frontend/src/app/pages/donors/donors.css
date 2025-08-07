@@ -17,13 +17,9 @@ main {
 
 /* Estilos para el contenedor del encabezado */
 .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 10px;
     border-top: 3px solid #0d4b7a;
     border-bottom: 1px solid #e0e0e0;
-    /* border-top: 2px solid #0a375e; */
 }
 
 .header-container h2 {
@@ -31,29 +27,14 @@ main {
     padding-bottom: 0;
     border-bottom: none;
     color: #0a375e;
-    font-size: 21px;
-}
-
-.btn-open-modal {
-    background-color: #0a375e;
-    color: white;
-    padding: 7px 20px;
-    border: none;
-    border-radius: 0;
-    cursor: pointer;
-    font-size: 15px;
-    margin-left: 20px;
-}
-
-.btn-open-modal:hover {
-    background-color: #0d4b7a;
+    font-size: 19px;
 }
 
 /* Estilos para la tabla de donadores */
 .table-responsive {
     overflow-x: auto;
-    padding: 10px;
-    height: calc(100vh - 250px);
+    padding: 0 10px 10px 10px;
+    height: calc(100vh - 310px);
 }
 
 .donors-table {
@@ -68,6 +49,12 @@ main {
     padding: 7px 15px;
     background-color: #ebebeb;
     /* text-align: left; */
+}
+
+.donors-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
 }
 
 .donors-table td {
@@ -88,8 +75,8 @@ main {
 
 .action-buttons {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     gap: 10px;
 }
 
@@ -114,7 +101,7 @@ main {
     color: red;
 }
 
-/* Estilos del modal - registrar donador*/
+/* Estilos del modal - editar donador*/
 .overlay {
     position: fixed;
     top: 0;
@@ -129,14 +116,15 @@ main {
 }
 
 .modal-container {
-    background-color: #fff;
     border-radius: 0;
+    margin: 0 20px;
     padding: 20px 20px;
     height: auto;
     width: 100%;
     max-width: 380px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     animation: modalFadeIn 0.3s ease-out;
+    background-color: #fff;
 }
 
 .container-header-modal {
@@ -156,9 +144,8 @@ main {
 }
 
 form h2 {
+    font-size: 21px;
     margin-bottom: 10px;
-    font-weight: 500;
-    color: #0a375e;
 }
 
 /* Grupos de formulario */
@@ -166,12 +153,12 @@ form h2 {
     margin-bottom: 20px;
 }
 
-.form-group label {
+/* .form-group label {
     display: block;
-    font-weight: 500;
+    font-weight: bold;
     margin-bottom: 1px;
     color: #000000;
-}
+} */
 
 .form-group label span {
     color: #d32f2f;
@@ -183,7 +170,6 @@ form h2 {
     border: 1px solid #ccc;
 }
 
-/* Contenedor de botones del modal */
 .button-container {
     display: flex;
     justify-content: space-between;
@@ -191,7 +177,6 @@ form h2 {
     gap: 10px;
 }
 
-/* Estilo base para botones */
 button {
     padding: 7px 15px;
     cursor: pointer;
@@ -200,7 +185,6 @@ button {
     font-size: 15px;
 }
 
-/* Botón de enviar */
 button[type="submit"] {
     background-color: #0a375e;
     color: white;
@@ -217,7 +201,6 @@ button[type="submit"]:disabled {
     cursor: not-allowed;
 }
 
-/* Botón de cancelar */
 .cancel-btn {
     background-color: #f5f5f5;
     color: #333;
@@ -244,10 +227,11 @@ button[type="submit"]:disabled {
     border-color: #ddd;
 }
 
-
-
-
-
+@media (min-width: 1024px) {
+    .table-responsive {
+        height: calc(100vh - 220px);
+    }
+}
 
 
 
@@ -261,64 +245,5 @@ button[type="submit"]:disabled {
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-
-
-
-
-/* Responsive */
-@media (max-width: 768px) {
-    .header-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .beneficiarios-table {
-        display: block;
-        width: 100%;
-    }
-
-    .beneficiarios-table thead {
-        display: none;
-    }
-
-    .beneficiarios-table tr {
-        display: block;
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        padding: 10px;
-    }
-
-    .beneficiarios-table td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 10px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .beneficiarios-table td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        margin-right: 15px;
-        color: #0a375e;
-        width: 120px;
-    }
-
-    .beneficiarios-table td:last-child {
-        justify-content: flex-end;
-    }
-
-    .btn-editar,
-    .btn-eliminar {
-        margin: 4px;
-    }
-
-    .btn-open-modal {
-        align-self: flex-end;
     }
 }

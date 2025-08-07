@@ -67,7 +67,6 @@ main {
     color: white;
     font-weight: 500;
     padding: 7px 15px;
-    /*   text-align: left; */
 }
 
 .donations-table thead th {
@@ -352,7 +351,7 @@ button[type="submit"]:disabled {
     }
 
     .table-responsive {
-        height: calc(100vh - 280px);
+        height: calc(100vh - 250px);
     }
 
     .form-donation .container-info-donor {
@@ -366,18 +365,12 @@ button[type="submit"]:disabled {
         gap: 10px;
     }
 
-    .form-donation .container-info-donation .container-donation {
-        width: 60%;
-        border: 1px solid #e0e0e0;
+    .container-donation .form-radio input {
+        margin: 0;
     }
 
-    .form-donation .container-donation .form-radio {
-        display: flex;
-        gap: 40px;
+    .form-radio{
+        padding-bottom: 10px;
     }
     
-    .container-info-donation .container-image {
-        width: 40%;
-        border-bottom: 1px solid #e0e0e0;
-    }
 }

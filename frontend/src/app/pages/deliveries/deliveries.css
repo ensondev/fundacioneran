@@ -8,7 +8,7 @@ main {
     flex-direction: column;
 }
 
-.donations-container {
+.deliveries-container {
     width: 100%;
     margin-top: 10px;
     background: white;
@@ -16,20 +16,23 @@ main {
 }
 
 .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
+    padding: 10px 20px;
+    gap: 10px;
     border-top: 3px solid #0d4b7a;
     border-bottom: 1px solid #e0e0e0;
 }
 
 .header-container h2 {
-    margin-bottom: 0;
+    margin-bottom: 10px;
     padding-bottom: 0;
     border-bottom: none;
     color: #0a375e;
-    font-size: 21px;
+    font-size: 19px;
+}
+
+.acciones-box {
+    display: flex;
+    gap: 10px;
 }
 
 .btn-open-modal {
@@ -40,7 +43,6 @@ main {
     border-radius: 0;
     cursor: pointer;
     font-size: 15px;
-    margin-left: 20px;
 }
 
 .search-container button:hover,
@@ -51,17 +53,17 @@ main {
 /* Estilos para la tabla de beneficiarios */
 .table-responsive {
     overflow-x: auto;
-    padding: 10px;
-    height: calc(100vh - 250px);
+    padding: 0 10px 10px 10px;
+    height: calc(100vh - 430px);
 }
 
-.donations-table {
+.deliveries-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
 }
 
-.donations-table th {
+.deliveries-table th {
     background-color: #0a375e;
     color: white;
     font-weight: 500;
@@ -69,18 +71,25 @@ main {
     /*   text-align: left; */
 }
 
-.donations-table td {
+.deliveries-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #0a375e;
+    z-index: 2;
+}
+
+.deliveries-table td {
     padding: 7px 15px;
     border-bottom: 1px solid #e0e0e0;
     color: #333;
     text-align: center;
 }
 
-.donations-table tr:not(:last-child) td {
+.deliveries-table tr:not(:last-child) td {
     border-bottom: 1px solid #e0e0e0;
 }
 
-.donations-table tr:hover {
+.deliveries-table tr:hover {
     background-color: #f8f9fa;
 }
 
@@ -136,6 +145,7 @@ main {
     max-width: 350px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     animation: modalFadeIn 0.3s ease-out;
+    margin: 0 20px;
 }
 
 .search-donor label {
@@ -179,6 +189,10 @@ main {
     margin-bottom: 20px;
 }
 
+.form-group label {
+    font-weight: bold;
+}
+
 /*FORMULARIO BENEFICIARIO*/
 .modal-container-beneficiarie {
     background-color: #fff;
@@ -189,9 +203,10 @@ main {
     max-width: 350px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     animation: modalFadeIn 0.3s ease-out;
+    margin: 0 20px;
 }
 
-.form-beneficiarie h2{
+.form-beneficiarie h2 {
     margin-bottom: 10px;
 }
 
@@ -265,6 +280,19 @@ button[type="submit"]:disabled {
     background-color: #e0e0e0;
 }
 
+@media (min-width: 1024px) {
+    .table-responsive {
+        height: calc(100vh - 230px);
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+
+
 /* Animación opcional para el modal */
 @keyframes modalFadeIn {
     from {
@@ -275,66 +303,5 @@ button[type="submit"]:disabled {
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-
-
-
-
-
-
-/* Responsive */
-@media (max-width: 768px) {
-    .header-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .beneficiarios-table {
-        display: block;
-        width: 100%;
-    }
-
-    .beneficiarios-table thead {
-        display: none;
-    }
-
-    .beneficiarios-table tr {
-        display: block;
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        padding: 10px;
-    }
-
-    .beneficiarios-table td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 10px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .beneficiarios-table td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        margin-right: 15px;
-        color: #0a375e;
-        width: 120px;
-    }
-
-    .beneficiarios-table td:last-child {
-        justify-content: flex-end;
-    }
-
-    .btn-editar,
-    .btn-eliminar {
-        margin: 4px;
-    }
-
-    .btn-open-modal {
-        align-self: flex-end;
     }
 }
