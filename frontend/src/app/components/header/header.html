@@ -38,20 +38,23 @@
                             <span>Donaciones</span>
                             <span class="arrow" [class.rotate]="isDonacionesOpen">></span>
                         </div>
-                        <ul *ngIf="isDonacionesOpen">
+                        @if (isDonacionesOpen) {
+                        <ul>
                             <li>
                                 <a (click)="closeMenu()" routerLink="/donations">
                                     <fa-icon [icon]="faHeartCirclePlus"></fa-icon><span>Registrar Donaciones</span>
                                 </a>
                             </li>
+                            @if (rol === 'Administrador') {
                             <li>
                                 <a (click)="closeMenu()" routerLink="/donors">
                                     <fa-icon [icon]="faUserGroup"></fa-icon><span>Donadores</span>
                                 </a>
                             </li>
+                            }
                         </ul>
+                        }
                     </li>
-
 
                     <li>
                         <div class="menu-toggle" (click)="toggleSubmenu('beneficiarios')">
@@ -59,18 +62,22 @@
                             <span>Beneficiarios</span>
                             <span class="arrow" [class.rotate]="isBeneficiariesOpen">></span>
                         </div>
-                        <ul *ngIf="isBeneficiariesOpen">
+                        @if (isBeneficiariesOpen) {
+                        <ul>
                             <li>
                                 <a (click)="closeMenu()" routerLink="/deliveries">
                                     <fa-icon [icon]="faBoxesStacked"></fa-icon><span>Registrar Entrega</span>
                                 </a>
                             </li>
+                            @if (rol === 'Administrador') {
                             <li>
                                 <a (click)="closeMenu()" routerLink="/beneficiaries">
                                     <fa-icon [icon]="faUserGroup"></fa-icon><span>Beneficiarios</span>
                                 </a>
                             </li>
+                            }
                         </ul>
+                        }
                     </li>
 
                     <li>
@@ -79,7 +86,8 @@
                             <span>Inventario</span>
                             <span class="arrow" [class.rotate]="isInventarioOpen">></span>
                         </div>
-                        <ul *ngIf="isInventarioOpen">
+                        @if (isInventarioOpen) {
+                        <ul>
                             <li>
                                 <a (click)="closeMenu()" routerLink="/products">
                                     <fa-icon [icon]="faPlus"></fa-icon><span>Registrar productos</span>
@@ -87,16 +95,11 @@
                             </li>
                             <li>
                                 <a (click)="closeMenu()" routerLink="/inventory">
-                                    <fa-icon [icon]="faTerminal"></fa-icon><span>Inventarario</span>
+                                    <fa-icon [icon]="faTerminal"></fa-icon><span>Inventario</span>
                                 </a>
                             </li>
-
-                            <!--                             <li>
-                                <a (click)="closeMenu()" routerLink="/inventory-sale-product">
-                                    <fa-icon [icon]="faCartShopping"></fa-icon><span>Vender Productos</span>
-                                </a>
-                            </li> -->
                         </ul>
+                        }
                     </li>
 
                     <li>
@@ -111,17 +114,21 @@
                         </a>
                     </li>
 
+                    @if (rol === 'Administrador') {
                     <li>
                         <a (click)="closeMenu()" routerLink="/cash-management">
                             <fa-icon [icon]="faCashRegister"></fa-icon><span>Caja</span>
                         </a>
                     </li>
+                    }
 
+                    @if (rol === 'Administrador') {
                     <li>
                         <a (click)="closeMenu()" routerLink="/users">
                             <fa-icon [icon]="faUserShield"></fa-icon><span>Administrar Usuario</span>
                         </a>
                     </li>
+                    }
                 </ul>
                 <div class="container-session">
                     <div class="title-module">
@@ -135,6 +142,7 @@
         </nav>
     </div>
 
-    <div class="backdrop" *ngIf="isMenuOpen()" (click)="closeMenu()"> </div>
-
+    @if (isMenuOpen()) {
+    <div class="backdrop" (click)="closeMenu()"></div>
+    }
 </header>

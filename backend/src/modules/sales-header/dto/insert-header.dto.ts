@@ -14,8 +14,4 @@ export class InsertHeaderDto {
     @ApiProperty({description: 'Ingresar total pagado',})
     @IsNumber()
     total: number;
-
-    @ApiProperty({description: 'Ingresar estado de venta'}) 
-    @IsString()
-    estado_venta: string;
 }

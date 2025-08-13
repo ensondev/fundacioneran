@@ -9,11 +9,11 @@ export class SalesHeaderService {
     constructor(private databaseService: DatabaseService) { };
 
     async insertSalesHeader(dto: InsertHeaderDto) {
-        const { nombre_cliente, cedula_cliente, total, estado_venta } = dto;
-        const query = `INSERT INTO public.ventas_cabecera (nombre_cliente, cedula_cliente, total, estado_venta, fecha_venta) 
-                    VALUES ($1, $2, $3, $4, now())
+        const { nombre_cliente, cedula_cliente, total } = dto;
+        const query = `INSERT INTO public.ventas_cabecera (nombre_cliente, cedula_cliente, total, fecha_venta) 
+                    VALUES ($1, $2, $3, now())
                     RETURNING id_venta, nombre_cliente, cedula_cliente, total, estado_venta, fecha_venta;`;
-        const values = [nombre_cliente, cedula_cliente, total, estado_venta];
+        const values = [nombre_cliente, cedula_cliente, total];
         try {
             const result = await this.databaseService.query(query, values);
             const header = result.rows[0];
@@ -32,6 +32,7 @@ export class SalesHeaderService {
         } catch (error) {
             return {
                 p_message: error.message,
+                status: false,
                 p_data: {}
             }
         }
@@ -41,18 +42,19 @@ export class SalesHeaderService {
         const query = `SELECT id_venta, nombre_cliente, cedula_cliente, total, estado_venta, fecha_venta FROM public.ventas_cabecera;`;
         try {
             const result = await this.databaseService.query(query, []);
-            return {
+            res.status(200).json({
                 p_message: null,
                 p_status: true,
                 p_data: {
                     sales_header: result.rows,
                 }
-            }
+            });
         } catch (error) {
-            return {
+            res.status(500).json({
                 p_message: error.message,
+                status: false,
                 p_data: {}
-            }
+            });
         }
     }
 

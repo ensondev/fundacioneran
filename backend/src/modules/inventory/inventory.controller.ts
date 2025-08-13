@@ -22,6 +22,16 @@ export class InventoryController {
         return this.inventoryService.insertProductInventory(dto);
     }
 
+    @Post('update-stock')
+    @HttpCode(HttpStatus.CREATED)
+    @ApiOperation({ summary: 'Actualizar stock del producto' })
+    @ApiResponse({ status: 201, description: 'Stock actualizado correctamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor.' })
+    updateStock(@Body() dto: { id_inventario: number, cantidadVendida: number }) {
+        return this.inventoryService.updateStock(dto.id_inventario, dto.cantidadVendida);
+    }
+
+
     @Public()
     @Get('')
     @HttpCode(HttpStatus.OK)

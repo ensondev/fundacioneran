@@ -3,8 +3,9 @@
         <div class="search-container">
             <select [(ngModel)]="searchCategorie" name="searchCategorie">
                 <option value="" disabled>Buscar por categoría</option>
-                <option *ngFor="let cat of categories" [value]="cat.nombre_categoria">{{ cat.nombre_categoria }}
-                </option>
+                @for (cat of categories; track cat.nombre_categoria) {
+                <option [value]="cat.nombre_categoria">{{ cat.nombre_categoria }}</option>
+                }
             </select>
             <select name="searchClasification" [(ngModel)]="searchClasification">
                 <option value="" disabled>Clasificación</option>
@@ -20,43 +21,51 @@
             </button>
         </div>
     </div>
-    <div class="warehouse-container">
+    <div class="products-container">
         <div class="header-container">
             <h2>Registrar Producto</h2>
-            <div class="container-buttons-register">
+            <div class="acciones-box">
+                @if (userRole === 'Administrador') {
                 <button class="btn-open-modal" (click)="abrirModalCategorie()">+ Categoria</button>
+                }
+
                 <button class="btn-open-modal" (click)="abrirModal()">+ Producto</button>
             </div>
         </div>
         <div class="table-responsive">
-            <table class="warehouse-table">
+            <table class="products-table">
                 <thead>
                     <tr>
                         <th>Id</th>
                         <th>Producto</th>
                         <th>Categoria</th>
                         <th>Precio</th>
-                        <th>Fecha caducidad</th>
+                        <th>caducidad</th>
                         <th *ngIf="userRole === 'Administrador'">Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let prod of products">
+                    @for (prod of products; track prod.id_producto) {
+                    <tr>
                         <td>{{ prod.id_producto }}</td>
                         <td>{{ prod.nombre_producto }}</td>
                         <td>{{ prod.nombre_categoria }}</td>
                         <td>{{ prod.precio_venta }}</td>
                         <td>{{ prod.fecha_caducidad | date:'shortDate'}}</td>
-                        <td *ngIf="userRole === 'Administrador'">
+                        @if (userRole === 'Administrador') {
+                        <td>
                             <div class="action-buttons">
-                                <button title="editar" class="btn-editar" (click)="abrirEditModal(prod)"><fa-icon
-                                        [icon]="faPen"></fa-icon></button>
-                            
-                                <button class="btn-eliminar" (click)="deleteProduct(prod.id_producto)"><fa-icon
-                                        [icon]="faTrash"></fa-icon></button>
+                                <button title="editar" class="btn-editar" (click)="abrirEditModal(prod)">
+                                    <fa-icon [icon]="faPen"></fa-icon>
+                                </button>
+                                <button class="btn-eliminar" (click)="deleteProduct(prod.id_producto)">
+                                    <fa-icon [icon]="faTrash"></fa-icon>
+                                </button>
                             </div>
                         </td>
+                        }
                     </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -64,12 +73,12 @@
     <!-- Modal con nuevo control flow @if -->
     @if (mostrarModal) {
     <div class="overlay">
-        <div class="modal-container-warehouse">
+        <div class="modal-container-products">
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
-            <form class="form-warehouse" (ngSubmit)="submit()" [formGroup]="form">
+            <form class="form-products" (ngSubmit)="submit()" [formGroup]="form">
 
                 <h2>Registrar producto</h2>
 
@@ -105,14 +114,12 @@
                     </select>
                 </div>
 
-                <div *ngIf="form.get('es_caducible')?.value">
+                @if (form.get('es_caducible')?.value) {
+                <div class="form-group">
                     <label>Fecha de caducidad:</label>
                     <input type="date" formControlName="fecha_caducidad" />
-                    <!-- <div
-                        *ngIf="form.get('fecha_caducidad')?.hasError('required') && form.get('fecha_caducidad')?.touched">
-                        La fecha de caducidad es obligatoria
-                    </div> -->
                 </div>
+                }
 
 
                 <div class="form-group">
@@ -133,12 +140,12 @@
 
     @if (mostrarEditModal) {
     <div class="overlay">
-        <div class="modal-container-warehouse">
+        <div class="modal-container-products">
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
-            <form class="form-warehouse" (ngSubmit)="updateProduct()" [formGroup]="formEdit">
+            <form class="form-products" (ngSubmit)="updateProduct()" [formGroup]="formEdit">
 
                 <h2>Registrar producto</h2>
 
@@ -174,14 +181,12 @@
                     </select>
                 </div>
 
-                <div *ngIf="formEdit.get('es_caducible')?.value">
-                    <label>Fecha de caducidad:</label>
-                    <input type="date" formControlName="fecha_caducidad" />
-                    <!-- <div
-                        *ngIf="form.get('fecha_caducidad')?.hasError('required') && form.get('fecha_caducidad')?.touched">
-                        La fecha de caducidad es obligatoria
-                    </div> -->
-                </div>
+                @if (formEdit.get('es_caducible')?.value) {
+                    <div class="form-group">
+                        <label>Fecha de caducidad:</label>
+                        <input type="date" formControlName="fecha_caducidad" />
+                    </div>
+                }
 
                 <div class="form-group">
                     <label>Precio <span>*</span></label>
@@ -200,12 +205,12 @@
 
     @if (mostrarModalCategorie) {
     <div class="overlay">
-        <div class="modal-container-warehouse">
+        <div class="modal-container-products">
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
-            <form class="form-warehouse" (ngSubmit)="submitCategories()" [formGroup]="formCategorie">
+            <form class="form-products" (ngSubmit)="submitCategories()" [formGroup]="formCategorie">
 
                 <h2>Registrar Categoría</h2>
 

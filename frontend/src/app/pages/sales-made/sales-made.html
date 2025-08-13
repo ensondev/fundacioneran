@@ -1,0 +1,171 @@
+<main>
+    <div class="container-filter">
+        <div class="search-container">
+
+            <input type="text" placeholder="Buscar venta por cédula" [(ngModel)]="searchCedula" name="searchCedula" />
+
+            <input type="date" [(ngModel)]="startDate" name="startDate" />
+            <input type="date" [(ngModel)]="endDate" name="endDate" />
+
+            <button class="btn-filter" (click)="searchSalesMade()">
+                <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
+            </button>
+            <button class="btn-clear" (click)="clearSearch()">
+                <fa-icon [icon]="faXmark"></fa-icon> Eliminar
+            </button>
+        </div>
+    </div>
+
+    <div class="sales-made-container">
+        <div class="header-container">
+            <h2>Registrar Venta</h2>
+            <div class="acciones-box">
+                <button class="btn-open-modal" (click)="abrirModal()">+ venta</button>
+                <!-- <button class="btn-open-modal" (click)="abrirModal()">+ Entrega</button> -->
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="sales-made-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Cédula</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <!-- <th>Opciones</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (sales of salesMade; track sales.id_venta) {
+                    <tr>
+                        <td>{{ sales.id_venta }}</td> <!-- id_venta en lugar de entrega.id_entrega -->
+                        <td>{{ sales.nombre_cliente }}</td>
+                        <td>{{ sales.cedula_cliente }}</td>
+                        <td>{{ sales.total }}</td> <!-- asumo es el total -->
+                        <td>{{ sales.estado_venta }}</td> <!-- Asumo tienes un campo estado -->
+                        <td>{{ sales.fecha_venta | date:'shortDate' }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(bene)"><fa-icon
+                                            [icon]="faPen"></fa-icon></button> -->
+                                <!-- Botón Eliminar visible solo para Administrador -->
+                                <!-- <button *ngIf="userRole === 'Administrador'" class="btn-eliminar"
+                                    (click)="deleteDeliverie(sales.entrega.id_entrega)"><fa-icon
+                                        [icon]="faTrash"></fa-icon></button> -->
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (mostrarModal) {
+        <div class="overlay">
+            <div class="modal-container-sales-made">
+                <div class="container-header-modal">
+                    <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+                </div>
+
+                <form class="form-sales-made" (ngSubmit)="submit()" [formGroup]="form">
+                    <h2>Registrar venta</h2>
+
+                    <div class="container-info-sale">
+                        <div class="form-group">
+                            <label>Cliente</label>
+                            <input type="text" formControlName="nombre_cliente" placeholder="Nombres del cliente"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cédula</label>
+                            <input type="text" formControlName="cedula_cliente" placeholder="Cédula del cliente"
+                                required>
+                        </div>
+                    </div>
+
+                    <h2>Agregar Productos</h2>
+
+                    <div class="container-info-products">
+                        <div class="container-products">
+                            <div class="form-group form-products">
+                                <label>Producto <span>*</span></label>
+                                <select formControlName="id_inventario" (change)="setProductPrice()" required>
+                                    <option value="" disabled selected>Seleccione producto</option>
+                                    @for (prod of productsInventory; track prod.id_inventario) {
+                                    <option [value]="prod.id_inventario">
+                                        {{ prod.nombre_producto }} - {{ prod.nombre_bodega }} (Stock: {{
+                                        prod.cantidad_disponible }})
+                                    </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Unidades <span>*</span></label>
+                                <input type="number" formControlName="cantidad" placeholder="Cantidad" required>
+                            </div>
+                        </div>
+
+                        <div class="container-info-sale">
+
+                            <div class="form-group">
+                                <label>Precio unitario</label>
+                                <input type="number" formControlName="precio_unitario" [readonly]="true">
+                            </div>
+
+                            <div class="form-group form-total">
+                                <label>Total Venta</label>
+                                <input type="number" [value]="calcularTotal()" readonly>
+                            </div>
+
+                            <button type="button" (click)="agregarProducto()"
+                                [disabled]="!form.controls['id_inventario'].value || !form.controls['cantidad'].value">
+                                + Agregar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de productos agregados -->
+                    <div class="table-responsive-sales" *ngIf="productosAgregados.length > 0">
+                        <table class="sales-table">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Bodega</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Subtotal</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let prod of productosAgregados; let i = index">
+                                    <td>{{ prod.nombre_producto }}</td>
+                                    <td>{{ prod.nombre_bodega }}</td>
+                                    <td>{{ prod.cantidad }}</td>
+                                    <td>{{ prod.precio_unitario | currency }}</td>
+                                    <td>{{ prod.subtotal | currency }}</td>
+                                    <td>
+                                        <button class="btn-eliminar" type="button" (click)="eliminarProducto(i)"><fa-icon [icon]="faTrash"></fa-icon></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="submit"
+                            [disabled]="productosAgregados.length === 0 || form.controls['nombre_cliente'].invalid || form.controls['cedula_cliente'].invalid">
+                            Registrar Venta
+                        </button>
+                        <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        }
+
+    </div>
+</main>

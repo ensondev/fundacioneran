@@ -7,6 +7,10 @@ export class InsertInventoryDto {
     @IsInt()
     producto_id: number;
 
+    @ApiProperty({ description: 'Ingresar ID de la categoria', example: '6' })
+    @IsInt()
+    categoria_id: number;
+
     @ApiProperty({ description: 'Ingresar ID de la bodega', example: '12' })
     @IsInt()
     bodega_id: number;

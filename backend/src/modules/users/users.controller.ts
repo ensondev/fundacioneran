@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateUsersDto } from 'src/modules/users/dto/update-users.dto';
@@ -18,6 +18,16 @@ export class UsersController {
     @ApiResponse({ status: 500, description: 'Error interno del servidor' })
     async getAllUsers(@Res() res) {
         return this.usersService.getAllUsers(res);
+    }
+
+    @Public()
+    @Post('name')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Obtener usuario por nombre' })
+    @ApiResponse({ status: 200, description: 'Usuario obtenido corractamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    async getUserName(@Req() req, @Res() res) {
+        return this.usersService.getUserName(req, res);
     }
 
     @Public()

@@ -1,4 +1,4 @@
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -25,19 +25,19 @@ import {
   faBoxesStacked
 } from '@fortawesome/free-solid-svg-icons';
 import { AuthStateService } from '../../shared/service/auth-state.service';
+import { sequenceEqual } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   imports: [
     CommonModule,
     RouterModule,
-    NgIf,
     FontAwesomeModule,
   ],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
-export class Header {
+export class Header{
   // Iconos
   faHeart = faHeart;
   faHeartCirclePlus = faHeartCirclePlus;
@@ -66,6 +66,7 @@ export class Header {
   iniciales: string = '';
 
   private router = inject(Router);
+  private authStateService = inject(AuthStateService);
 
   constructor(private authState: AuthStateService) {
     const session = this.authState.getSession();

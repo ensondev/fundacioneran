@@ -28,18 +28,20 @@ export class UsersService {
             map((res: any) => res.p_data.users || []),
             catchError(err => {
                 console.error('Error en getUsers:', err);
-                return of([])
+                return of([]);
             })
         );
     }
 
-/*     updateUser(nombre_usuario: string, password: string, id_usuario: number): Observable<any> {
-        return this._http.put(`${environment.API_URL}/users/update`, {
-            nombre_usuario,
-            password,
-            id_usuario
-        });
-    } */
+    getUserName(nombre_usuario: string): Observable<any> {
+        return this._http.post(`${environment.API_URL}/users/name`, { nombre_usuario }).pipe(
+            map((res: any) => res.p_data.users || res),
+            catchError(err => {
+                console.error('Error en createUser:', err);
+                return throwError(() => err);
+            })
+        )
+    }
 
     updateUser(data: any): Observable<any> {
         return this._http.put(`${environment.API_URL}/users/update`, data);

@@ -31,11 +31,13 @@ export default class Users implements OnInit {
   private notification = inject(NotificationService);
 
   users: any[] = [];
+  allUsers: any[] = [];
   selectedUsers: any = null;
   isLoading = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
   userRole: string = '';
+  searchUser: string = '';
   mostrarModal = false;
   mostrarEditModal = false;
 
@@ -66,6 +68,7 @@ export default class Users implements OnInit {
     this.userService.getUsers().subscribe({
       next: (user) => {
         this.users = user;
+        this.allUsers = user;
         this.isLoading = false;
       },
       error: (error) => {
@@ -170,6 +173,41 @@ export default class Users implements OnInit {
         this.isLoading = false;
       }
     })
+  }
+
+  searchByUser() {
+    if (!this.searchUser.trim()) {
+      /* this.loadUsers(); */
+      this.notification.showError('Por favor ingresa un nombre para buscar.');
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.userService.getUserName(this.searchUser).subscribe({
+      next: (user) => {
+        console.log(user)
+        if(user.length === 0){
+          this.loadUsers();
+          this.notification.showError('No se encontraron usuarios con ese nombre.');
+        }
+        if (user) {
+          this.users = user;
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error al buscar usuario', err);
+        this.isLoading = false;
+      }
+    });
+  }
+
+
+
+  clearSearch() {
+    this.searchUser = '';
+    this.users = this.allUsers;
   }
 
   abrirModal() {

@@ -9,7 +9,7 @@ export class UpdateDetailDto {
 
     @ApiProperty({ description: 'Actualizar el producto vendido', example: '5' })
     @IsInt()
-    producto_id: number;
+    id_inventario: number;
 
     @ApiProperty({ description: 'Actualizar el precio del producto', example: '20 o 19.99' })
     @IsNumber()

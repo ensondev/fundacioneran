@@ -2,7 +2,7 @@
     <div class="container-filter">
         <div class="search-container">
             <input type="text" placeholder="Buscar donación por cédula" [(ngModel)]="searchCedula"
-                (keyup.enter)="searchDonationsByCedula()" name="searchCedula" />
+                name="searchCedula" />
 
             <input type="date" [(ngModel)]="startDate" name="startDate" />
             <input type="date" [(ngModel)]="endDate" name="endDate" />
@@ -36,11 +36,12 @@
                         <th>Método</th>
                         <th>Detalle</th>
                         <th>Fecha</th>
-                        <th *ngIf="userRole === 'Administrador'">Opciones</th>
+                        @if (userRole === 'Administrador') {<th>Opciones</th>}
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let donation of donations">
+                    @for (donation of donations; track donation.id_donacion) {
+                    <tr>
                         <td>{{ donation.id_donacion }}</td>
                         <td>{{ donation.donante.nombres }}</td>
                         <td>{{ donation.donante.numero_identificacion }}</td>
@@ -49,16 +50,25 @@
                         <td>{{ donation.metodo_pago }}</td>
                         <td>{{ donation.detalle_donacion }}</td>
                         <td>{{ donation.fecha_donacion | date:'shortDate' }}</td>
-                        <td *ngIf="userRole === 'Administrador'">
+                        @if (userRole === 'Administrador') {
+                        <td>
                             <div class="action-buttons">
-                                <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(bene)"><fa-icon
-                                        [icon]="faPen"></fa-icon></button> -->
+                                <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(bene)">
+                    <fa-icon [icon]="faPen"></fa-icon>
+                </button> -->
                                 <!-- Botón Eliminar visible solo para Administrador -->
-                                <button class="btn-eliminar" (click)="deleteDonation(donation.id_donacion)"><fa-icon
-                                        [icon]="faTrash"></fa-icon></button>
+                                <button class="btn-eliminar" (click)="deleteDonation(donation.id_donacion)">
+                                    <fa-icon [icon]="faTrash"></fa-icon>
+                                </button>
                             </div>
                         </td>
+                        }
                     </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="9">No hay donaciones registradas</td>
+                    </tr>
+                    }
                 </tbody>
             </table>
         </div>

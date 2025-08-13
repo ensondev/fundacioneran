@@ -16,7 +16,7 @@ main {
 }
 
 .header-container {
-    padding: 10px 20px;
+    padding: 10px;
     gap: 10px;
     border-top: 3px solid #0d4b7a;
     border-bottom: 1px solid #e0e0e0;
@@ -208,6 +208,7 @@ main {
 
 .form-beneficiarie h2 {
     margin-bottom: 10px;
+    font-size: 18px;
 }
 
 /*GLOBALES*/

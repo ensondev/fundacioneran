@@ -14,8 +14,8 @@ export class SalesDetailsController {
     @Public()
     @Post('insert')
     @HttpCode(HttpStatus.CREATED)
-    @ApiOperation({ summary: 'insertar nuevo detalle de la venta' })
-    @ApiResponse({ status: 201, description: 'detalle de la venta registrada correctamente' })
+    @ApiOperation({ summary: 'Insertar nuevos detalles de venta' })
+    @ApiResponse({ status: 201, description: 'Detalles de venta registrados correctamente' })
     @ApiResponse({ status: 500, description: 'Error interno del servidor' })
     @ApiBody({ type: InsertDetailDto })
     async insertSalesDetail(@Body() dto: InsertDetailDto) {

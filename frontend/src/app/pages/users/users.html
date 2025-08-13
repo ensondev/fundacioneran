@@ -1,12 +1,19 @@
 <main>
-
-    <div class="warehouse-container">
+    <div class="container-filter">
+        <div class="search-container">
+            <input type="text" placeholder="Buscar usuario" [(ngModel)]="searchUser" name="searchUser">
+            <button class="btn-filter" (click)="searchByUser()"><fa-icon
+                    [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
+            <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+        </div>
+    </div>
+    <div class="users-container">
         <div class="header-container">
             <h2>Administrar Usuario</h2>
             <button class="btn-open-modal" (click)="abrirModal()">+ Usuario</button>
         </div>
         <div class="table-responsive">
-            <table class="warehouse-table">
+            <table class="users-table">
                 <thead>
                     <tr>
                         <th>N°</th>
@@ -14,26 +21,30 @@
                         <th>Rol</th>
                         <th>Activo</th>
                         <th>Fecha</th>
-                        <th *ngIf="userRole === 'Administrador'" >Opciones</th>
+                        <th *ngIf="userRole === 'Administrador'">Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let user of users">
+                    @for (user of users; track user.id_usuario) {
+                    <tr>
                         <td>{{ user.id_usuario }}</td>
                         <td>{{ user.nombre_usuario }}</td>
                         <td>{{ user.rol_usuario }}</td>
                         <td>{{ user.cuenta_activa }}</td>
-                        <td>{{ user.fecha_creacion }}</td>
-                        <td *ngIf="userRole === 'Administrador'">
+                        <td>{{ user.fecha_creacion | date:'shortDate'}}</td>
+                        @if (userRole === 'Administrador') {
+                        <td>
                             <div class="action-buttons">
                                 <button title="editar" class="btn-editar" (click)="abrirEditModal(user)"><fa-icon
                                         [icon]="faPen"></fa-icon></button>
                                 <!-- Botón Eliminar visible solo para Administrador -->
-                                <button class="btn-eliminar"
-                                    (click)="deleteUser(user.id_usuario)"><fa-icon [icon]="faTrash"></fa-icon></button>
+                                <button class="btn-eliminar" (click)="deleteUser(user.id_usuario)"><fa-icon
+                                        [icon]="faTrash"></fa-icon></button>
                             </div>
                         </td>
+                        }
                     </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -41,12 +52,12 @@
     <!-- Modal con nuevo control flow @if -->
     @if (mostrarModal) {
     <div class="overlay">
-        <div class="modal-container-warehouse">
+        <div class="modal-container-users">
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
-            <form class="form-warehouse" (ngSubmit)="submitUser()" [formGroup]="form">
+            <form class="form-users" (ngSubmit)="submitUser()" [formGroup]="form">
 
                 <h2>Registrar Usuario</h2>
 
@@ -56,7 +67,7 @@
                 </div>
 
                 <div class="form-group form-select">
-                    <label >Rol <span>*</span></label>
+                    <label>Rol <span>*</span></label>
                     <select id="user-role" name="role" formControlName="rol_usuario" class="input-select" required>
                         <option value="" disabled selected>Seleccione un rol</option>
                         <option value="Administrador">Administrador</option>
@@ -80,12 +91,12 @@
 
     @if (mostrarEditModal) {
     <div class="overlay">
-        <div class="modal-container-warehouse">
+        <div class="modal-container-users">
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
-            <form class="form-warehouse" (ngSubmit)="updateSubmit()" [formGroup]="formEdit">
+            <form class="form-users" (ngSubmit)="updateSubmit()" [formGroup]="formEdit">
 
                 <h2>Acrualizar Usuario</h2>
 

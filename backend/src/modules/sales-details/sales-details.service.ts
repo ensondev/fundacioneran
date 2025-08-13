@@ -4,14 +4,17 @@ import { InsertDetailDto } from './dto/insert-detail.dto';
 import { UpdateDetailDto } from './dto/update-detail.dto';
 import { DeleteDetailDto } from './dto/delete-detail.dto';
 
+
+
 @Injectable()
 export class SalesDetailsService {
     constructor(private databaseService: DatabaseService) { };
 
     async insertSalesDetail(dto: InsertDetailDto) {
-        const { id_venta, producto_id, cantidad, precio_unitario } = dto;
-        const query = `INSERT INTO public.ventas_detalle (id_venta, producto_id, cantidad, precio_unitario) VALUES ($1, $2, $3, $4);`;
-        const value = [id_venta, producto_id, cantidad, precio_unitario];
+        const { id_venta, id_inventario, cantidad, precio_unitario } = dto;
+        const query = `INSERT INTO public.ventas_detalle (id_venta, id_inventario, cantidad, precio_unitario) VALUES ($1, $2, $3, $4)
+        RETURNING id_venta, id_inventario, cantidad, precio_unitario;`;
+        const value = [id_venta, id_inventario, cantidad, precio_unitario];
         try {
             const result = await this.databaseService.query(query, value);
             const detail = result.rows[0];
@@ -29,15 +32,16 @@ export class SalesDetailsService {
         } catch (error) {
             return {
                 p_message: error.message,
+                p_status: false,
                 p_data: {}
             }
         }
     }
 
     async getSalesDetail(res) {
-        const query = `SELECT id_detalle, id_venta, producto_id, cantidad, precio_unitario, subtotal FROM public.ventas_detalle;`;
+        const query = `SELECT id_detalle, id_venta, id_inventario, cantidad, precio_unitario, subtotal FROM public.ventas_detalle;`;
         try {
-            const result = await this.databaseService.query(query,[]);
+            const result = await this.databaseService.query(query, []);
             res.status(200).json({
                 p_message: null,
                 p_status: true,
@@ -48,17 +52,18 @@ export class SalesDetailsService {
         } catch (error) {
             res.status(500).json({
                 p_message: error.message,
+                p_status: false,
                 p_data: {}
             });
         }
     }
 
     async updateSalesDetail(dto: UpdateDetailDto) {
-        const { id_venta, producto_id, cantidad, precio_unitario, id_detalle } = dto;
+        const { id_venta, id_inventario, cantidad, precio_unitario, id_detalle } = dto;
         const query = `UPDATE FROM public.ventas_detalle
-                    SET id_venta = $1, producto_id = $2, cantidad = $3, precio_unitario = $4
+                    SET id_venta = $1, id_inventario = $2, cantidad = $3, precio_unitario = $4
                     WHERE id_detalle = $5`;
-        const values = [id_venta, producto_id, cantidad, precio_unitario, id_detalle];
+        const values = [id_venta, id_inventario, cantidad, precio_unitario, id_detalle];
         try {
             const result = await this.databaseService.query(query, values);
             const detail = result.rows[0];

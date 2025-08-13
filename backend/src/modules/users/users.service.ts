@@ -32,6 +32,29 @@ export class UsersService {
         }
     }
 
+    async getUserName(req, res) {
+        const { nombre_usuario } = req.body;
+        const query = `SELECT id_usuario, nombre_usuario, rol_usuario, cuenta_activa, fecha_creacion
+                    FROM public.usuarios
+                    WHERE nombre_usuario = $1;`
+        const value = [nombre_usuario];
+        try {
+            const result = await this.databaseService.query(query, value);
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    users: result.rows,
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                p_message: error.message,
+                p_data: {}
+            });
+        }
+    }
+
     async updateUsers(dto: UpdateUsersDto) {
         const { nombre_usuario, password, id_usuario } = dto;
         console.log('DTO recibido:', dto); // 👈 Para debug

@@ -8,7 +8,7 @@ main {
     flex-direction: column;
 }
 
-.warehouse-container {
+.users-container {
     width: 100%;
     margin-top: 10px;
     background: white;
@@ -18,18 +18,18 @@ main {
 .header-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 10px;
+    gap: 10px;
     border-top: 3px solid #0d4b7a;
     border-bottom: 1px solid #e0e0e0;
 }
 
 .header-container h2 {
-    margin-bottom: 0;
+    margin-bottom: 10px;
     padding-bottom: 0;
     border-bottom: none;
     color: #0a375e;
-    font-size: 21px;
+    font-size: 19px;
 }
 
 .btn-open-modal {
@@ -50,36 +50,42 @@ main {
 /* Estilos para la tabla de beneficiarios */
 .table-responsive {
     overflow-x: auto;
-    padding: 10px;
-    height: calc(100vh - 250px);
+    padding: 0 10px 10px 10px;
+    height: calc(100vh - 310px);
 }
 
-.warehouse-table {
+.users-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
 }
 
-.warehouse-table th {
+.users-table th {
     background-color: #0a375e;
     color: white;
     font-weight: 500;
     padding: 7px 15px;
-    /*   text-align: left; */
 }
 
-.warehouse-table td {
+.users-table td {
     padding: 7px 15px;
     border-bottom: 1px solid #e0e0e0;
     color: #333;
     text-align: center;
 }
 
-.warehouse-table tr:not(:last-child) td {
+.users-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #0a375e;
+    z-index: 2;
+}
+
+.users-table tr:not(:last-child) td {
     border-bottom: 1px solid #e0e0e0;
 }
 
-.warehouse-table tr:hover {
+.users-table tr:hover {
     background-color: #f8f9fa;
 }
 
@@ -89,7 +95,6 @@ main {
     justify-content: center;
     gap: 10px;
 }
-
 
 /* Botones de acción */
 .btn-editar,
@@ -128,7 +133,7 @@ main {
 
 
 /*FORMULARIO BODEGA*/
-.modal-container-warehouse{
+.modal-container-users {
     background-color: #fff;
     border-radius: 0;
     padding: 30px 20px;
@@ -139,15 +144,15 @@ main {
     animation: modalFadeIn 0.3s ease-out;
 }
 
-.form-warehouse h2{
+.form-users h2 {
     margin-bottom: 10px;
 }
 
-.form-warehouse .form-group{
+.form-users .form-group {
     margin-bottom: 15px;
 }
 
-.form-warehouse .button-container {
+.form-users .button-container {
     display: flex;
     justify-content: space-between;
     gap: 10px;
@@ -217,6 +222,20 @@ button[type="submit"]:disabled {
     background-color: #e0e0e0;
 }
 
+@media (min-width: 1024px) {
+    .table-responsive {
+        height: calc(100vh - 230px);
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+
+
+
 /* Animación opcional para el modal */
 @keyframes modalFadeIn {
     from {
@@ -227,66 +246,5 @@ button[type="submit"]:disabled {
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-
-
-
-
-
-
-/* Responsive */
-@media (max-width: 768px) {
-    .header-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .beneficiarios-table {
-        display: block;
-        width: 100%;
-    }
-
-    .beneficiarios-table thead {
-        display: none;
-    }
-
-    .beneficiarios-table tr {
-        display: block;
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        padding: 10px;
-    }
-
-    .beneficiarios-table td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 10px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .beneficiarios-table td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        margin-right: 15px;
-        color: #0a375e;
-        width: 120px;
-    }
-
-    .beneficiarios-table td:last-child {
-        justify-content: flex-end;
-    }
-
-    .btn-editar,
-    .btn-eliminar {
-        margin: 4px;
-    }
-
-    .btn-open-modal {
-        align-self: flex-end;
     }
 }
