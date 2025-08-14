@@ -11,7 +11,9 @@
   <div class="donors-container">
     <div class="header-container">
       <h2>Lista de Donadores</h2>
-      <!-- <button class="btn-open-modal" (click)="abrirModal()">+ Donador</button> -->
+      <div class="acciones-box">
+        <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon [icon]="faFileCsv"></fa-icon></button>
+      </div>
     </div>
     <div class="table-responsive">
       <table class="donors-table">

@@ -17,6 +17,8 @@ main {
 
 /* Estilos para el contenedor del encabezado */
 .header-container {
+    display: flex;
+    justify-content: space-between;
     padding: 10px;
     border-top: 3px solid #0d4b7a;
     border-bottom: 1px solid #e0e0e0;
@@ -28,6 +30,21 @@ main {
     border-bottom: none;
     color: #0a375e;
     font-size: 19px;
+}
+
+.acciones-box {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-open-modal {
+    background-color: #0a375e;
+    color: white;
+    padding: 7px 20px;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 15px;
 }
 
 /* Estilos para la tabla de donadores */

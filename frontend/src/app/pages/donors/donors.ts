@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,10 +11,12 @@ import {
   faXmark,
   faBell,
   faCircleExclamation,
+  faFileCsv
 } from '@fortawesome/free-solid-svg-icons';
 import { DonorsService } from '../../services/donors.service';
 import { AuthStateService } from '../../shared/service/auth-state.service';
 import { NotificationService } from '../../services/notification.service';
+
 
 @Component({
   selector: 'app-donors',
@@ -28,6 +32,7 @@ export default class Donors implements OnInit {
   faXmark = faXmark;
   faBell = faBell;
   faCircleExclamation = faCircleExclamation;
+  faFileCsv = faFileCsv;
 
   private _formBuilder = inject(FormBuilder);
   private donorService = inject(DonorsService);
@@ -153,6 +158,43 @@ export default class Donors implements OnInit {
     });
   }
 
+  generarReporteExcel() {
+    const data = this.donors.map(d => ({
+      'ID': d.id_donante,
+      'Nombre': d.nombres,
+      'Cédula': d.numero_identificacion,
+      'Teléfono': d.telefono,
+      'Fecha de Registro': new Date(d.fecha_registro).toLocaleDateString()
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+    // 👇 Definir ancho para cada columna (en caracteres)
+    worksheet['!cols'] = [
+      { wch: 5 },   // ID
+      { wch: 35 },  // Nombre
+      { wch: 15 },  // Cédula
+      { wch: 15 },  // Teléfono
+      { wch: 20 }   // Fecha de Registro
+    ];
+
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Donadores': worksheet },
+      SheetNames: ['Donadores']
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array'
+    });
+
+    const blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    FileSaver.saveAs(blob, 'Reporte_Donadores.xlsx');
+  }
+
   abrirEditModal(donor: any) {
     this.selectedDonor = donor;
     this.editForm.patchValue({
@@ -168,7 +210,7 @@ export default class Donors implements OnInit {
 
   clearSearch() {
     this.searchCedula = '';
-    this.loadDonors(); // vuelve a cargar la lista completa
+    this.loadDonors();
     this.errorMessage = null;
   }
 

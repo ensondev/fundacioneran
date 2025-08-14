@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CashManagementService } from '../../services/cash-management.service';
@@ -8,7 +10,8 @@ import {
   faMagnifyingGlass,
   faXmark,
   faTicket,
-  faRupiahSign
+  faRupiahSign,
+  faFileCsv,
 } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -26,6 +29,7 @@ export default class CashManagement implements OnInit {
   faMagnifyingGlass = faMagnifyingGlass;
   faXmark = faXmark;
   faTicket = faTicket;
+  faFileCsv = faFileCsv;
 
   private formBuilder = inject(FormBuilder);
   private cashService = inject(CashManagementService);
@@ -158,6 +162,43 @@ export default class CashManagement implements OnInit {
     } else {
       this.transactions = filtered;
     }
+  }
+
+  generarReporteExcel() {
+    const data = this.transactions.map(t => ({
+      'N°': t.id_transaccion,
+      'Tipo': t.tipo_transaccion,
+      'Monto': t.monto,
+      'Fecha': new Date(t.fecha_transaccion).toLocaleDateString() ,
+      'Razon': t.razon
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+    //Definir ancho para cada columna (en caracteres)
+    worksheet['!cols'] = [
+      { wch: 5 },   // ID
+      { wch: 15 },  // tipo
+      { wch: 15 },  // monto
+      { wch: 15 },  // Fecha
+      { wch: 35 },  // Razon
+    ];
+
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Transacciones': worksheet },
+      SheetNames: ['Transacciones']
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array'
+    });
+
+    const blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    FileSaver.saveAs(blob, 'Reporte_Transacciones.xlsx');
   }
 
 

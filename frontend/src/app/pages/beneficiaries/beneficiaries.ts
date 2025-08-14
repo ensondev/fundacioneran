@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,7 +8,8 @@ import {
   faTrash,
   faPen,
   faMagnifyingGlass,
-  faXmark
+  faXmark,
+  faFileCsv
 } from '@fortawesome/free-solid-svg-icons';
 import { BeneficiariesService } from '../../services/beneficiaries.service';
 import { AuthStateService } from '../../shared/service/auth-state.service';
@@ -24,6 +27,7 @@ export default class Beneficiaries implements OnInit {
   faPen = faPen;
   faMagnifyingGlass = faMagnifyingGlass;
   faXmark = faXmark;
+  faFileCsv = faFileCsv;
 
   private _formBuilder = inject(FormBuilder);
   private beneficiarieService = inject(BeneficiariesService);
@@ -146,6 +150,45 @@ export default class Beneficiaries implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  generarReporteExcel() {
+    const data = this.beneficiaries.map(b => ({
+      'ID': b.id_beneficiario,
+      'Nombre': b.nombres_beneficiario,
+      'Cédula': b.cedula_beneficiario,
+      'Dirección': b.direccion_beneficiario,
+      'Teléfono': b.telefono_beneficiario,
+      'Fecha de Registro': new Date(b.fecha_registro).toLocaleDateString()
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+    //Definir ancho para cada columna (en caracteres)
+    worksheet['!cols'] = [
+      { wch: 5 },   // ID
+      { wch: 35 },  // Nombre
+      { wch: 15 },  // Cédula
+      { wch: 35 },  // Teléfono
+      { wch: 15 },  // Teléfono
+      { wch: 20 }   // Fecha de Registro
+    ];
+
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Beneficiarios': worksheet },
+      SheetNames: ['Beneficiarios']
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array'
+    });
+
+    const blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    FileSaver.saveAs(blob, 'Reporte_Beneficiarios.xlsx');
   }
 
   abrirEditModal(bene: any) {

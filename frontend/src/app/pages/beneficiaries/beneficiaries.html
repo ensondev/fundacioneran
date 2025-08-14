@@ -11,7 +11,9 @@
     <div class="beneficiaries-container">
         <div class="header-container">
             <h2>Lista de Beneficiarios</h2>
-            <!-- <button class="btn-open-modal" (click)="abrirModal()">+ Donador</button> -->
+            <div class="acciones-box">
+                <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon [icon]="faFileCsv"></fa-icon></button>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="beneficiaries-table">
@@ -39,8 +41,7 @@
                                 <button title="editar" class="btn-editar" (click)="abrirEditModal(bene)"><fa-icon
                                         [icon]="faPen"></fa-icon></button>
                                 <!-- Botón Eliminar visible solo para Administrador -->
-                                <button  class="btn-eliminar"
-                                    (click)="deleteBeneficiarie(bene.id_beneficiario)"><fa-icon
+                                <button class="btn-eliminar" (click)="deleteBeneficiarie(bene.id_beneficiario)"><fa-icon
                                         [icon]="faTrash"></fa-icon></button>
                             </div>
                         </td>
