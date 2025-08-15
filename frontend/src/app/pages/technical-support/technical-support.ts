@@ -1,11 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-technical-support',
-  imports: [],
+  imports: [CommonModule, RouterModule],
   templateUrl: './technical-support.html',
   styleUrl: './technical-support.css'
 })
-export class TechnicalSupport {
+export default class TechnicalSupport {
 
 }

@@ -201,15 +201,13 @@ export default class Deliveries implements OnInit {
 
     const filtered = this.allDeliveries.filter(d => {
       const matchesCedula = cedula ? d.cedula_beneficiario.toLowerCase().includes(cedula) : true;
-
+      const deliverieDate = new Date(d.entrega.fecha_entrega);
       let matchesDate = true;
 
       if (start && !this.endDate) {
-        const entregaDate = new Date(d.entrega.fecha_entrega);
-        matchesDate = entregaDate >= start && entregaDate <= end;
+        matchesDate = deliverieDate >= start && deliverieDate <= end;
       } else if (start && this.endDate) {
-        const entregaDate = new Date(d.entrega.fecha_entrega);
-        matchesDate = entregaDate >= start && entregaDate <= end;
+        matchesDate = deliverieDate >= start && deliverieDate <= end;
       }
 
       return matchesCedula && matchesDate;

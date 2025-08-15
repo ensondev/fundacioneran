@@ -18,5 +18,9 @@ export class App {
     return this.router.url === '/auth/log-in';
   }
 
+  get isResetPassword(){
+    return this.router.url === '/technical-support';
+  }
+
   constructor(private router: Router) { }
 }

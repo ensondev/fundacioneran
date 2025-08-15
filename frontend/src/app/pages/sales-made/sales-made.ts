@@ -75,8 +75,8 @@ export default class SalesMade implements OnInit {
     this.isLoading = true;
     this.saleMadeService.getSalesMade().subscribe({
       next: (response) => {
-        this.salesMade = response;
         this.allSalesMade = response;
+        this.salesMade = response;
         this.isLoading = false;
       },
       error: (error) => {
@@ -161,9 +161,7 @@ export default class SalesMade implements OnInit {
     const end = this.endDate ? new Date(this.endDate) : new Date();
 
     const filtered = this.allSalesMade.filter(sales => {
-      const matchesCedula = cedula
-        ? sales.cedula_cliente?.toLowerCase().includes(cedula) ?? false
-        : true;
+      const matchesCedula = cedula ? sales.cedula_cliente.toLowerCase().includes(cedula) : true;
 
       const saleDate = new Date(sales.fecha_venta);
       let matchesDate = true;
@@ -183,7 +181,6 @@ export default class SalesMade implements OnInit {
       this.salesMade = filtered;
     }
   }
-
 
   setProductPrice() {
     const id_inventario = this.form.controls['id_inventario'].value;

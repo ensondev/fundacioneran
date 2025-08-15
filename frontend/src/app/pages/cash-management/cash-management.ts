@@ -143,18 +143,20 @@ export default class CashManagement implements OnInit {
 
   searchTransaction() {
     const tipo = this.searchTransactions?.trim().toLowerCase();
-    const fechaInicio = this.startDate ? new Date(this.startDate) : null;
-    const fechaFin = this.endDate ? new Date(this.endDate) : new Date(); // Si no hay endDate, usa fecha actual
+    const start = this.startDate ? new Date(this.startDate) : null;
+    const end = this.endDate ? new Date(this.endDate) : new Date(); // Si no hay endDate, usa fecha actual
 
     const filtered = this.allTransaction.filter(trans => {
-      const transFecha = new Date(trans.fecha_transaccion);
-      const transTipo = trans.tipo_transaccion?.toLowerCase();
+      const transTipo = tipo ? trans.tipo_transaccion?.toLowerCase().includes() : true;
+      const transactionDate = new Date(trans.fecha_transaccion);
+      let matchesDate = true;
+      if (start && !this.endDate) {
+        matchesDate = transactionDate >= start && transactionDate <= end;
+      } else if (start && this.endDate) {
+        matchesDate = transactionDate >= start && transactionDate <= end;
+      }
 
-      const cumpleTipo = !tipo || transTipo === tipo;
-      const cumpleFechaInicio = !fechaInicio || transFecha >= fechaInicio;
-      const cumpleFechaFin = !fechaFin || transFecha <= fechaFin;
-
-      return cumpleTipo && cumpleFechaInicio && cumpleFechaFin;
+      return transTipo && matchesDate;
     });
 
     if (filtered.length === 0) {
@@ -169,7 +171,7 @@ export default class CashManagement implements OnInit {
       'N°': t.id_transaccion,
       'Tipo': t.tipo_transaccion,
       'Monto': t.monto,
-      'Fecha': new Date(t.fecha_transaccion).toLocaleDateString() ,
+      'Fecha': new Date(t.fecha_transaccion).toLocaleDateString(),
       'Razon': t.razon
     }));
 

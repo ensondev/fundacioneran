@@ -59,6 +59,20 @@ form .form-group{
 .error-message{
     color: red;
     margin-bottom: 10px;
+    background-color: rgb(221, 164, 164);
+    padding: 10px 20px;
+    border: 1px solid rgb(243, 80, 80);
+}
+
+.container-password-reset{
+    margin-bottom: 10px;
+    display: flex;
+    gap: 5px;
+}
+
+.container-password-reset a{
+    text-decoration: none;
+    color: #013250;
 }
 
 .submit-button{

@@ -292,7 +292,6 @@ export default class Donations implements OnInit {
       let matchesDate = true;
 
       if (start && !this.endDate) {
-
         matchesDate = donationDate >= start && donationDate <= end;
       } else if (start && this.endDate) {
         matchesDate = donationDate >= start && donationDate <= end;

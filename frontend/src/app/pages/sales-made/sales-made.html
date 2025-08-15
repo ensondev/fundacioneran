@@ -72,12 +72,12 @@
                     <h2>Registrar venta</h2>
 
                     <div class="container-info-sale">
-                        <div class="form-group">
+                        <div class="form-group form-group-client">
                             <label>Cliente</label>
                             <input type="text" formControlName="nombre_cliente" placeholder="Nombres del cliente"
                                 required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group form-group-client">
                             <label>Cédula</label>
                             <input type="text" formControlName="cedula_cliente" placeholder="Cédula del cliente"
                                 required>
@@ -126,7 +126,7 @@
                     </div>
 
                     <!-- Tabla de productos agregados -->
-                    <div class="table-responsive-sales" *ngIf="productosAgregados.length > 0">
+                    <div class="table-responsive-sales" *ngIf="productosAgregados.length >= 0">
                         <table class="sales-table">
                             <thead>
                                 <tr>
@@ -135,7 +135,7 @@
                                     <th>Cantidad</th>
                                     <th>Precio</th>
                                     <th>Subtotal</th>
-                                    <th>Eliminar</th>
+                                    <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>

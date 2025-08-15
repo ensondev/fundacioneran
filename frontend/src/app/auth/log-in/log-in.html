@@ -6,6 +6,9 @@
 
         <div class="container-form">
             <form [formGroup]="form" (ngSubmit)="submit()">
+                <div *ngIf="errorMessage" class="error-message">
+                    {{ errorMessage }}
+                </div>
                 <div class="container-title">
                     <h2 class="form-title">Iniciar Sesión</h2>
                 </div>
@@ -21,8 +24,9 @@
                         placeholder="••••••••" class="input-text" required
                         title="Mínimo 8 caracteres con mayúsculas, minúsculas y números">
                 </div>
-                <div *ngIf="errorMessage" class="error-message">
-                    {{ errorMessage }}
+                <div class="container-password-reset">
+                    <p>¿Has olvidado la contraseña?</p>
+                    <a routerLink="/technical-support" >recuperar contraseña</a>
                 </div>
                 <button type="submit" class="submit-button">
                     <span class="button-text">Iniciar sesión</span>

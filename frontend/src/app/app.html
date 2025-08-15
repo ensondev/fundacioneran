@@ -1,6 +1,12 @@
-<app-header *ngIf="!isLoginPage"></app-header>
+@if (!isLoginPage && !isResetPassword) {
+<app-header></app-header>
+}
 <main>
     <router-outlet></router-outlet>
 </main>
-<app-notification-card *ngIf="!isLoginPage"></app-notification-card>
-<app-footer *ngIf="!isLoginPage"></app-footer>
+@if (!isLoginPage) {
+<app-notification-card></app-notification-card>
+}
+@if (!isLoginPage && !isResetPassword) {
+<app-footer></app-footer>
+}
