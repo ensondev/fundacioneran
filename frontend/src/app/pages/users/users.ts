@@ -203,8 +203,6 @@ export default class Users implements OnInit {
     });
   }
 
-
-
   clearSearch() {
     this.searchUser = '';
     this.users = this.allUsers;

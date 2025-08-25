@@ -13,9 +13,15 @@ import { ProductsModule } from './products/products.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { TransactionsService } from './transactions/transactions.service';
+import { CoursesModule } from './courses/courses.module';
+import { RegistrationsModule } from './registrations/registrations.module';
+import { ParticipantsModule } from './participants/participants.module';
+import { InstructorsModule } from './instructors/instructors.module';
+import { SubjectModule } from './subject/subject.module';
+import { InfantsModule } from './infants/infants.module';
 
 @Module({
-  imports: [DonorModule, UsersModule, DonationsModule, BeneficiariesModule, CategoriesModule, DeliveriesModule, TransactionsModule, InventoryModule, ProductsModule, WarehouseModule, SalesHeaderModule, SalesDetailsModule],
+  imports: [DonorModule, UsersModule, DonationsModule, BeneficiariesModule, CategoriesModule, DeliveriesModule, TransactionsModule, InventoryModule, ProductsModule, WarehouseModule, SalesHeaderModule, SalesDetailsModule, CoursesModule, RegistrationsModule, ParticipantsModule, InstructorsModule, SubjectModule, InfantsModule],
   controllers: [],
   providers: []
 })

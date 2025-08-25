@@ -1,34 +1,40 @@
-//HECHO
-import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsInt, IsNumber, IsString, Matches } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Matches } from "class-validator";
 
 export class UpdateDonationDto {
-    @ApiProperty({ description: 'Actualizar ID del donador', example: '40', })
+    @ApiProperty({ description: 'ID de la donación a actualizar', example: 10 })
+    @IsInt()
+    id_donacion: number;
+
+    @ApiProperty({ description: 'Actualizar ID del donador', example: 40 })
     @IsInt()
     id_donante: number;
 
-    @ApiProperty({ description: 'Actualizar tipo de donacion', examples: ['Monetaria', 'Producto'] })
+    @ApiProperty({ description: 'Actualizar tipo de donación', examples: ['Monetaria', 'Producto'] })
     @IsString()
-    @Matches(/^[a-zA-Z]+$/, { message: 'Tipo de donacion solo puede contener letras' })
+    @Matches(/^[a-zA-Z]+$/, { message: 'Tipo de donación solo puede contener letras' })
     tipo_donacion: string;
 
-    @ApiProperty({ description: 'Actualizar valor estimado', example: '500 o 50.50', })
+    @ApiPropertyOptional({ description: 'Actualizar valor estimado', example: 500 })
+    @IsOptional()
     @IsNumber()
-    valor_estimado: number;
+    valor_estimado?: number;
 
-    @ApiProperty({ description: 'Actualizar método de pago', examples: ['Efectivo', 'Transferencia'] })
+    @ApiPropertyOptional({ description: 'Actualizar método de pago', examples: ['Efectivo', 'Transferencia'] })
+    @IsOptional()
     @IsString()
-    metodo_pago: string;
+    metodo_pago?: string;
 
-    @ApiProperty({ description: 'Actualizar detalle del producto', example: 'color, marca' })
+    @ApiProperty({ description: 'Actualizar detalle del producto', example: 'Color, marca' })
+    @IsOptional()
     @IsString()
-    detalle_donacion: string;
+    detalle_donacion?: string;
 
-    @ApiProperty({ description: 'Actualizar imagen de la donación' })
+    @ApiProperty({ description: 'Actualizar imagen de la donación', example: 'https://example.com/image.jpg' })
     @IsString()
     url_image: string;
 
-    @ApiProperty({ description: 'ID de la donación a actualizar', example: '10' })
-    @IsInt()
-    id_donacion: number;
+    @IsOptional()
+    @ApiPropertyOptional({ description: 'Disponible para entregar', default: true })
+    disponible?: boolean;
 }

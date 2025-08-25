@@ -135,26 +135,47 @@ main {
     z-index: 1050;
 }
 
+/* =================================================== */
 /*FORMULARIO ENTREGAS*/
 .modal-container-deliverie {
     background-color: #fff;
     border-radius: 0;
-    padding: 30px 20px;
-    height: auto;
     width: 100%;
     max-width: 350px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     animation: modalFadeIn 0.3s ease-out;
-    margin: 0 20px;
+    margin: 0 10px;
 }
 
-.search-donor label {
+.modal-container-deliverie .container-header-form {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.modal-container-deliverie .container-header-form .form-logo {
+    width: 64px;
+}
+
+.modal-container-deliverie .container-header-form h2 {
+    color: #0a375e;
+    font-size: 19px;
+}
+
+.modal-container-deliverie .form-deliverie {
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-container-deliverie .form-deliverie label {
     font-weight: bold;
-    margin-bottom: 2px;
+    font-size: 15px;
 }
 
-.search-donor label span {
-    color: red;
+.modal-container-deliverie .form-deliverie .form-group {
+    margin-bottom: 20px;
 }
 
 .form-deliverie .input-search-donor {
@@ -171,7 +192,7 @@ main {
 
 .form-deliverie .input-search-donor .container-search input {
     width: 250px;
-    padding: 5px 20px;
+    padding: 10px 20px;
     border: 1px solid #e0e0e0;
 }
 
@@ -182,62 +203,100 @@ main {
     color: #fff;
 }
 
-.form-deliverie .container-info-donor {
-    padding: 15px;
-    padding-bottom: 0;
-    border: 1px solid #e0e0e0;
-    margin-bottom: 20px;
+.form-deliverie .button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
 }
 
-.form-group label {
-    font-weight: bold;
+.form-group label span {
+    color: #d32f2f;
 }
 
+/* =================================================== */
+
+.search-donor label span {
+    color: red;
+}
+
+
+
+
+
+
+
+
+/* =================================================== */
 /*FORMULARIO BENEFICIARIO*/
 .modal-container-beneficiarie {
     background-color: #fff;
     border-radius: 0;
-    padding: 30px 20px;
-    height: auto;
     width: 100%;
     max-width: 350px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     animation: modalFadeIn 0.3s ease-out;
-    margin: 0 20px;
+    margin: 0 10px;
 }
 
-.form-beneficiarie h2 {
-    margin-bottom: 10px;
-    font-size: 18px;
+.modal-container-beneficiarie .container-header-form {
+    display: flex;
+    align-items: center;
+    padding: 10px;
 }
 
-/*GLOBALES*/
-.container-header-modal {
-    background-color: #B5FAFF;
-    border: 1px solid #3CD0E0;
+.modal-container-beneficiarie .container-header-form .form-logo {
+    width: 64px;
+}
+
+.modal-container-beneficiarie .container-header-form h2 {
+    color: #0a375e;
+    font-size: 19px;
+}
+
+.modal-container-beneficiarie .form-beneficiarie {
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-container-beneficiarie .form-beneficiarie label {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.modal-container-beneficiarie .form-beneficiarie .form-group {
     margin-bottom: 20px;
 }
 
+.form-edit-donor .button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* =================================================== */
+
+
+/*GLOBALES*/
 .container-header-modal .required-text {
     color: #000;
     font-size: 15px;
-    margin: 10px 10px;
+    padding: 0 20px;
+    margin-bottom: 20px;
 }
 
 .required-text span {
     color: red;
 }
 
-.form-group input,
-.form-group select {
+.form-group select,
+.form-group input {
     width: 100%;
-    padding: 5px 10px;
-    margin-bottom: 20px;
+    padding: 10px 10px;
+    margin-bottom: 10px;
+    background-color: #ececec;
     border: 1px solid #e0e0e0;
-}
-
-.form-group label span {
-    color: #d32f2f;
 }
 
 .button-container {

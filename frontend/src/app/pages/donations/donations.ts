@@ -39,6 +39,7 @@ export default class Donations implements OnInit {
   private notification = inject(NotificationService);
 
   userRole: string = '';
+  selectedDonation: any = null;
   searchType = '';
   isLoading = false;
 
@@ -52,6 +53,7 @@ export default class Donations implements OnInit {
 
   mostrarModal = false;
   mostrarModalDonor = false;
+  mostrarEditModal = false;
   donorExists = false;
 
   allDonations: any[] = [];
@@ -124,6 +126,7 @@ export default class Donations implements OnInit {
 
     this.donationsService.getDonationsWithDonors().subscribe({
       next: (data) => {
+        console.log(data)
         this.allDonations = data;
         this.donations = data;
         this.isLoading = false;
@@ -210,6 +213,52 @@ export default class Donations implements OnInit {
       this.isLoading = false;
     }
 
+  }
+
+  editDonations() {
+    if (this.form.invalid || !this.selectedDonation) return;
+
+    const tipo_donacion = this.form.value.tipo_donacion!;
+    const isMonetaria = tipo_donacion === 'Monetaria';
+
+    if (isMonetaria && (!this.form.value.valor_estimado || this.form.value.valor_estimado <= 0)) {
+      this.notification.showError('Debe ingresar un monto válido');
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    const id_donacion = this.selectedDonation.id_donacion;
+    const donorId = this.selectedDonation.donante.id_donante;
+
+    const payload = {
+      id_donacion,
+      id_donante: donorId,
+      tipo_donacion,
+      valor_estimado: isMonetaria ? this.form.value.valor_estimado ?? 0 : 0,
+      metodo_pago: isMonetaria ? this.form.value.metodo_pago ?? '' : null,
+      detalle_donacion: isMonetaria ? '' : this.form.value.detalle_donacion ?? '',
+      url_image: this.form.value.url_image ?? '',
+    };
+
+    console.log('Payload: ',payload)
+
+    this.donationsService.updateDonation(payload).subscribe({
+      next: (res) => {
+        console.log('Respuesta del backend:', res); // <--- ¿ESTO SE EJECUTA?
+        this.notification.showSuccess('Donación actualizada correctamente');
+        this.loadDonations();
+        this.cerrarEditModal();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.notification.showError('Error al actualizar la donación');
+        console.error('Error al actualizar la donación:', error);
+        this.isLoading = false;
+      }
+    });
   }
 
   deleteDonation(id_donacion: number) {
@@ -337,6 +386,25 @@ export default class Donations implements OnInit {
 
   cerrarModalDonor() {
     this.mostrarModalDonor = false;
+  }
+
+  abrirEditModal(donation: any) {
+    this.selectedDonation = donation;
+    this.form.patchValue({
+      nombres: donation.donante.nombres,
+      numero_identificacion: donation.donante.numero_identificacion,
+      telefono: donation.donante.telefono,
+      tipo_donacion: donation.tipo_donacion,
+      valor_estimado: donation.valor_estimado,
+      metodo_pago: donation.metodo_pago,
+      detalle_donacion: donation.detalle_donacion
+    });
+    this.mostrarEditModal = true;
+  }
+
+  cerrarEditModal() {
+    this.mostrarEditModal = false;
+    this.selectedDonation = null;
   }
 
   get showMonetaryFields(): boolean {

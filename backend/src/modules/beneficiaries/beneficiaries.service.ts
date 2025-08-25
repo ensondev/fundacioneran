@@ -34,6 +34,7 @@ export class BeneficiariesService {
         } catch (error) {
             return {
                 p_message: error.message,
+                p_status: false,
                 p_data: {}
             }
         }

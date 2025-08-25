@@ -3,7 +3,10 @@ import { Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
+  faIdCard,
+  faBook,
   faHeart,
+  faChalkboardUser,
   faHeartCirclePlus,
   faUserPlus,
   faBoxArchive,
@@ -22,7 +25,8 @@ import {
   faUsers,
   faTerminal,
   faPrint,
-  faBoxesStacked
+  faBoxesStacked,
+  faB
 } from '@fortawesome/free-solid-svg-icons';
 import { AuthStateService } from '../../shared/service/auth-state.service';
 import { sequenceEqual } from 'rxjs';
@@ -39,6 +43,7 @@ import { sequenceEqual } from 'rxjs';
 })
 export class Header{
   // Iconos
+  faIdCard = faIdCard;
   faHeart = faHeart;
   faHeartCirclePlus = faHeartCirclePlus;
   faUserPlus = faUserPlus;
@@ -59,7 +64,8 @@ export class Header{
   faUsers = faUsers;
   faBoxesStacked = faBoxesStacked;
   faPrint = faPrint;
-
+  faBook = faBook;
+  faChalkboardUser = faChalkboardUser;
 
   usuario: string = '';
   rol: string = '';
@@ -86,6 +92,7 @@ export class Header{
   isDonacionesOpen = false;
   isBeneficiariesOpen = false;
   isInventarioOpen = false;
+  isCoursesOpen = false;
   isMenuOpen = signal(false);
 
   toggleSubmenu(menu: string) {
@@ -95,6 +102,8 @@ export class Header{
       this.isInventarioOpen = !this.isInventarioOpen;
     } else if (menu === 'beneficiarios') {
       this.isBeneficiariesOpen = !this.isBeneficiariesOpen;
+    } else if (menu === 'cursos'){
+      this.isCoursesOpen = !this.isCoursesOpen;
     }
   }
 

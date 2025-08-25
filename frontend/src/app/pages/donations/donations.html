@@ -2,9 +2,9 @@
     <div class="container-filter">
         <div class="search-container">
             <input type="text" placeholder="Buscar donación por cédula" [(ngModel)]="searchCedula"
-                name="searchCedula" />
+                name="searchCedula" maxlength="10" />
 
-            <input type="date" [(ngModel)]="startDate" name="startDate" />
+            <input type="date" [(ngModel)]="startDate" name="startDate"/>
             <input type="date" [(ngModel)]="endDate" name="endDate" />
 
             <button class="btn-filter" (click)="searchDonationsByCedula()">
@@ -18,7 +18,7 @@
     </div>
     <div class="donations-container">
         <div class="header-container">
-            <h2>Registrar donacion</h2>
+            <h2>Registrar donación</h2>
             <div class="container-button-register acciones-box">
                 <button class="btn-open-modal" (click)="abrirModalDonor()">+ Donador</button>
                 <button class="btn-open-modal" (click)="abrirModal()">+ Donación</button>
@@ -28,13 +28,14 @@
             <table class="donations-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <!-- <th>ID</th> -->
                         <th>Donador</th>
                         <th>Cédula</th>
                         <th>Tipo</th>
                         <th>Valor</th>
                         <th>Método</th>
                         <th>Detalle</th>
+                        <th>Disponible</th>
                         <th>Fecha</th>
                         @if (userRole === 'Administrador') {<th>Opciones</th>}
                     </tr>
@@ -42,21 +43,45 @@
                 <tbody>
                     @for (donation of donations; track donation.id_donacion) {
                     <tr>
-                        <td>{{ donation.id_donacion }}</td>
+                        <!-- <td>{{ donation.id_donacion }}</td> -->
                         <td>{{ donation.donante.nombres }}</td>
                         <td>{{ donation.donante.numero_identificacion }}</td>
                         <td>{{ donation.tipo_donacion }}</td>
+
+                        @if(donation.tipo_donacion === "Producto"){
+                        <td style="color: gray;">N/A</td>
+                        }@else {
                         <td>{{ donation.valor_estimado }}</td>
+                        }
+
+                        @if(donation.tipo_donacion === "Producto"){
+                        <td style="color: gray;">--</td>
+                        }@else {
                         <td>{{ donation.metodo_pago }}</td>
+                        }
+
+                        @if(donation.tipo_donacion === "Monetaria"){
+                        <td style="color: gray;">--</td>
+                        }@else {
                         <td>{{ donation.detalle_donacion }}</td>
-                        <td>{{ donation.fecha_donacion | date:'shortDate' }}</td>
+                        }
+
+                        @if (donation.disponible && donation.tipo_donacion === "Monetaria") {
+                        <td style=" color: gray;">no entregable</td>
+                        }@else if (donation.disponible) {
+                        <td style=" color: green;">disponible</td>
+                        }@else {
+                        <td style=" color: red;">entregado</td>
+                        }
+
+                        <td>{{ donation.fecha_donacion | date:'dd/MM/yyyy' }}</td>
+
                         @if (userRole === 'Administrador') {
                         <td>
                             <div class="action-buttons">
-                                <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(bene)">
-                    <fa-icon [icon]="faPen"></fa-icon>
-                </button> -->
-                                <!-- Botón Eliminar visible solo para Administrador -->
+                                <button title="editar" class="btn-editar" (click)="abrirEditModal(donation)">
+                                    <fa-icon [icon]="faPen"></fa-icon>
+                                </button>
                                 <button class="btn-eliminar" (click)="deleteDonation(donation.id_donacion)">
                                     <fa-icon [icon]="faTrash"></fa-icon>
                                 </button>
@@ -78,6 +103,10 @@
     @if (mostrarModal) {
     <div class="overlay">
         <div class="modal-container-donation">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Registrar donación</h2>
+            </div>
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
@@ -89,7 +118,7 @@
                     <div class="input-group input-search-donor">
                         <div class="container-search-donor">
                             <input type="text" [(ngModel)]="searchCedulaDonante" [ngModelOptions]="{ standalone: true }"
-                                name="searchCedula" placeholder="Cédula del donante" required>
+                                name="searchCedula" placeholder="documento de identidad" required maxlength="10">
 
                             <button type="button" (click)="checkDonor()" [disabled]="!searchCedulaDonante">
                                 <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
@@ -142,7 +171,8 @@
 
                         <div class="form-group form-monto" *ngIf="showMonetaryFields">
                             <label>Monto <span>*</span></label>
-                            <input type="number" formControlName="valor_estimado" step="0.01" required>
+                            <input type="number" formControlName="valor_estimado" step="0.01" required step="0.01"
+                                min="0">
                         </div>
 
                         <div class="form-group" *ngIf="showMonetaryFields">
@@ -165,7 +195,7 @@
                     </div>
                 </div>
                 <div class="button-container">
-                    <button type="submit" [disabled]="form.invalid">Registrar donación</button>
+                    <button type="submit" [disabled]="form.invalid">Registrar</button>
                     <button type="button" class="cancel-btn" (click)="cerrarModal()"
                         [disabled]="isLoading">Cancelar</button>
                 </div>
@@ -177,33 +207,113 @@
     @if (mostrarModalDonor) {
     <div class="overlay">
         <div class="modal-donor-container">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Registrar donador</h2>
+            </div>
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
             <form class="form-donor" [formGroup]="formDonor" (ngSubmit)="submitDonor()">
-                <h2>Registrar Donador</h2>
                 <div class="form-group">
-                    <label>Nombre <span>*</span></label>
-                    <input type="text" name="nombre" formControlName="nombres" required
-                        placeholder="Nombres completo del donante">
+                    <label>Nombres completo <span>*</span></label>
+                    <input type="text" name="nombre" formControlName="nombres" required placeholder="nombres completo">
                 </div>
 
                 <div class="form-group">
-                    <label>Cédula <span>*</span></label>
+                    <label>Documento de identidad <span>*</span></label>
                     <input type="text" name="cedula" formControlName="numero_identificacion" required
-                        placeholder="Cédula del donante">
+                        placeholder="documento de identidad" maxlength="10">
                 </div>
 
                 <div class="form-group">
-                    <label>Teléfono <span>*</span></label>
-                    <input type="text" name="telefono" formControlName="telefono" placeholder="Teléfono del donante"
-                        required>
+                    <label>Numero Telefónico <span>*</span></label>
+                    <input type="text" name="telefono" formControlName="telefono" placeholder="numero telefónico"
+                        required maxlength="10">
                 </div>
 
                 <div class="button-container">
                     <button type="submit" [disabled]="formDonor.invalid">Registrar donador</button>
                     <button type="button" class="cancel-btn" (click)="cerrarModalDonor()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+
+    @if (mostrarEditModal) {
+    <div class="overlay">
+        <div class="modal-container-donation">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Actualizar donación</h2>
+            </div>
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-donation" (ngSubmit)="editDonations()" [formGroup]="form">
+                <div class="container-info-donor">
+                    <div class="form-group">
+                        <label>Donador</label>
+                        <input type="text" formControlName="nombres" placeholder="Nombres del donante" readonly
+                            class="readonly-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cédula</label>
+                        <input type="text" formControlName="numero_identificacion" placeholder="Cédula del donante"
+                            readonly class="readonly-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" formControlName="telefono" placeholder="Teléfono del donante" readonly
+                            class="readonly-input" required>
+                    </div>
+                </div>
+                <!-- Sección Donación -->
+                <div class="container-info-donation">
+                    <div class="container-donation">
+                        <div class="form-group form-radio">
+                            <p>Tipo de Aporte <span>*</span></p>
+                            <div class="container-option">
+                                <label>
+                                    <input type="radio" formControlName="tipo_donacion" value="Monetaria">Monetaria
+                                </label>
+                                <label>
+                                    <input type="radio" formControlName="tipo_donacion" value="Producto">Producto
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-monto" *ngIf="showMonetaryFields">
+                            <label>Monto <span>*</span></label>
+                            <input type="number" formControlName="valor_estimado" step="0.01" min="0" required>
+                        </div>
+
+                        <div class="form-group" *ngIf="showMonetaryFields">
+                            <label>Método de pago <span>*</span></label>
+                            <select formControlName="metodo_pago" required>
+                                <option value="" disabled selected>Seleccione método</option>
+                                <option value="Efectivo">Efectivo</option>
+                                <option value="Transferencia">Transferencia</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" *ngIf="showProductFields">
+                            <label>Descripcion del producto <span>*</span></label>
+                            <input type="text" formControlName="detalle_donacion" placeholder="Nombre del producto"
+                                required>
+                        </div>
+                    </div>
+                    <div class="container-image">
+                        <input type="file" placeholder="imagen" formControlName="url_image">
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button type="submit" [disabled]="form.invalid">Actualizar</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarEditModal()"
+                        [disabled]="isLoading">Cancelar</button>
                 </div>
             </form>
         </div>

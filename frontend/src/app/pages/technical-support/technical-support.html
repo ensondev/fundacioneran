@@ -1,1 +1,37 @@
-<p>technical-support works!</p>
+<main class="support-form-container">
+
+  <div class="container-form-eran">
+    
+    <div class="container-title">
+      <h2>Soporte Técnico (Restablecer contraseña)</h2>
+    </div>
+
+    <div class="conteiner-form">
+      <form [formGroup]="supportForm" (ngSubmit)="enviarMensaje()">
+        <div class="form-group">
+          <label for="usuario">Usuario</label>
+          <input type="text" placeholder="Usuario de su cuenta" id="usuario" formControlName="nombre_usuario"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label for="gmail">Correo</label>
+          <input type="email" placeholder="Correo donde recibira la respuesta" id="gmail" formControlName="gmail" required>
+        </div>
+
+        <div class="form-group">
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" placeholder="ingresar mensaje" formControlName="mensaje" rows="5" required></textarea>
+        </div>
+
+        <button type="submit" [disabled]="supportForm.invalid || isSending">
+          Enviar Mensaje
+        </button>
+      </form>
+
+      <div class="container-img">
+        <img src="/image/logoFundacion.png" alt="" draggable="false">
+      </div>
+    </div>
+  </div>
+</main>

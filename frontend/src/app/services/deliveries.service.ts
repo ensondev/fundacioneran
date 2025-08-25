@@ -25,9 +25,38 @@ export class deliveriesService {
         );
     }
 
+    updateDeliverie(
+        beneficiario_id: number,
+        donacion_id: number,
+        id_entrega: number
+    ): Observable<any> {
+        return this._http.put(`${environment.API_URL}/deliveries/update`, {
+            beneficiario_id,
+            donacion_id,
+            id_entrega
+        });
+    }
+
     deleteDeliverie(id_entrega: number): Observable<any> {
         return this._http.request('delete', `${environment.API_URL}/deliveries/delete`, {
             body: { id_entrega }
         });
     }
+
+    getDeliverieById(id_entrega: number): Observable<any> {
+        return this._http.get(`${environment.API_URL}/deliveries/get-by-id/${id_entrega}`).pipe(
+            map((response: any) => {
+                if (response?.p_status) {
+                    return response.p_data.id_donacion;
+                } else {
+                    return null;
+                }
+            }),
+            catchError(error => {
+                console.error('Error en getDeliverieById', error);
+                return of(null);
+            })
+        );
+    }
+
 }

@@ -2,7 +2,7 @@
   <div class="container-filter">
     <div class="search-container">
       <input type="text" placeholder="Buscar donador por cédula" [(ngModel)]="searchCedula"
-        (keyup.enter)="searchByCedula()">
+        (keyup.enter)="searchByCedula()" maxlength="10">
       <button class="btn-filter" (click)="searchByCedula()"><fa-icon
           [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
       <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
@@ -12,14 +12,14 @@
     <div class="header-container">
       <h2>Lista de Donadores</h2>
       <div class="acciones-box">
-        <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon [icon]="faFileCsv"></fa-icon></button>
+        <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon
+            [icon]="faFileCsv"></fa-icon></button>
       </div>
     </div>
     <div class="table-responsive">
       <table class="donors-table">
         <thead>
           <tr>
-            <th>N°</th>
             <th>Donador</th>
             <th>Cédula</th>
             <th>Teléfono</th>
@@ -28,12 +28,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let donor of donors; let i = index">
-            <td>{{ donor.id_donante }}</td>
+          @for (donor of donors; track donor.id_donante) {
+          <tr>
             <td>{{ donor.nombres }}</td>
             <td>{{ donor.numero_identificacion }}</td>
             <td>{{ donor.telefono }}</td>
             <td>{{ donor.fecha_registro | date:'dd/MM/yyyy' }}</td>
+
             <td *ngIf="userRole === 'Administrador'">
               <div class="action-buttons">
                 <button title="editar" class="btn-editar" (click)="abrirEditModal(donor)"><fa-icon
@@ -44,6 +45,11 @@
               </div>
             </td>
           </tr>
+          }@empty {
+          <tr>
+            <td colspan="9">No hay donadores registrados</td>
+          </tr>
+          }
         </tbody>
       </table>
     </div>
@@ -53,12 +59,17 @@
   @if (mostrarEditModal) {
   <div class="overlay">
     <div class="modal-container">
+
+      <div class="container-header-form">
+        <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+        <h2>Editar donador</h2>
+      </div>
+
       <div class="container-header-modal">
         <p class="required-text">El campo con <span>*</span> es obligatorio</p>
       </div>
 
-      <form [formGroup]="editForm" (ngSubmit)="updateDonor()">
-        <h2>Editar Teléfono del Donador</h2>
+      <form class="form-edit-donor" [formGroup]="editForm" (ngSubmit)="updateDonor()">
         <div class="form-group">
           <label>Nombre</label>
           <input type="text" [value]="selectedDonor.nombres" readonly class="readonly-input">
@@ -76,11 +87,11 @@
 
         <div class="form-group">
           <label>Nuevo Teléfono <span>*</span></label>
-          <input type="text" formControlName="telefono" placeholder="Ingrese el nuevo teléfono" required>
+          <input type="text" formControlName="telefono" placeholder="Ingrese el nuevo teléfono" maxlength="10" required>
         </div>
 
         <div class="button-container">
-          <button type="submit" [disabled]="editForm.invalid">Actualizar teléfono</button>
+          <button type="submit" [disabled]="editForm.invalid">Actualizar</button>
           <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
         </div>
       </form>

@@ -1,0 +1,159 @@
+<main>
+    <!-- <div class="container-filter">
+    <div class="search-container">
+      <input type="text" placeholder="Buscar donador por cédula" [(ngModel)]="searchCedula"
+        (keyup.enter)="searchByCedula()">
+      <button class="btn-filter" (click)="searchByCedula()"><fa-icon
+          [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
+      <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+    </div>
+  </div> -->
+    <div class="instructors-container">
+        <div class="header-container">
+            <h2>Lista de instructores</h2>
+            <!-- <div class="acciones-box">
+                <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon
+                        [icon]="faFileCsv"></fa-icon></button>
+            </div> -->
+            <button class="btn-open-modal" (click)="abrirModal()">+ Instructor</button>
+        </div>
+        <div class="table-responsive">
+            <table class="instructors-table">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Instructor</th>
+                        <th>Cédula</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Especialidad</th>
+                        <th>Fecha Contratación</th>
+                        <th>Activo</th>
+                        @if(userRole === 'Administrador'){
+                        <th>Opciones</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (inst of instructors; track inst.id_instructor) {
+                    <tr>
+                        <td>{{ inst.id_instructor }}</td>
+                        <td>{{ inst.nombres }}</td>
+                        <td>{{ inst.cedula }}</td>
+                        <td>{{ inst.telefono }}</td>
+                        <td>{{ inst.correo }}</td>
+                        <td>{{ inst.especialidad }}</td>
+                        <td>{{ inst.fecha_contratacion | date:'shortDate' }}</td>
+                        @if (inst.activo) {
+                        <td>Impartiendo</td>
+                        }@else {
+                        <td>Retirado</td>
+                        }
+
+                        @if (userRole === 'Administrador') {
+                        <td>
+                            <div class="action-buttons">
+                                <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(donor)"><fa-icon
+                                        [icon]="faPen"></fa-icon></button> -->
+                                <button class="btn-eliminar" (click)="deleteInstructor(inst.id_instructor)"><fa-icon
+                                        [icon]="faTrash"></fa-icon></button>
+                            </div>
+                        </td>
+                        }
+
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (mostrarModal) {
+    <div class="overlay">
+        <div class="modal-participant-container">
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-donor" [formGroup]="form" (ngSubmit)="insertInstructor()">
+                <h2>Registrar Instructor</h2>
+                <div class="form-group">
+                    <label>Nombres <span>*</span></label>
+                    <input type="text" name="nombre" formControlName="nombres" required
+                        placeholder="Nombres completo del instructor">
+                </div>
+
+                <div class="form-group">
+                    <label>Cédula <span>*</span></label>
+                    <input type="text" name="cedula" formControlName="cedula" required
+                        placeholder="Cédula del instructor">
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono <span>*</span></label>
+                    <input type="text" name="telefono" formControlName="telefono" placeholder="Teléfono del instructor"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Correo <span>*</span></label>
+                    <input type="email" name="correo" formControlName="correo" placeholder="Correo del instructor"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Especialidad <span>*</span></label>
+                    <input type="text" name="direccion" formControlName="especialidad"
+                        placeholder="Especialidad del instructor" required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="form.invalid">Registrar</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+
+    <!-- Modal para editar donador -->
+    <!-- @if (mostrarEditModal) {
+    <div class="overlay">
+        <div class="modal-container">
+            <div class="container-header-modal">
+                <p class="required-text">El campo con <span>*</span> es obligatorio</p>
+            </div>
+
+            <form [formGroup]="editForm" (ngSubmit)="updateDonor()">
+                <h2>Editar Teléfono del Donador</h2>
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" [value]="selectedDonor.nombres" readonly class="readonly-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Cédula</label>
+                    <input type="text" [value]="selectedDonor.numero_identificacion" readonly class="readonly-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono actual</label>
+                    <input type="text" [value]="selectedDonor.telefono" readonly class="readonly-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Nuevo Teléfono <span>*</span></label>
+                    <input type="text" formControlName="telefono" placeholder="Ingrese el nuevo teléfono" required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="editForm.invalid">Actualizar teléfono</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    } -->
+
+</main>

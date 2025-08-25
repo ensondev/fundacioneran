@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
 import { DeliveriesService } from './deliveries.service';
 import { Public } from 'src/authentication/auth/guard/auth.guard';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -30,6 +30,17 @@ export class DeliveriesController {
     @ApiResponse({ status: 500, description: 'Error interno del servidor' })
     async getDeliveries(@Res() res) {
         return this.deliveriesService.getDeliveries(res);
+    }
+
+    @Public()
+    @Get('get-by-id/:id_entrega')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Obtener una entrega por ID' })
+    @ApiResponse({ status: 200, description: 'Entrega obtenida correctamente' })
+    @ApiResponse({ status: 404, description: 'Entrega no encontrada' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    async getDeliverieById(@Param('id_entrega') id_entrega: number) {
+        return this.deliveriesService.getDeliverieById(id_entrega);
     }
 
     @Public()

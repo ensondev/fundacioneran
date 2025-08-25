@@ -57,7 +57,7 @@ export class DonationsService {
         );
     }
 
-    updateDonationAvailability(disponible: boolean, id_donacion: number ): Observable<any> {
+    updateDonationAvailability(disponible: boolean, id_donacion: number): Observable<any> {
         return this._http.put(`${environment.API_URL}/donations/update-availability`, {
             disponible,
             id_donacion,
@@ -69,9 +69,27 @@ export class DonationsService {
         );
     }
 
-    deleteDonation(id_donacion: number): Observable<any>{
+    updateDonation(updateDonation: {
+        id_donacion: number,
+        id_donante: number,
+        tipo_donacion: string,
+        valor_estimado: number | null,
+        metodo_pago: string | null,
+        detalle_donacion: string,
+        url_image: string | null,
+    }): Observable<any> {
+        return this._http.put(`${environment.API_URL}/donations/update`, updateDonation).pipe(
+            catchError(err => {
+                console.error('Error en updateDonation:', err);
+                return of(null);
+            })
+        );
+    }
+
+
+    deleteDonation(id_donacion: number): Observable<any> {
         return this._http.request('delete', `${environment.API_URL}/donations/delete`, {
-            body: {id_donacion}
+            body: { id_donacion }
         });
     }
 }

@@ -33,7 +33,7 @@ export class DonationsService {
                     metodo: donacion.metodo_pago,
                     descripcion: donacion.detalle_donacion,
                     image: donacion.url_image,
-                    entregado: donacion.entregado,
+                    disponible: donacion.disponible,
                     fecha: donacion.fecha_donacion,
                 }
             }
@@ -67,33 +67,45 @@ export class DonationsService {
     }
 
     async updateDonation(dto: UpdateDonationDto) {
-        const { id_donante, tipo_donacion, valor_estimado, metodo_pago, detalle_donacion, url_image, id_donacion } = dto;
-        const query = `UPDATE public.donaciones
-                    SET id_donante = $1, tipo_donacion = $2, valor_estimado = $3, metodo_pago = $4, detalle_donacion = $5, url_image = $6
-                    WHERE id_donacion = $7
-                    RETURNING id_donante, tipo_donacion, valor_estimado, metodo_pago, detalle_donacion, url_image;`;
+        const { id_donacion, id_donante, tipo_donacion, valor_estimado, metodo_pago, detalle_donacion, url_image } = dto;
+
+        const query = `
+        UPDATE public.donaciones
+        SET
+            id_donante = $1,
+            tipo_donacion = $2,
+            valor_estimado = $3,
+            metodo_pago = $4,
+            detalle_donacion = $5,
+            url_image = $6
+        WHERE id_donacion = $7
+        RETURNING id_donacion, id_donante, tipo_donacion, valor_estimado, metodo_pago, detalle_donacion, url_image, disponible;`;
+
         const values = [id_donante, tipo_donacion, valor_estimado, metodo_pago, detalle_donacion, url_image, id_donacion];
+
         try {
             const result = await this.databaseService.query(query, values);
-            const donacion = result.rows[0]
+            const donacion = result.rows[0];
+
             return {
                 p_messaje: 'Donación actualizada correctamente',
                 p_status: true,
                 p_data: {
+                    id_donacion: donacion.id_donacion,
                     donador: donacion.id_donante,
                     tipo: donacion.tipo_donacion,
                     monto: donacion.valor_estimado,
                     metodo: donacion.metodo_pago,
                     detalle: donacion.detalle_donacion,
                     image: donacion.url_image,
-                    disponible: donacion.disponible
+                    disponible: donacion.disponible,
                 }
-            }
+            };
         } catch (error) {
             return {
                 p_message: error.message,
                 p_data: {}
-            }
+            };
         }
     }
 
@@ -152,13 +164,15 @@ export class DonationsService {
                     d.detalle_donacion,
                     d.url_image,
                     d.fecha_donacion,
+                    d.disponible,
                     dn.id_donante,
                     dn.nombres,
                     dn.numero_identificacion,
                     dn.telefono,
                     dn.fecha_registro
                 FROM public.donaciones d
-                INNER JOIN public.donantes dn ON d.id_donante = dn.id_donante;`;
+                INNER JOIN public.donantes dn ON d.id_donante = dn.id_donante
+                ORDER BY d.disponible DESC;`;
         try {
             const result = await this.databaseService.query(query, []);
 
@@ -170,6 +184,7 @@ export class DonationsService {
                 detalle_donacion: row.detalle_donacion,
                 url_image: row.url_image,
                 fecha_donacion: row.fecha_donacion,
+                disponible: row.disponible,
                 donante: {
                     id_donante: row.id_donante,
                     nombres: row.nombres,

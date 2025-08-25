@@ -1,0 +1,165 @@
+<main>
+    <!-- <div class="container-filter">
+    <div class="search-container">
+      <input type="text" placeholder="Buscar donador por cédula" [(ngModel)]="searchCedula"
+        (keyup.enter)="searchByCedula()">
+      <button class="btn-filter" (click)="searchByCedula()"><fa-icon
+          [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
+      <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+    </div>
+  </div> -->
+    <div class="course-container">
+        <div class="header-container">
+            <h2>Lista de Cursos</h2>
+            <!-- <div class="acciones-box">
+                <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon
+                        [icon]="faFileCsv"></fa-icon></button>
+            </div> -->
+            <button class="btn-open-modal" (click)="abrirModalSubject()">+ Materia</button>
+            <button class="btn-open-modal" (click)="abrirModal()">+ Curso</button>
+        </div>
+        <div class="table-responsive">
+            <table class="course-table">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Curso</th>
+                        <th>Instructor</th>
+                        <th>Descripcion</th>
+                        <th>Fecha inicio</th>
+                        <th>Fecha fin</th>
+                        <th>Cupos disponibles</th>
+                        <th>Activo</th>
+                        @if(userRole === 'Administrador'){
+                        <th>Opciones</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (cour of courses; track cour.id_curso) {
+                    <tr>
+                        <td>{{ cour.id_curso }}</td>
+                        <td>{{ cour.nombre_materia }}</td>
+                        <td>{{ cour.nombres }}</td>
+                        <td>{{ cour.descripcion }}</td>
+                        <td>{{ cour.fecha_inicio | date:'shortDate' }}</td>
+                        <td>{{ cour.fecha_fin | date:'shortDate' }}</td>
+                        <td>{{ cour.inscripciones_actuales }}/{{ cour.cupo_maximo }} @if(cour.inscripciones_actuales ==
+                            cour.cupo_maximo){Lleno}@else {disponible}</td>
+                        @if (cour.activo) {
+                        <td>En proceso</td>
+                        }@else {
+                        <td>Finalizado</td>
+                        }
+
+                        @if (userRole === 'Administrador') {
+                        <td>
+                            <div class="action-buttons">
+                                <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(donor)"><fa-icon
+                                        [icon]="faPen"></fa-icon></button> -->
+                                <button class="btn-eliminar" (click)="deleteCourse(cour.id_instructor)"><fa-icon
+                                        [icon]="faTrash"></fa-icon></button>
+                            </div>
+                        </td>
+                        }
+
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (mostrarModal) {
+    <div class="overlay">
+        <div class="modal-participant-container">
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-donor" [formGroup]="form" (ngSubmit)="insertCourses()">
+                <h2>Registrar Curso</h2>
+
+                <div class="form-group form-categorie">
+                    <label>Curso <span>*</span></label>
+                    <select formControlName="materia_id" required>
+                        <option value="" disabled selected>Seleccione un curso</option>
+                        @for (subj of subjects; track subj.id_materia) {
+                        <option [value]="subj.id_materia">{{ subj.nombre_materia }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group form-categorie">
+                    <label>Instructor <span>*</span></label>
+                    <select formControlName="instructor_id" required>
+                        <option value="" disabled selected>Seleccione un instructor</option>
+                        @for (inst of instructors; track inst.id_instructor) {
+                        <option [value]="inst.id_instructor">{{ inst.nombres }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Descripcion <span>*</span></label>
+                    <input type="text" name="descripcion" formControlName="descripcion" required
+                        placeholder="descripcion del curso">
+                </div>
+
+                <div class="form-group">
+                    <label>Cupos <span>*</span></label>
+                    <input type="number" formControlName="cupo_maximo" placeholder="cupos disponibles" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de inicio:</label>
+                    <input type="date" formControlName="fecha_inicio" />
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de finalización:</label>
+                    <input type="date" formControlName="fecha_fin" />
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="form.invalid">Registrar</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+
+    @if (mostrarModalSubject) {
+    <div class="overlay">
+        <div class="modal-subject-container">
+            <div class="container-heder-modal">
+                <p class="required-text">El campo con <span>*</span> es obligatorio</p>
+            </div>
+
+            <form [formGroup]="formSubject" (ngSubmit)="insertSubjet()">
+                <h2>Registrar Materia</h2>
+
+                <div class="form-group">
+                    <label>Nombre <span>*</span></label>
+                    <input type="text" name="nombre_materia" formControlName="nombre_materia" required
+                        placeholder="nombre de la materia">
+                </div>
+
+                <div class="form-group">
+                    <label>Descripcion <span>*</span></label>
+                    <input type="text" name="descripcion" formControlName="descripcion" required
+                        placeholder="descripcion de la materia">
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="formSubject.invalid">Registrar</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarModalSubject()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+
+</main>

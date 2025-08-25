@@ -2,6 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BeneficiariesService } from '../../services/beneficiaries.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatOptionModule } from '@angular/material/core';
+import { Observable, startWith, map } from 'rxjs';
+import { FormControl } from '@angular/forms';
+
 import {
   faTrash,
   faPen,
@@ -16,7 +23,10 @@ import { AuthStateService } from '../../shared/service/auth-state.service';
 import { NotificationService } from '../../services/notification.service';
 @Component({
   selector: 'app-deliveries',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, FontAwesomeModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, FontAwesomeModule, MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatOptionModule],
   templateUrl: './deliveries.html',
   styleUrl: './deliveries.css'
 })
@@ -39,6 +49,7 @@ export default class Deliveries implements OnInit {
 
   successMessage: string | null = null;
   errorMessage: string | null = null;
+  selectedDeliverie: any = null;
 
   searchCedulaBeneficiario: string = '';
   searchCedula: string = '';
@@ -48,14 +59,19 @@ export default class Deliveries implements OnInit {
   mostrarModal = false;
   beneficiarieExists = false;
   mostrarModalBeneficiarie = false;
+  mostrarEditModal = false;
 
   allDeliveries: any[] = [];
   deliveries: any[] = [];
   products: any[] = [];
 
+  productControl = new FormControl(''); // para autocomplete manual
+  filteredProducts$: Observable<any[]> = of([]);
+
   DeliverieForm!: FormGroup;
 
   form = this._formBuilder.group({
+    beneficiario_id: this._formBuilder.nonNullable.control<number | null>(null, Validators.required),
     nombres_beneficiario: this._formBuilder.nonNullable.control('', Validators.required),
     cedula_beneficiario: this._formBuilder.nonNullable.control('', Validators.required),
     direccion_beneficiario: this._formBuilder.nonNullable.control('', Validators.required),
@@ -173,15 +189,98 @@ export default class Deliveries implements OnInit {
     });
   }
 
-  deleteDeliverie(id_entrega: number) {
+  /* updateDeliverie() {
+    const updatedData = {
+      beneficiario_id: this.selectedDeliverie.entrega.id_beneficiario,
+      donacion_id: Number(this.form.value.id_donacion),
+      id_entrega: this.selectedDeliverie.entrega.id_entrega
+    };
+
+    console.log(updatedData)
+
+    this.isLoading = true;
+
+    firstValueFrom(this.deliveriesService.updateDeliverie(
+      updatedData.beneficiario_id,
+      updatedData.donacion_id,
+      updatedData.id_entrega
+    )).then(res => {
+      if (res?.p_status) {
+        this.notification.showSuccess('Entrega actualizada correctamente');
+        this.cerrarEditModal();
+        this.loadBeneficiariesWithDeliveries();
+      } else {
+        this.notification.showError('No se pudo actualizar la entrega');
+      }
+    }).catch(err => {
+      this.notification.showError('Error al actualizar la entrega');
+      console.error('Error en updateDeliverie:', err);
+    }).finally(() => {
+      this.isLoading = false;
+    });
+
+  } */
+
+  updateDeliverie() {
+    const updatedData = {
+      beneficiario_id: Number(this.form.value.beneficiario_id),
+      donacion_id: Number(this.form.value.id_donacion),
+      id_entrega: this.selectedDeliverie.entrega.id_entrega
+    };
+
+    console.log('Datos a actualizar:', updatedData);
+
+    this.isLoading = true;
+
+    firstValueFrom(this.deliveriesService.updateDeliverie(
+      updatedData.beneficiario_id,
+      updatedData.donacion_id,
+      updatedData.id_entrega
+    ))
+      .then(res => {
+        if (res?.p_status) {
+          this.notification.showSuccess('Entrega actualizada correctamente');
+          this.cerrarEditModal();
+          this.loadBeneficiariesWithDeliveries();
+        } else {
+          this.notification.showError('No se pudo actualizar la entrega');
+        }
+      })
+      .catch(err => {
+        this.notification.showError('Error al actualizar la entrega');
+        console.error('Error en updateDeliverie:', err);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
+  }
+
+
+
+  /* deleteDeliverie(id_entrega: number) {
     if (!confirm('⚠️¿Seguro que quieres eliminar esta entrega?⚠️')) return;
 
     this.isLoading = true;
     this.errorMessage = null;
     this.successMessage = null;
 
+    try{
+      const donacion = await firstValueFrom(
+        this.donationService.getDonationsWithDonors().pipe(
+          catchError(() => of(null))
+        )
+      );
+
+      if(!donacion) return;
+
+      const donacion_id = donacion.donationsWithDonor;
+    }
+
     this.deliveriesService.deleteDeliverie(id_entrega).subscribe({
-      next: () => {
+      next: (res) => {
+        this.donationService.updateDonationAvailability().subscribe({
+
+        })
         this.notification.showSuccess('Entrega eliminado correctamente')
         this.loadBeneficiariesWithDeliveries();
         this.isLoading = false;
@@ -192,6 +291,43 @@ export default class Deliveries implements OnInit {
         this.isLoading = false;
       }
     });
+  } */
+
+  async deleteDeliverie(id_entrega: number) {
+    if (!confirm('⚠️¿Seguro que quieres eliminar esta entrega?⚠️')) return;
+    this.isLoading = true;
+
+    try {
+      // Obtener la entrega con su id_donacion asociado
+      const id_donacion = await firstValueFrom(
+        this.deliveriesService.getDeliverieById(id_entrega).pipe(
+          catchError(() => of(null))
+        )
+      );
+
+      if (!id_donacion) {
+        this.notification.showError('Entrega no encontrada');
+        this.isLoading = false;
+        return;
+      }
+
+      await firstValueFrom(
+        this.deliveriesService.deleteDeliverie(id_entrega)
+      );
+
+      await firstValueFrom(
+        this.donationService.updateDonationAvailability(true, Number(id_donacion))
+      );
+
+      this.notification.showSuccess('Entrega eliminada correctamente');
+      this.loadBeneficiariesWithDeliveries();
+      this.loadAvailableProducts();
+    } catch (error) {
+      this.notification.showError('Error al eliminar la entrega');
+      console.error('Error al eliminar la entrega:', error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   searchDeliverieByCedula() {
@@ -239,6 +375,7 @@ export default class Deliveries implements OnInit {
       if (beneficiarie) {
         this.beneficiarieExists = true;
         this.form.patchValue({
+          beneficiario_id: beneficiarie.id_beneficiario,
           nombres_beneficiario: beneficiarie.nombres_beneficiario,
           cedula_beneficiario: beneficiarie.cedula_beneficiario,
           direccion_beneficiario: beneficiarie.direccion_beneficiario,
@@ -291,6 +428,50 @@ export default class Deliveries implements OnInit {
 
   cerrarModal() {
     this.mostrarModal = false;
+  }
+
+  /* abrirEditModal(deli: any) {
+    this.selectedDeliverie = deli;
+    this.form.patchValue({
+      nombres_beneficiario: deli.nombres_beneficiario,
+      cedula_beneficiario: deli.cedula_beneficiario,
+      direccion_beneficiario: deli.direccion_beneficiario,
+      telefono_beneficiario: deli.telefono_beneficiario,
+      id_donacion: deli.id_donacion
+    });
+    this.mostrarEditModal = true;
+  } */
+
+  abrirEditModal(deli: any) {
+    this.selectedDeliverie = deli;
+    const productoExistente = this.products.find(p => p.id_donacion === deli.entrega.id_donacion);
+
+    // Si no está en la lista (porque está en `disponible = false`), lo agregas manualmente
+    if (!productoExistente) {
+      this.products.push({
+        id_donacion: deli.entrega.id_donacion,
+        detalle_donacion: deli.detalle_donacion,
+        // puedes agregar otros campos si los necesitas para mostrarlo bien
+      });
+    }
+
+    // Ahora haces el patchValue como se mostró antes
+    this.form.patchValue({
+      beneficiario_id: deli.entrega.id_beneficiario,
+      nombres_beneficiario: deli.nombres_beneficiario,
+      cedula_beneficiario: deli.cedula_beneficiario,
+      direccion_beneficiario: deli.direccion_beneficiario,
+      telefono_beneficiario: deli.telefono_beneficiario,
+      id_donacion: deli.entrega.id_donacion
+    });
+
+    this.mostrarEditModal = true;
+  }
+
+
+  cerrarEditModal() {
+    this.mostrarEditModal = false;
+    this.selectedDeliverie = null;
   }
 
 }

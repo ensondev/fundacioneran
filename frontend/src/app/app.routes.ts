@@ -13,7 +13,11 @@ export const routes: Routes = [
     { path: 'products', canActivate: [privateGuard], loadComponent: () => import('./pages/products/products') },
     { path: 'inventory', canActivate: [privateGuard], loadComponent: () => import('./pages/inventory/inventory') },
     { path: 'cash-management', canActivate: [privateGuard], loadComponent: () => import('./pages/cash-management/cash-management') },
-    { path: 'sales-made', canActivate: [privateGuard], loadComponent: () => import('./pages/sales-made/sales-made')},
-    {path: 'technical-support', canActivate: [publicGuard], loadComponent: () => import('./pages/technical-support/technical-support')},
+    { path: 'sales-made', canActivate: [privateGuard], loadComponent: () => import('./pages/sales-made/sales-made') },
+    { path: 'technical-support', canActivate: [publicGuard], loadComponent: () => import('./pages/technical-support/technical-support') },
+    { path: 'courses', canActivate: [privateGuard], loadComponent: () => import('./pages/courses/courses') },
+    { path: 'participants', canActivate: [privateGuard], loadComponent: () => import('./pages/participants/participants') },
+    { path: 'instructors', canActivate: [privateGuard], loadComponent: () => import('./pages/instructors/instructors') },
+    { path: 'registrations', canActivate: [privateGuard], loadComponent: () => import('./pages/registrations/registrations')},
     { path: '**', redirectTo: 'home' }
 ];
