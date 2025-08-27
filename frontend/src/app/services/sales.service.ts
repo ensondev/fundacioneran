@@ -25,9 +25,9 @@ export class SalesMadeService {
 
     insertDetails(detalle: {
         id_venta: number;
-        id_inventario: number;
+        id_inventario: number | null;
         cantidad: number;
-        precio_unitario: number;
+        precio_unitario: number | null;
     }): Observable<any> {
         return this._http.post(`${environment.API_URL}/sales-details/insert`, detalle).pipe(
             map((res: any) => res.p_data || res),

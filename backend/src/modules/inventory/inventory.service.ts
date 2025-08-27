@@ -55,18 +55,20 @@ export class InventoryService {
     async getProductsInventory(res) {
         /* const query = `SELECT id_inventario, producto_id, categoria_id, bodega_id, cantidad_disponible, fecha_actualizacion FROM public.inventario_bodega;`; */
         const query = `SELECT 
-  ib.id_inventario,
-  ib.cantidad_disponible,
-  ib.fecha_actualizacion,
-  p.nombre_producto,
-  p.precio_venta,
-  c.nombre_categoria,
-  b.nombre_bodega
-FROM inventario_bodega ib
-JOIN productos p ON p.id_producto = ib.producto_id
-JOIN categorias c ON c.id_categoria = ib.categoria_id
-JOIN bodega b ON b.id_bodega = ib.bodega_id;
-`;
+                    ib.id_inventario,
+                    ib.producto_id,
+                    ib.categoria_id,
+                    ib.bodega_id,
+                    ib.cantidad_disponible,
+                    ib.fecha_actualizacion,
+                    p.nombre_producto,
+                    p.precio_venta,
+                    c.nombre_categoria,
+                    b.nombre_bodega
+                FROM inventario_bodega ib
+                JOIN productos p ON p.id_producto = ib.producto_id
+                JOIN categorias c ON c.id_categoria = ib.categoria_id
+                JOIN bodega b ON b.id_bodega = ib.bodega_id;`;
         try {
             const result = await this.databaseService.query(query, []);
             res.status(200).json({
@@ -86,12 +88,12 @@ JOIN bodega b ON b.id_bodega = ib.bodega_id;
     }
 
     async updateProductInventory(dto: UpdateInventoryDto) {
-        const { producto_id, bodega_id, cantidad_disponible, id_inventario } = dto;
+        const { producto_id, categoria_id, bodega_id, cantidad_disponible, id_inventario } = dto;
         const query = `UPDATE public.inventario_bodega
-                    SET producto_id = $1, bodega_id = $2, cantidad_disponible = $3, fecha_actualizacion = now()
-                    WHERE id_inventario = $4
+                    SET producto_id = $1, categoria_id = $2, bodega_id = $3, cantidad_disponible = $4, fecha_actualizacion = now()
+                    WHERE id_inventario = $5
                     RETURNING producto_id, bodega_id, cantidad_disponible, fecha_actualizacion;`;
-        const values = [producto_id, bodega_id, cantidad_disponible, id_inventario];
+        const values = [producto_id, categoria_id, bodega_id, cantidad_disponible, id_inventario];
         try {
             const result = await this.databaseService.query(query, values);
             const producto = result.rows[0]
@@ -100,6 +102,7 @@ JOIN bodega b ON b.id_bodega = ib.bodega_id;
                 p_status: true,
                 p_data: {
                     producto: producto.producto_id,
+                    categoria: producto.categoria_id,
                     bodega: producto.bodega_id,
                     stock: producto.cantidad_disponible,
                     fecha: producto.fecha_actualizacion
@@ -132,7 +135,6 @@ JOIN bodega b ON b.id_bodega = ib.bodega_id;
             };
         }
     }
-
 
     async deleteProductInventory(dto: DeleteInventoryDto) {
         const { id_inventario } = dto;

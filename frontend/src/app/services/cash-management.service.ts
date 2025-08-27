@@ -1,7 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { catchError, map, Observable, of, throwError } from "rxjs";
+import { animationFrameScheduler, catchError, map, Observable, of, throwError } from "rxjs";
 import { environment } from "../../environments/environment";
+import { normalizePassiveListenerOptions } from "@angular/cdk/platform";
 
 @Injectable({
     providedIn: 'root'
@@ -53,5 +54,25 @@ export class CashManagementService {
         );
     }
 
+    updateTransaction(
+        tipo_transaccion: string,
+        monto: number | null,
+        razon: string,
+        id_transaccion: number | null
+    ): Observable<any> {
+        return this._http.put(`${environment.API_URL}/transactions/update`, {
+            tipo_transaccion, monto, razon, id_transaccion
+        }).pipe(
+            catchError(error => {
+                console.error('Error en updateTransaction:', error);
+                return throwError(() => error);
+            })
+        )
+    }
 
+    deleteTransaction(id_transaccion: number): Observable<any> {
+        return this._http.delete(`${environment.API_URL}/transactions/delete`, {
+            body: {id_transaccion}
+        })
+    }
 }

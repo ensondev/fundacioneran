@@ -94,7 +94,7 @@ export default class Instructors implements OnInit {
   }
 
   deleteInstructor(id_instructor: number){
-    const confirmDelete = confirm('⚠️¿Estás seguro de que deseas eliminar este instructor?⚠️');
+    if(!confirm('⚠️¿Estás seguro de eliminar este instructor?⚠️')) return ;
     this.isLoading = true;
     this.instructorsService.deleteInstructor(id_instructor).subscribe({
       next:(response) => {

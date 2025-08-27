@@ -9,28 +9,32 @@
             <table class="warehouse-table">
                 <thead>
                     <tr>
-                        <th>N°</th>
+                        <!-- <th>N°</th> -->
                         <th>Bodega</th>
                         <th>Ubicacion</th>
-                        <th *ngIf="userRole === 'Administrador'">Opciones</th>
+                        @if (userRole === 'Administrador') {
+                        <th>Opciones</th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let ware of warehouses">
-                        <td>{{ ware.id_bodega }}</td>
+                    @for (ware of warehouses; track ware.id_bodega) {
+                    <tr>
+                        <!-- <td>{{ ware.id_bodega }}</td> -->
                         <td>{{ ware.nombre_bodega }}</td>
                         <td>{{ ware.ubicacion }}</td>
-                        <td *ngIf="userRole === 'Administrador'">
+                        @if (userRole === 'Administrador') {
+                        <td>
                             <div class="action-buttons">
                                 <button title="editar" class="btn-editar" (click)="abrirEditModal(ware)"><fa-icon
                                         [icon]="faPen"></fa-icon></button>
-                                <!-- Botón Eliminar visible solo para Administrador -->
-                                <button class="btn-eliminar"
-                                    (click)="deleteWarehouse(ware.id_bodega)"><fa-icon
+                                <button class="btn-eliminar" (click)="deleteWarehouse(ware.id_bodega)"><fa-icon
                                         [icon]="faTrash"></fa-icon></button>
                             </div>
                         </td>
+                        }
                     </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -39,14 +43,16 @@
     @if (mostrarModal) {
     <div class="overlay">
         <div class="modal-container-warehouse">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Registrar Bodega</h2>
+            </div>
+
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
             <form class="form-warehouse" (ngSubmit)="submitWarehouse()" [formGroup]="form">
-
-                <h2>Registrar Bodega</h2>
-
                 <div class="form-group">
                     <label>Bodega <span>*</span></label>
                     <input type="text" formControlName="nombre_bodega" placeholder="Nombre de la bodega" required>
@@ -58,7 +64,7 @@
                 </div>
 
                 <div class="button-container">
-                    <button type="submit" [disabled]="form.invalid">Crear Bodega</button>
+                    <button type="submit" [disabled]="form.invalid">Registrar</button>
                     <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
                 </div>
             </form>
@@ -69,13 +75,16 @@
     @if (mostrarEditModal) {
     <div class="overlay">
         <div class="modal-container-warehouse">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Actualizar Bodega</h2>
+            </div>
+
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
             <form class="form-warehouse" (ngSubmit)="updateWarehouse()" [formGroup]="form">
-
-                <h2>Registrar Bodega</h2>
 
                 <div class="form-group">
                     <label>Bodega <span>*</span></label>
@@ -88,7 +97,7 @@
                 </div>
 
                 <div class="button-container">
-                    <button type="submit" [disabled]="form.invalid">Crear Bodega</button>
+                    <button type="submit" [disabled]="form.invalid">Actualizar</button>
                     <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
                 </div>
             </form>

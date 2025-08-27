@@ -97,7 +97,7 @@ export default class Participants implements OnInit {
   }
 
   deleteParticipant(id_participante: number) {
-    const confirmDelete = confirm('⚠️¿Estás seguro de que deseas eliminar este participante?⚠️');
+    if(!confirm('⚠️¿Estás seguro de eliminar este participante?⚠️')) return;
 
     this.isLoading = true;
 

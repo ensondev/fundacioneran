@@ -9,7 +9,7 @@ import { environment } from "../../environments/environment";
 export class InventoryService {
     private _http = inject(HttpClient);
 
-    InsertProdutInventory(producto_id: number, categoria_id: number, bodega_id: number, cantidad_disponible: number): Observable<any> {
+    InsertProdutInventory(producto_id: number | null, categoria_id: number | null, bodega_id: number | null, cantidad_disponible: number | null): Observable<any> {
         return this._http.post(`${environment.API_URL}/inventory/insert`, {
             producto_id,
             categoria_id,
@@ -34,11 +34,23 @@ export class InventoryService {
         )
     }
 
+    updateProductInventory(producto_id: number | null, categoria_id: number | null, bodega_id: number | null, cantidad_disponible: number | null, id_inventario: number | null): Observable<any> {
+        return this._http.put(`${environment.API_URL}/inventory/update`, {
+            producto_id, categoria_id, bodega_id, cantidad_disponible, id_inventario
+        });
+    }
+
     updateStock(id_inventario: number, cantidadVendida: number) {
         return this._http.post(`${environment.API_URL}/inventory/update-stock`, {
             id_inventario,
             cantidadVendida
         });
+    }
+
+    deleteProductInventory(id_inventario: number): Observable<any> {
+        return this._http.request('delete', `${environment.API_URL}/inventory/delete`, {
+            body: { id_inventario }
+        })
     }
 
 }

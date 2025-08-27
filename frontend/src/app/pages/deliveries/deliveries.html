@@ -41,7 +41,7 @@
                         <td>{{ deli.nombres_beneficiario }}</td>
                         <td>{{ deli.cedula_beneficiario }}</td>
                         <td>{{ deli.detalle_donacion }}</td>
-                        <td>{{ deli.entrega.fecha_entrega | date:'shortDate' }}</td>
+                        <td>{{ deli.entrega.fecha_entrega | date:'dd/MM/yyyy' }}</td>
                         @if (userRole === 'Administrador') {
                         <td>
                             <div class="action-buttons">

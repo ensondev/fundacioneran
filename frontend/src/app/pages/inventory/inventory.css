@@ -135,27 +135,47 @@ main {
     align-items: center;
     z-index: 1050;
 }
-
-/*FORMULARIO PRODUCTOS*/
+/* =================================================== */
+/*FORMULARIO PRODUCTOS EN EL INVENTARIO*/
 .modal-container-products-inventory {
     background-color: #fff;
     border-radius: 0;
-    padding: 30px 20px;
-    height: auto;
     width: 100%;
     max-width: 350px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     animation: modalFadeIn 0.3s ease-out;
-    margin: 0 20px;
+    margin: 0 10px;
 }
 
-.form-products-inventory h2 {
-    margin-bottom: 10px;
-    font-size: 18px;
+.modal-container-products-inventory .container-header-form {
+    display: flex;
+    align-items: center;
+    padding: 10px;
 }
 
-.form-products-inventory .form-group {
-    margin-bottom: 15px;
+.modal-container-products-inventory .container-header-form .form-logo {
+    width: 64px;
+}
+
+.modal-container-products-inventory .container-header-form h2 {
+    color: #0a375e;
+    font-size: 19px;
+}
+
+.modal-container-products-inventory .form-products-inventory {
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-container-products-inventory .form-products-inventory label {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.modal-container-products-inventory .form-products-inventory .form-group {
+    margin-bottom: 20px;
 }
 
 .form-products-inventory .button-container {
@@ -164,58 +184,30 @@ main {
     gap: 10px;
 }
 
-.container-option {
-    display: flex;
-    gap: 40px;
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #e0e0e0;
+.form-group label span {
+    color: #d32f2f;
 }
-
-.container-option label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.container-option label input {
-    margin-bottom: 0;
-}
+/* =================================================== */
 
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 5px 10px;
+    padding: 10px 10px;
     margin-bottom: 10px;
+    background-color: #ececec;
     border: 1px solid #e0e0e0;
 }
 
 /*GLOBALES*/
-.container-header-modal {
-    background-color: #B5FAFF;
-    border: 1px solid #3CD0E0;
-    margin-bottom: 10px;
-}
-
 .container-header-modal .required-text {
     color: #000;
     font-size: 15px;
-    margin: 10px 10px;
+    padding: 0 20px;
+    margin-bottom: 20px;
 }
 
 .required-text span {
     color: red;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 5px 10px;
-    margin-bottom: 10px;
-    border: 1px solid #e0e0e0;
-}
-
-.form-group label span {
-    color: #d32f2f;
 }
 
 button {

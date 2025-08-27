@@ -56,9 +56,10 @@ export class TransactionsService {
 
     async updateTransactions(dto: UpdateTransactionDto) {
         const { tipo_transaccion, monto, razon, id_transaccion } = dto;
-        const query = `UPDATE FROM public.transacciones
+        const query = `UPDATE public.transacciones
                     SET tipo_transaccion = $1, monto = $2, razon = $3
-                    HERE id_transaccion = $4`;
+                    WHERE id_transaccion = $4
+                    RETURNING id_transaccion, tipo_transaccion, monto, razon`;
         const values = [tipo_transaccion, monto, razon, id_transaccion];
         try {
             const result = await this.databaseService.query(query, values);
@@ -67,6 +68,7 @@ export class TransactionsService {
                 p_messaje: 'transacción actualizado correctamente',
                 p_status: true,
                 p_data: {
+                    id_transaccion: transaccion.id_transaccion,
                     transaccion: transaccion.tipo_transaccion,
                     monto: transaccion.monto,
                     razon: transaccion.razon,

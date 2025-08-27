@@ -118,7 +118,6 @@ main {
     color: red;
 }
 
-/* =================================================== */
 /* Estilos del modal - editar donador*/
 .overlay {
     position: fixed;
@@ -133,6 +132,8 @@ main {
     z-index: 1050;
 }
 
+/* =================================================== */
+/*FORMULARIO DONADORES UPDATE*/
 .modal-container {
     background-color: #fff;
     border-radius: 0;
@@ -178,7 +179,6 @@ main {
     justify-content: space-between;
     gap: 10px;
 }
-
 /* =================================================== */
 
 .container-header-modal .required-text {
@@ -260,7 +260,6 @@ button[type="submit"]:disabled {
         height: calc(100vh - 220px);
     }
 }
-
 
 
 /* Animación opcional para el modal */

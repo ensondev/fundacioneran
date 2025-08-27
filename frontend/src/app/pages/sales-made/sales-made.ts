@@ -241,10 +241,12 @@ export default class SalesMade implements OnInit {
   }
 
   abrirModal() {
+    this.form.reset();
     this.mostrarModal = true;
   }
 
   cerrarModal() {
+    this.form.reset();
     this.mostrarModal = false;
   }
 

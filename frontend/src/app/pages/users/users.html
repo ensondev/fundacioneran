@@ -16,28 +16,29 @@
             <table class="users-table">
                 <thead>
                     <tr>
-                        <th>N°</th>
+                        <!-- <th>N°</th> -->
                         <th>Usuario</th>
                         <th>Rol</th>
                         <th>Activo</th>
                         <th>Fecha</th>
-                        <th *ngIf="userRole === 'Administrador'">Opciones</th>
+                        @if (userRole === 'Administrador') {
+                        <th>Opciones</th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
                     @for (user of users; track user.id_usuario) {
                     <tr>
-                        <td>{{ user.id_usuario }}</td>
+                        <!-- <td>{{ user.id_usuario }}</td> -->
                         <td>{{ user.nombre_usuario }}</td>
                         <td>{{ user.rol_usuario }}</td>
                         <td>{{ user.cuenta_activa }}</td>
-                        <td>{{ user.fecha_creacion | date:'shortDate'}}</td>
+                        <td>{{ user.fecha_creacion | date:'dd/MM/yyyy'}}</td>
                         @if (userRole === 'Administrador') {
                         <td>
                             <div class="action-buttons">
                                 <button title="editar" class="btn-editar" (click)="abrirEditModal(user)"><fa-icon
                                         [icon]="faPen"></fa-icon></button>
-                                <!-- Botón Eliminar visible solo para Administrador -->
                                 <button class="btn-eliminar" (click)="deleteUser(user.id_usuario)"><fa-icon
                                         [icon]="faTrash"></fa-icon></button>
                             </div>
@@ -53,21 +54,25 @@
     @if (mostrarModal) {
     <div class="overlay">
         <div class="modal-container-users">
+
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Registrar usuario</h2>
+            </div>
+
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
             <form class="form-users" (ngSubmit)="submitUser()" [formGroup]="form">
 
-                <h2>Registrar Usuario</h2>
-
                 <div class="form-group">
-                    <label>Usuario <span>*</span></label>
-                    <input type="text" formControlName="nombre_usuario" placeholder="Nombre del usuario" required>
+                    <label>Nombre de usuario <span>*</span></label>
+                    <input type="text" formControlName="nombre_usuario" placeholder="nombre de usuario" required>
                 </div>
 
                 <div class="form-group form-select">
-                    <label>Rol <span>*</span></label>
+                    <label>Rol de usuario<span>*</span></label>
                     <select id="user-role" name="role" formControlName="rol_usuario" class="input-select" required>
                         <option value="" disabled selected>Seleccione un rol</option>
                         <option value="Administrador">Administrador</option>
@@ -81,7 +86,7 @@
                 </div>
 
                 <div class="button-container">
-                    <button type="submit" [disabled]="form.invalid">Crear usuario</button>
+                    <button type="submit" [disabled]="form.invalid">Registrar</button>
                     <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
                 </div>
             </form>
@@ -92,17 +97,20 @@
     @if (mostrarEditModal) {
     <div class="overlay">
         <div class="modal-container-users">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Actualizar usuario</h2>
+            </div>
+
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
             <form class="form-users" (ngSubmit)="updateSubmit()" [formGroup]="formEdit">
 
-                <h2>Acrualizar Usuario</h2>
-
                 <div class="form-group">
-                    <label>Usuario <span>*</span></label>
-                    <input type="text" formControlName="nombre_usuario" placeholder="Nombre del usuario" required>
+                    <label>Nombre de usuario <span>*</span></label>
+                    <input type="text" formControlName="nombre_usuario" placeholder="nombre de usuario" required>
                 </div>
 
                 <div class="form-group">

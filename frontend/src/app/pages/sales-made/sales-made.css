@@ -136,22 +136,46 @@ main {
     z-index: 1050;
 }
 
+/* =================================================== */
 /*FORMULARIO PRODUCTOS*/
 .modal-container-sales-made {
     background-color: #fff;
     border-radius: 0;
-    padding: 30px 20px;
-    height: calc(100vh - 100px);
     width: 100%;
-    max-width: 650px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    max-width: 850px;
     animation: modalFadeIn 0.3s ease-out;
-    margin: 0 20px;
 }
 
-.form-sales-made h2 {
-    margin-bottom: 10px;
-    font-size: 18px;
+.modal-container-sales-made .container-header-form {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.modal-container-sales-made .container-header-form .form-logo {
+    width: 64px;
+}
+
+.modal-container-sales-made .container-header-form h2 {
+    color: #0a375e;
+    font-size: 19px;
+}
+
+.modal-container-sales-made .form-sales-made {
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-container-sales-made .form-sales-made label {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.modal-container-sales-made .form-sales-made .form-group {
+    margin-bottom: 20px;
 }
 
 .form-sales-made .container-info-sale,
@@ -160,33 +184,71 @@ main {
     gap: 20px;
 }
 
-.container-info-sale {
+.form-sales-made .container-info-sale {
     display: flex;
     align-items: center;
     gap: 20px;
     margin-top: 10px;
     margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #e0e0e0;
+    border-bottom: 1px solid #cccccc;
 }
 
 .container-info-sale .form-group-client {
     width: 50%;
 }
 
-.form-sales-made .container-info-sale button {
-    width: 100px;
-    height: 30px;
-    margin-top: 8px;
+.container-products .form-products {
+    width: 95%;
+}
+
+.container-products .form-products input,
+.container-info-detail .form-group input,
+.form-sales-made .container-info-sale input{
+    margin-bottom: 0;
+}
+
+.container-info-detail{
     display: flex;
     align-items: center;
+    gap: 20px;
+}
+
+.container-info-detail .form-group{
+    width: 50%;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 10px;
+    /* margin-bottom: 10px; */
+    background-color: #ececec;
+    border: 1px solid #e0e0e0;
+}
+
+
+.form-sales-made .button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.form-sales-made .container-info-detail button {
+    width: 100px;
+    height: 40px;
     padding: 7px 16px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
     font-size: 15px;
     border: none;
-    background-color: #5ca75c;
+    color: #fff;
+    background-color: #0a375e;
+}
+/* =================================================== */
+
+.form-group label span {
+    color: #d32f2f;
 }
 
 /* Estilos para la tabla de productos agregados */
@@ -195,7 +257,7 @@ main {
     height: 210px;
     margin-top: 10px;
     margin-bottom: 10px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #cfcfcf;
 }
 
 .sales-table {
@@ -270,40 +332,17 @@ main {
     margin-bottom: 0;
 }
 
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 5px 10px;
-    /* margin-bottom: 10px; */
-    border: 1px solid #e0e0e0;
-}
 
 /*GLOBALES*/
-.container-header-modal {
-    background-color: #B5FAFF;
-    border: 1px solid #3CD0E0;
-    margin-bottom: 10px;
-}
-
 .container-header-modal .required-text {
     color: #000;
     font-size: 15px;
-    margin: 10px 10px;
+    padding: 0 20px;
+    margin-bottom: 20px;
 }
 
 .required-text span {
     color: red;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 5px 10px;
-    margin-bottom: 10px;
-    border: 1px solid #e0e0e0;
-}
-
-.form-group label span {
-    color: #d32f2f;
 }
 
 button {

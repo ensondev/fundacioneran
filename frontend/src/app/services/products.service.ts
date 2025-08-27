@@ -13,9 +13,9 @@ export class productsService {
         es_caducible: boolean,
         nombre_producto: string | null,
         detalle_producto: string,
-        categoria_id: number,
+        categoria_id: number | null,
         fecha_caducidad: string | null,
-        precio_venta: number,
+        precio_venta: number | null,
     ): Observable<any> {
         return this._http.post(`${environment.API_URL}/products/register`, {
             es_caducible,
@@ -58,9 +58,9 @@ export class productsService {
         es_caducible: boolean,
         nombre_producto: string,
         detalle_producto: string,
-        categoria_id: number,
+        categoria_id: number | null,
         fecha_caducidad: string | null,
-        precio_venta: number
+        precio_venta: number | null
     ): Observable<any> {
         return this._http.put(`${environment.API_URL}/products/update`, {
             id_producto,

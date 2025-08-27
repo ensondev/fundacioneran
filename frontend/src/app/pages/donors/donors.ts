@@ -97,14 +97,12 @@ export default class Donors implements OnInit {
     this.donorService.updateDonor(updatedDonor).subscribe({
       next: (response) => {
         this.notification.showSuccess('Donador actualizado correctamente');
-        /* this.successMessage = 'Donador actualizado'; */
         this.loadDonors();
         this.cerrarEditModal();
         this.isLoading = false;
       },
       error: (error) => {
         this.notification.showError('Error al actualizar el donador');
-        /* this.errorMessage = 'Error al actualizar donador'; */
         console.error('Error al actualizar donador:', error);
         this.isLoading = false;
       }
@@ -115,8 +113,6 @@ export default class Donors implements OnInit {
     if (!confirm('⚠️¿Seguro que quieres eliminar este donador?⚠️')) return;
 
     this.isLoading = true;
-    this.errorMessage = null;
-    this.successMessage = null;
 
     this.donorService.deleteDonor(id_donante).subscribe({
       next: () => {

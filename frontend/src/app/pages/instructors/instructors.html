@@ -21,7 +21,7 @@
             <table class="instructors-table">
                 <thead>
                     <tr>
-                        <th>N°</th>
+                        <!-- <th>N°</th> -->
                         <th>Instructor</th>
                         <th>Cédula</th>
                         <th>Teléfono</th>
@@ -37,13 +37,13 @@
                 <tbody>
                     @for (inst of instructors; track inst.id_instructor) {
                     <tr>
-                        <td>{{ inst.id_instructor }}</td>
+                        <!-- <td>{{ inst.id_instructor }}</td> -->
                         <td>{{ inst.nombres }}</td>
                         <td>{{ inst.cedula }}</td>
                         <td>{{ inst.telefono }}</td>
                         <td>{{ inst.correo }}</td>
                         <td>{{ inst.especialidad }}</td>
-                        <td>{{ inst.fecha_contratacion | date:'shortDate' }}</td>
+                        <td>{{ inst.fecha_contratacion | date:'dd/MM/yyyy' }}</td>
                         @if (inst.activo) {
                         <td>Impartiendo</td>
                         }@else {
@@ -71,41 +71,46 @@
 
     @if (mostrarModal) {
     <div class="overlay">
-        <div class="modal-participant-container">
+        <div class="modal-instructors-container">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Registrar instructor</h2>
+            </div>
+
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
-            <form class="form-donor" [formGroup]="form" (ngSubmit)="insertInstructor()">
-                <h2>Registrar Instructor</h2>
+            <form class="form-instructors" [formGroup]="form" (ngSubmit)="insertInstructor()">
+
                 <div class="form-group">
-                    <label>Nombres <span>*</span></label>
+                    <label>Nombres completo <span>*</span></label>
                     <input type="text" name="nombre" formControlName="nombres" required
-                        placeholder="Nombres completo del instructor">
+                        placeholder="nombres completo">
                 </div>
 
                 <div class="form-group">
-                    <label>Cédula <span>*</span></label>
+                    <label>Documento de identidad <span>*</span></label>
                     <input type="text" name="cedula" formControlName="cedula" required
-                        placeholder="Cédula del instructor">
+                        placeholder="documento de identidad">
                 </div>
 
                 <div class="form-group">
-                    <label>Teléfono <span>*</span></label>
-                    <input type="text" name="telefono" formControlName="telefono" placeholder="Teléfono del instructor"
+                    <label>Número telefónico <span>*</span></label>
+                    <input type="text" name="telefono" formControlName="telefono" placeholder="número telefónico"
                         required>
                 </div>
 
                 <div class="form-group">
-                    <label>Correo <span>*</span></label>
-                    <input type="email" name="correo" formControlName="correo" placeholder="Correo del instructor"
+                    <label>Correo electrónico <span>*</span></label>
+                    <input type="email" name="correo" formControlName="correo" placeholder="correo electrónico"
                         required>
                 </div>
 
                 <div class="form-group">
                     <label>Especialidad <span>*</span></label>
                     <input type="text" name="direccion" formControlName="especialidad"
-                        placeholder="Especialidad del instructor" required>
+                        placeholder="especialidad del instructor" required>
                 </div>
 
                 <div class="button-container">

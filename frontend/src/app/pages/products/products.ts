@@ -56,18 +56,18 @@ export default class Products implements OnInit {
     es_caducible: this._formBuild.nonNullable.control(false, Validators.required),
     nombre_producto: this._formBuild.nonNullable.control('', Validators.required),
     detalle_producto: this._formBuild.nonNullable.control(''),
-    categoria_id: this._formBuild.nonNullable.control<number>(0, Validators.required),
+    categoria_id: this._formBuild.nonNullable.control<number | null>(null, Validators.required),
     fecha_caducidad: this._formBuild.nonNullable.control(''),
-    precio_venta: this._formBuild.nonNullable.control<number>(0, Validators.required),
+    precio_venta: this._formBuild.nonNullable.control<number | null>(null, Validators.required),
   });
 
   formEdit = this._formBuild.group({
     es_caducible: this._formBuild.nonNullable.control(false, Validators.required),
     nombre_producto: this._formBuild.nonNullable.control('', Validators.required),
     detalle_producto: this._formBuild.nonNullable.control(''),
-    categoria_id: this._formBuild.nonNullable.control<number>(0, Validators.required),
+    categoria_id: this._formBuild.nonNullable.control<number | null>(null, Validators.required),
     fecha_caducidad: this._formBuild.nonNullable.control(''),
-    precio_venta: this._formBuild.nonNullable.control<number>(0, Validators.required),
+    precio_venta: this._formBuild.nonNullable.control<number | null>(null, Validators.required),
   });
 
   formCategorie = this._formBuild.group({
@@ -216,11 +216,14 @@ export default class Products implements OnInit {
     const confirmDelete = confirm('⚠️¿Estás seguro de que deseas eliminar este producto?⚠️');
 
     if (!confirmDelete) return;
+    this.isLoading = true;
 
     this.productService.deleteProduct(id_producto).subscribe({
-      next: () => {
+      next: (res) => {
+        console.log(res)
         this.notification.showSuccess('Producto eliminado correctamente');
         this.loadProducts(); // vuelve a cargar la lista
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error al eliminar producto:', err);

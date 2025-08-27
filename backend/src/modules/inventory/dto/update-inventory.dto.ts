@@ -7,6 +7,10 @@ export class UpdateInventoryDto {
     @IsInt()
     producto_id: number;
 
+    @ApiProperty({ description: 'Ingresar ID de la categoria', example: '5' })
+    @IsInt()
+    categoria_id: number;
+
     @ApiProperty({ description: 'Ingresar ID de la bodega', example: '12' })
     @IsInt()
     bodega_id: number;

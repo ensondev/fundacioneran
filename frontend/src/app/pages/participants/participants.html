@@ -11,17 +11,17 @@
     <div class="participants-container">
         <div class="header-container">
             <h2>Lista de Participantes</h2>
-            <!-- <div class="acciones-box">
-                <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon
-                        [icon]="faFileCsv"></fa-icon></button>
-            </div> -->
-            <button class="btn-open-modal" (click)="abrirModal()">+ Donación</button>
+            <div class="acciones-box">
+                <!-- <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon
+                        [icon]="faFileCsv"></fa-icon></button> -->
+                <button class="btn-open-modal" (click)="abrirModal()">+ Donación</button>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="participants-table">
                 <thead>
                     <tr>
-                        <th>N°</th>
+                        <!-- <th>N°</th> -->
                         <th>Participante</th>
                         <th>Cédula</th>
                         <th>Teléfono</th>
@@ -30,21 +30,21 @@
                         <th>Fecha Nacimiento</th>
                         <th>Fecha registro Registrado</th>
                         @if(userRole === 'Administrador'){
-                            <th>Opciones</th>
+                        <th>Opciones</th>
                         }
                     </tr>
                 </thead>
                 <tbody>
                     @for (part of participants; track part.id_participante) {
                     <tr>
-                        <td>{{ part.id_participante }}</td>
+                        <!-- <td>{{ part.id_participante }}</td> -->
                         <td>{{ part.nombres }}</td>
                         <td>{{ part.cedula }}</td>
                         <td>{{ part.telefono }}</td>
                         <td>{{ part.correo }}</td>
                         <td>{{ part.direccion }}</td>
-                        <td>{{ part.fecha_nacimiento | date:'shortDate' }}</td>
-                        <td>{{ part.fecha_registro | date:'shortDate' }}</td>
+                        <td>{{ part.fecha_nacimiento | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ part.fecha_registro | date:'dd/MM/yyyy' }}</td>
                         @if (userRole === 'Administrador') {
                         <td>
                             <div class="action-buttons">
@@ -66,34 +66,38 @@
 
     @if (mostrarModal) {
     <div class="overlay">
-        <div class="modal-participant-container">
+        <div class="modal-participants-container">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Registrar participante</h2>
+            </div>
+
             <div class="container-header-modal">
                 <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
             </div>
 
-            <form class="form-donor" [formGroup]="form" (ngSubmit)="insertParticipant()">
-                <h2>Registrar Participante</h2>
+            <form class="form-participants" [formGroup]="form" (ngSubmit)="insertParticipant()">
                 <div class="form-group">
-                    <label>Nombres <span>*</span></label>
+                    <label>Nombres completo <span>*</span></label>
                     <input type="text" name="nombre" formControlName="nombres" required
-                        placeholder="Nombres completo del participante">
+                        placeholder="nombres completo">
                 </div>
 
                 <div class="form-group">
-                    <label>Cédula <span>*</span></label>
+                    <label>Documento de identidad <span>*</span></label>
                     <input type="text" name="cedula" formControlName="cedula" required
-                        placeholder="Cédula del participante">
+                        placeholder="documento de identidad">
                 </div>
 
                 <div class="form-group">
-                    <label>Teléfono <span>*</span></label>
+                    <label>Número telefónico <span>*</span></label>
                     <input type="text" name="telefono" formControlName="telefono"
-                        placeholder="Teléfono del participante" required>
+                        placeholder="número telefónico" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Correo <span>*</span></label>
-                    <input type="email" name="correo" formControlName="correo" placeholder="Correo del participante"
+                    <label>Correo electrónico <span>*</span></label>
+                    <input type="email" name="correo" formControlName="correo" placeholder="correo electrónico"
                         required>
                 </div>
 

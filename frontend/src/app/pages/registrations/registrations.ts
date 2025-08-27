@@ -148,7 +148,7 @@ export default class Registrations implements OnInit {
   }
 
   deleteRegistration(id_inscripcion: number) {
-    const confirmDelete = confirm('⚠️¿Estás seguro de que deseas eliminar esta suscripción?⚠️');
+    if(!confirm('⚠️¿Estás seguro de eliminar esta suscripción?⚠️')) return; 
 
     this.isLoading = true;
 

@@ -16,16 +16,14 @@ main {
 }
 
 .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 10px;
+    gap: 10px;
     border-top: 3px solid #0d4b7a;
     border-bottom: 1px solid #e0e0e0;
 }
 
 .header-container h2 {
-    margin-bottom: 0;
+    margin-bottom: 10px;
     padding-bottom: 0;
     border-bottom: none;
     color: #0a375e;
@@ -84,7 +82,7 @@ main {
 .table-responsive {
     overflow-x: auto;
     padding: 0 10px 10px 10px;
-    height: calc(100vh - 530px);
+    height: calc(100vh - 560px);
 }
 
 .cash-table {
@@ -137,6 +135,34 @@ main {
     color: #777;
 }
 
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Botones de acción */
+.btn-editar,
+.btn-eliminar {
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: #000;
+    background-color: transparent;
+}
+
+.btn-editar:hover {
+    color: #e0a800;
+}
+
+.btn-eliminar:hover {
+    color: red;
+}
+
 /* Modal styles */
 .overlay {
     position: fixed;
@@ -151,35 +177,65 @@ main {
     z-index: 1000;
 }
 
+/* =================================================== */
+/*FORMULARIO DE TRANSACCIONES*/
 .modal-container-cash {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
+    background-color: #fff;
+    border-radius: 0;
     width: 100%;
-    max-width: 400px;
-    position: relative;
-    margin: 0 20px;
+    max-width: 350px;
+    animation: modalFadeIn 0.3s ease-out;
 }
 
-.form-cash {
-    padding: 15px;
-    padding-bottom: 0;
-    border: 1px solid #e0e0e0;
-    margin-top: 10px;
+.modal-container-cash .container-header-form {
+    display: flex;
+    align-items: center;
+    padding: 10px;
 }
 
+.modal-container-cash .container-header-form .form-logo {
+    width: 64px;
+}
 
-/*GLOBALES*/
-.container-header-modal {
-    background-color: #B5FAFF;
-    border: 1px solid #3CD0E0;
+.modal-container-cash .container-header-form h2 {
+    color: #0a375e;
+    font-size: 19px;
+}
+
+.modal-container-cash .form-cash {
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-container-cash .form-cash label {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.modal-container-cash .form-cash .form-group {
     margin-bottom: 20px;
 }
 
+.form-cash .button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+/* =================================================== */
+
+.form-group label span {
+    color: #d32f2f;
+}
+
+/*GLOBALES*/
 .container-header-modal .required-text {
     color: #000;
     font-size: 15px;
-    margin: 10px 10px;
+    padding: 0 20px;
+    margin-bottom: 20px;
 }
 
 .required-text span {
@@ -189,28 +245,18 @@ main {
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 5px 10px;
-    margin-bottom: 15px;
+    padding: 10px 10px;
+    margin-bottom: 10px;
+    background-color: #ececec;
     border: 1px solid #e0e0e0;
 }
 
-.form-group label span {
-    color: #d32f2f;
-}
-
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-
 .button-container button {
-    padding: 7px 16px;
+    padding: 7px 15px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
     font-size: 15px;
-    margin-bottom: 20px;
 }
 
 button[type="submit"] {
@@ -240,8 +286,8 @@ button[type="submit"]:disabled {
     background-color: #e0e0e0;
 }
 
-/*VERSION DESTOCK*/
 
+/*VERSION DESTOCK*/
 @media (min-width: 1024px) {
     main {
         height: calc(100vh - 120px);
@@ -252,6 +298,11 @@ button[type="submit"]:disabled {
     }
 
     .table-responsive {
-        height: calc(100vh - 290px);
+        height: calc(100vh - 300px);
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
     }
 }

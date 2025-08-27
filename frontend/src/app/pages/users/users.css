@@ -131,25 +131,46 @@ main {
     z-index: 1050;
 }
 
-
+/* =================================================== */
 /*FORMULARIO BODEGA*/
 .modal-container-users {
     background-color: #fff;
     border-radius: 0;
-    padding: 30px 20px;
-    height: auto;
     width: 100%;
     max-width: 350px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     animation: modalFadeIn 0.3s ease-out;
 }
 
-.form-users h2 {
-    margin-bottom: 10px;
+.modal-container-users .container-header-form {
+    display: flex;
+    align-items: center;
+    padding: 10px;
 }
 
-.form-users .form-group {
-    margin-bottom: 15px;
+.modal-container-users .container-header-form .form-logo {
+    width: 64px;
+}
+
+.modal-container-users .container-header-form h2 {
+    color: #0a375e;
+    font-size: 19px;
+}
+
+.modal-container-users .form-users {
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-container-users .form-users label {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.modal-container-users .form-users .form-group {
+    margin-bottom: 20px;
 }
 
 .form-users .button-container {
@@ -157,18 +178,18 @@ main {
     justify-content: space-between;
     gap: 10px;
 }
+/* =================================================== */
 
-/*GLOBALES*/
-.container-header-modal {
-    background-color: #B5FAFF;
-    border: 1px solid #3CD0E0;
-    margin-bottom: 10px;
+.form-group label span {
+    color: #d32f2f;
 }
 
+/*GLOBALES*/
 .container-header-modal .required-text {
     color: #000;
     font-size: 15px;
-    margin: 10px 10px;
+    padding: 0 20px;
+    margin-bottom: 20px;
 }
 
 .required-text span {
@@ -178,13 +199,10 @@ main {
 .form-group select,
 .form-group input {
     width: 100%;
-    padding: 5px 10px;
+    padding: 10px 10px;
     margin-bottom: 10px;
+    background-color: #ececec;
     border: 1px solid #e0e0e0;
-}
-
-.form-group label span {
-    color: #d32f2f;
 }
 
 button {

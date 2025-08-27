@@ -165,7 +165,7 @@ export default class Courses implements OnInit {
   }
 
   deleteCourse(id_curso: number) {
-    const confirmDelete = confirm('⚠️¿Estás seguro de que deseas eliminar este curso?⚠️');
+    if(!confirm('⚠️¿Estás seguro de eliminar este curso?⚠️')) return ;
 
     this.isLoading = true;
 

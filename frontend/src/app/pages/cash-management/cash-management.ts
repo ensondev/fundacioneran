@@ -16,6 +16,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthStateService } from '../../shared/service/auth-state.service';
+import { NotFoundError } from 'rxjs';
 @Component({
   selector: 'app-cash-management',
   imports: [CommonModule, ReactiveFormsModule, FormsModule, FontAwesomeModule],
@@ -38,6 +39,7 @@ export default class CashManagement implements OnInit {
 
   allTransaction: any[] = [];
   transactions: any[] = [];
+  selectedTransaction: any = null;
   isLoading = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
@@ -52,6 +54,7 @@ export default class CashManagement implements OnInit {
   userRol: string = '';
 
   mostrarModal = false;
+  mostrarEditModal = false;
 
   TransactionForm!: FormGroup;
 
@@ -139,6 +142,47 @@ export default class CashManagement implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  updateTransaction() {
+    if (this.form.invalid || !this.selectedTransaction) return;
+
+    const { tipo_transaccion, monto, razon } = this.form.getRawValue();
+
+    const id_transaccion = this.selectedTransaction.id_transaccion;
+
+    this.isLoading = true;
+
+    this.cashService.updateTransaction(tipo_transaccion, monto, razon, id_transaccion).subscribe({
+      next: (res) => {
+        this.notification.showSuccess('Transacción actualizada correctamente');
+        this.loadTotals();
+        this.loadTransactions();
+        this.cerrarEditModal();
+        this.isLoading = false;
+      }, error: (error) => {
+        this.notification.showError('Error al actualizar la transacción');
+        console.error('Error al actualizar la transacción:', error);
+        this.isLoading = false;
+      }
+    })
+  }
+
+  deleteTransaction(id_transaccion: number){
+    if (!confirm('⚠️¿Seguro que quieres eliminar esta transacción?⚠️')) return;
+    this.isLoading = true;
+    this.cashService.deleteTransaction(id_transaccion).subscribe({
+      next: (res) => {
+        this.notification.showSuccess('Transacción eliminada correctamente');
+        this.loadTotals();
+        this.loadTransactions();
+        this.isLoading = false;
+      }, error: (error) => {
+        this.notification.showError('Error al eliminar la transacción');
+        console.error('Error al eliminar la transacción:', error);
+        this.isLoading = false;
+      }
+    })
   }
 
   searchTransaction() {
@@ -235,5 +279,20 @@ export default class CashManagement implements OnInit {
 
   cerrarModal() {
     this.mostrarModal = false;
+  }
+
+  abrirEditModal(trans: any) {
+    this.selectedTransaction = trans;
+    this.form.patchValue({
+      tipo_transaccion: trans.tipo_transaccion,
+      monto: trans.monto,
+      razon: trans.razon
+    });
+    this.mostrarEditModal = true;
+  }
+
+  cerrarEditModal() {
+    this.mostrarEditModal = false;
+    this.selectedTransaction = null;
   }
 }

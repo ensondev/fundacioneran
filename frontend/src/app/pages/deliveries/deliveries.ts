@@ -76,7 +76,7 @@ export default class Deliveries implements OnInit {
     cedula_beneficiario: this._formBuilder.nonNullable.control('', Validators.required),
     direccion_beneficiario: this._formBuilder.nonNullable.control('', Validators.required),
     telefono_beneficiario: this._formBuilder.nonNullable.control('', Validators.required),
-    id_donacion: this._formBuilder.nonNullable.control<number>(0, Validators.required)
+    id_donacion: this._formBuilder.nonNullable.control<number | null>(null, Validators.required)
   })
 
   formBeneficiarie = this._formBuilder.group({
