@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InstructorsService } from './instructors.service';
 import { Public } from 'src/authentication/auth/guard/auth.guard';
 import { InsertInstructorsDto } from './dto/insert-instructors.dto';
 import { DeleteInstructorsDto } from './dto/delete-instructors.dto';
+import { UpdateInstructorsDto } from './dto/update-instructors.dto';
 
 @ApiTags('Instructores')
 @Controller('instructors')
@@ -29,6 +30,17 @@ export class InstructorsController {
     @ApiResponse({ status: 500, description: 'Error interno del servidor' })
     async getParticipants(@Res() res) {
         return this.instructorsService.getInstructors(res)
+    }
+
+    @Public()
+    @Put('update')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Actualizar instructor' })
+    @ApiResponse({ status: 200, description: 'Instructor actualizado correctamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    @ApiBody({ type: UpdateInstructorsDto })
+    async UpdateInstructor(@Body() dto: UpdateInstructorsDto) {
+        return this.instructorsService.updateInstructor(dto);
     }
 
     @Public()

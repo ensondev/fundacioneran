@@ -1,3 +1,6 @@
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
+
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,7 +10,7 @@ import {
   faPen,
   faMagnifyingGlass,
   faXmark,
-  faRupiahSign
+  faFileCsv,
 } from '@fortawesome/free-solid-svg-icons';
 import { InventoryService } from '../../services/inventory.service';
 import { AuthStateService } from '../../shared/service/auth-state.service';
@@ -25,6 +28,8 @@ export default class SalesMade implements OnInit {
   faPen = faPen;
   faMagnifyingGlass = faMagnifyingGlass;
   faXmark = faXmark;
+  faFileCsv = faFileCsv;
+
 
   searchCedula: string = '';
   startDate: string = '';
@@ -229,6 +234,45 @@ export default class SalesMade implements OnInit {
     this.form.controls['id_inventario'].reset();
     this.form.controls['cantidad'].reset();
     this.form.controls['precio_unitario'].reset();
+  }
+
+  generarReporteExcel() {
+    const data = this.salesMade.map(sm => ({
+      'N°': sm.id_venta,
+      'Cliente': sm.nombre_cliente,
+      'Cédula': sm.cedula_cliente,
+      'Estado venta': sm.estado_venta,
+      'Total': sm.total,
+      'Fecha venta': new Date(sm.fecha_venta).toLocaleDateString(),
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+    //Definir ancho para cada columna (en caracteres)
+    worksheet['!cols'] = [
+      { wch: 5 },
+      { wch: 35 },
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 25 },
+    ];
+
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Ventas': worksheet },
+      SheetNames: ['Ventas']
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array'
+    });
+
+    const blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    FileSaver.saveAs(blob, 'Reporte_Ventas.xlsx');
   }
 
 

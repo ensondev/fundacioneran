@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { InsertCoursesDto } from './dto/insert-courses.dto';
 import { DeleteCoursesDto } from './dto/delete-courses.dto';
+import { UpdateCoursesDto } from './dto/update-courses.dto';
+import { UpdateAvailabilityCoursesDto } from './dto/update-availability-courses.dto';
 
 @Injectable()
 export class CoursesService {
@@ -39,55 +41,33 @@ export class CoursesService {
     }
 
     async getCourses(res) {
-        /* const query = `
-        SELECT 
-            c.id_curso,
-            c.materia_id,
-            m.nombre_materia,
-            c.instructor_id,
-            i.nombres,
-            c.descripcion,
-            c.fecha_inicio,
-            c.fecha_fin,
-            c.cupo_maximo,
-            c.activo
-        FROM 
-            cursos c
-        JOIN 
-            materias m ON c.materia_id = m.id_materia
-        JOIN 
-            instructores i ON c.instructor_id = i.id_instructor;`; */
-
-        const query = `
-    SELECT 
-        c.id_curso,
-        c.materia_id,
-        m.nombre_materia,
-        c.instructor_id,
-        i.nombres,
-        c.descripcion,
-        c.fecha_inicio,
-        c.fecha_fin,
-        c.cupo_maximo,
-        c.activo,
-        COUNT(ins.id_inscripcion) AS inscripciones_actuales
-    FROM cursos c
-    JOIN materias m ON c.materia_id = m.id_materia
-    JOIN instructores i ON c.instructor_id = i.id_instructor
-    LEFT JOIN inscripciones ins ON ins.curso_id = c.id_curso
-    GROUP BY 
-        c.id_curso,
-        c.materia_id,
-        m.nombre_materia,
-        c.instructor_id,
-        i.nombres,
-        c.descripcion,
-        c.fecha_inicio,
-        c.fecha_fin,
-        c.cupo_maximo,
-        c.activo;
-`;
-
+        const query = `SELECT 
+                    c.id_curso,
+                    c.materia_id,
+                    m.nombre_materia,
+                    c.instructor_id,
+                    i.nombres,
+                    c.descripcion,
+                    c.fecha_inicio,
+                    c.fecha_fin,
+                    c.cupo_maximo,
+                    c.activo,
+                    COUNT(ins.id_inscripcion) AS inscripciones_actuales
+                FROM cursos c
+                JOIN materias m ON c.materia_id = m.id_materia
+                JOIN instructores i ON c.instructor_id = i.id_instructor
+                LEFT JOIN inscripciones ins ON ins.curso_id = c.id_curso
+                GROUP BY 
+                    c.id_curso,
+                    c.materia_id,
+                    m.nombre_materia,
+                    c.instructor_id,
+                    i.nombres,
+                    c.descripcion,
+                    c.fecha_inicio,
+                    c.fecha_fin,
+                    c.cupo_maximo,
+                    c.activo;`;
         try {
             const result = await this.databaseService.query(query, []);
             res.status(200).json({
@@ -103,6 +83,65 @@ export class CoursesService {
                 p_status: false,
                 p_data: {}
             })
+        }
+    }
+
+    async updateCourses(dto: UpdateCoursesDto){
+        const {materia_id, instructor_id, descripcion, fecha_inicio, fecha_fin, cupo_maximo, id_curso} = dto;
+        const query = `UPDATE public.cursos
+                    SET materia_id = $1, instructor_id = $2, descripcion = $3, fecha_inicio = $4, fecha_fin = $5, cupo_maximo = $6
+                    WHERE id_curso = $7
+                    RETURNING materia_id, instructor_id, descripcion, fecha_inicio, fecha_fin, cupo_maximo, id_curso;`;
+        const values = [materia_id, instructor_id, descripcion, fecha_inicio, fecha_fin, cupo_maximo, id_curso];
+        try{
+            const result = await this.databaseService.query(query, values);
+            const curso = result.rows[0];
+            return {
+                p_message: 'Curso actualizado correctamente',
+                p_status: true,
+                p_data: {
+                    curso: curso.id_curso,
+                    materia: curso.materia_id,
+                    instructor: curso.instructor_id,
+                    descripcion: curso.descripcion,
+                    fecha_inicio: curso.fecha_inicio,
+                    fecha_fin: curso.fecha_fin,
+                    cupo_maximo: curso.cupo_maximo
+                }
+            }
+        }catch(error){
+            return {
+                p_message: error.message,
+                p_status: false,
+                p_data: {}
+            }
+        }
+    }
+
+    async updateAvailabilityCourse(dto: UpdateAvailabilityCoursesDto){
+        const { activo, id_curso} = dto;
+        const query = `UPDATE public.cursos
+                    SET activo = $1
+                    WHERE id_curso = $2
+                    RETURNING activo, id_curso;`;
+        const values = [activo, id_curso];
+        try{
+            const result = await this.databaseService.query(query, values);
+            const disponibilidad = result.rows[0];
+            return{
+                p_message: 'activo del curso actualizado correctamente',
+                p_status: true,
+                p_data: {
+                    activo: disponibilidad.activo,
+                    id_curso: disponibilidad.id_curso,
+                }
+            }
+        }catch(error){
+            return {
+                p_message: error.message,
+                p_status: false,
+                p_data: {}
+            }
         }
     }
 

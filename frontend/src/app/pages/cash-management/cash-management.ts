@@ -16,7 +16,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthStateService } from '../../shared/service/auth-state.service';
-import { NotFoundError } from 'rxjs';
+
 @Component({
   selector: 'app-cash-management',
   imports: [CommonModule, ReactiveFormsModule, FormsModule, FontAwesomeModule],
@@ -168,7 +168,7 @@ export default class CashManagement implements OnInit {
     })
   }
 
-  deleteTransaction(id_transaccion: number){
+  deleteTransaction(id_transaccion: number) {
     if (!confirm('⚠️¿Seguro que quieres eliminar esta transacción?⚠️')) return;
     this.isLoading = true;
     this.cashService.deleteTransaction(id_transaccion).subscribe({
@@ -215,8 +215,8 @@ export default class CashManagement implements OnInit {
       'N°': t.id_transaccion,
       'Tipo': t.tipo_transaccion,
       'Monto': t.monto,
-      'Fecha': new Date(t.fecha_transaccion).toLocaleDateString(),
-      'Razon': t.razon
+      'Razon': t.razon,
+      'Fecha': new Date(t.fecha_transaccion).toLocaleDateString()
     }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
@@ -226,8 +226,8 @@ export default class CashManagement implements OnInit {
       { wch: 5 },   // ID
       { wch: 15 },  // tipo
       { wch: 15 },  // monto
-      { wch: 15 },  // Fecha
-      { wch: 35 },  // Razon
+      { wch: 25 },  // Razon
+      { wch: 20 },  // Fecha
     ];
 
     const workbook: XLSX.WorkBook = {

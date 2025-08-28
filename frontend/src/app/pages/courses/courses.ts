@@ -8,7 +8,8 @@ import {
   faTrash,
   faPen,
   faMagnifyingGlass,
-  faXmark
+  faXmark,
+  faRupiahSign
 } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
 import { retry } from 'rxjs';
@@ -45,7 +46,9 @@ export default class Courses implements OnInit {
 
   isLoading = false;
   mostrarModal = false;
+  mostrarModalEdit = false;
   mostrarModalSubject = false;
+  selectedCourses: any = null;
 
   CoursesForm!: FormGroup;
 
@@ -70,6 +73,11 @@ export default class Courses implements OnInit {
 
     const session = this.authStateService.getSession();
     this.userRole = session ? session.rol : '';
+
+    // Verificar cada 10 segundos si algún curso ya debe finalizar
+    setInterval(() => {
+      this.verificarCursosEnTiempoReal();
+    }, 10000); // 10,000 ms = 10 segundos
   }
 
   loadCourses() {
@@ -79,10 +87,56 @@ export default class Courses implements OnInit {
       next: (response) => {
         this.allCourses = response;
         this.courses = response;
+
+        const today = new Date();
+        const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        this.courses.forEach((course) => {
+          const fechaFin = new Date(course.fecha_fin);
+          const fechaFinDateOnly = new Date(fechaFin.getFullYear(), fechaFin.getMonth(), fechaFin.getDate());
+
+          // CASO 2: Si aún no ha terminado y está inactivo → actualizar a activo
+          if (fechaFinDateOnly > todayDateOnly && course.activo === false) {
+            this.coursesService.updateAvailabilityCourse(true, course.id_curso).subscribe({
+              next: () => {
+                this.loadCourses();
+                course.activo = true;
+                console.log(`Curso ${course.id_curso} marcado como activo`);
+              },
+              error: (error) => {
+                console.error(`Error al actualizar curso ${course.id_curso}:`, error);
+                this.notification.showError(`No se pudo actualizar el estado del curso ${course.id_curso}`);
+              }
+            });
+          }
+        });
         this.isLoading = false;
-      }, error: (error) => {
+      },
+      error: (error) => {
         console.error('Error al cargar los cursos:', error);
+        this.notification.showError('Error al cargar los cursos');
         this.isLoading = false;
+      }
+    });
+  }
+
+  verificarCursosEnTiempoReal() {
+    const now = new Date();
+
+    this.courses.forEach((course) => {
+      const fechaFin = new Date(course.fecha_fin);
+
+      if (fechaFin <= now && course.activo === true) {
+        this.coursesService.updateAvailabilityCourse(false, course.id_curso).subscribe({
+          next: () => {
+            course.activo = false;
+            this.notification.showError(`Curso "${course.nombre_materia}" ha finalizado`);
+            console.log(`Curso ${course.id_curso} marcado como inactivo`);
+          },
+          error: (err) => {
+            console.error(`Error al actualizar curso ${course.id_curso}:`, err);
+          }
+        });
       }
     });
   }
@@ -164,8 +218,31 @@ export default class Courses implements OnInit {
     })
   }
 
+  updateCourse() {
+    if (this.form.invalid || !this.selectedCourses) return;
+
+    const { materia_id, instructor_id, descripcion, fecha_inicio, fecha_fin, cupo_maximo } = this.form.getRawValue();
+    const curso_id = this.selectedCourses.id_curso;
+
+    this.isLoading = true;
+
+    this.coursesService.updateCourse(materia_id, instructor_id, descripcion, fecha_inicio, fecha_fin, cupo_maximo, curso_id).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.notification.showSuccess('Curso actualizado correctamente');
+        this.loadCourses();
+        this.cerrarEditModal();
+        this.isLoading = false;
+      }, error: (error) => {
+        this.notification.showError('Error al actualizar el curso');
+        console.log('Error al actualizar el curso:', error);
+        this.isLoading = false;
+      }
+    })
+  }
+
   deleteCourse(id_curso: number) {
-    if(!confirm('⚠️¿Estás seguro de eliminar este curso?⚠️')) return ;
+    if (!confirm('⚠️¿Estás seguro de eliminar este curso?⚠️')) return;
 
     this.isLoading = true;
 
@@ -196,5 +273,23 @@ export default class Courses implements OnInit {
 
   cerrarModalSubject() {
     this.mostrarModalSubject = false;
+  }
+
+  abrirEditModal(cour: any) {
+    this.selectedCourses = cour;
+    this.form.patchValue({
+      materia_id: cour.materia_id,
+      instructor_id: cour.instructor_id,
+      descripcion: cour.descripcion,
+      fecha_inicio: cour.fecha_inicio,
+      fecha_fin: cour.fecha_fin,
+      cupo_maximo: cour.cupo_maximo
+    });
+    this.mostrarModalEdit = true;
+  }
+
+  cerrarEditModal() {
+    this.selectedCourses = null;
+    this.mostrarModalEdit = false;
   }
 }

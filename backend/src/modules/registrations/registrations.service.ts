@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { InsertRegistrationsDto } from './dto/insert-registrations.dto';
 import { DeleteRegistrationsDto } from './dto/delete-registrations.dto';
+import { UpdateRegistrationsDto } from './dto/update-registrations.dto';
 
 @Injectable()
 export class RegistrationsService {
@@ -104,7 +105,9 @@ export class RegistrationsService {
                 SELECT 
                     i.id_inscripcion,
                     p.nombres,
+                    p.id_participante,
                     m.nombre_materia,
+                    c.id_curso,
                     i.fecha_inscripcion,
                     i.estado_inscripcion
                 FROM inscripciones i
@@ -126,6 +129,34 @@ export class RegistrationsService {
                 p_status: false,
                 p_data: {}
             });
+        }
+    }
+
+    async updateRegistration(dto: UpdateRegistrationsDto) {
+        const { participante_id, curso_id, id_inscripcion } = dto;
+        const query = `UPDATE public.inscripciones
+                    SET participante_id = $1, curso_id = $2
+                    WHERE id_inscripcion = $3
+                    RETURNING participante_id, curso_id, id_inscripcion;`;
+        const values = [participante_id, curso_id, id_inscripcion];
+        try {
+            const result = await this.databaseService.query(query, values);
+            const inscripcion = result.rows[0];
+            return {
+                p_message: 'Inscripcion actualizada correctamente',
+                p_status: true,
+                p_data: {
+                    id_inscripcion: inscripcion.id_inscripcion,
+                    participante: inscripcion.participante_id,
+                    curso: inscripcion.curso_id
+                }
+            }
+        } catch (error) {
+            return {
+                p_message: error.message,
+                p_status: false,
+                p_data: {}
+            }
         }
     }
 

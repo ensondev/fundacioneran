@@ -31,6 +31,21 @@ export class RegistrationsService {
         )
     }
 
+    updateRegistration(
+        participante_id: number | null,
+        curso_id: number | null,
+        id_inscripcion: number | null
+    ): Observable<any> {
+        return this._http.put(`${environment.API_URL}/registrations/update`, {
+            participante_id, curso_id, id_inscripcion
+        }).pipe(
+            catchError(error => {
+                console.error('Error en updateRegistration:', error);
+                return throwError(() => error);
+            })
+        )
+    }
+
     deleteRegistration(id_inscripcion: number): Observable<any> {
         return this._http.request('delete', `${environment.API_URL}/registrations/delete`, {
             body: { id_inscripcion }

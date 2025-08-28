@@ -21,7 +21,7 @@ export class ParticipantsService {
         )
     }
 
-    getParticipants():Observable<any[]> {
+    getParticipants(): Observable<any[]> {
         return this._http.get(`${environment.API_URL}/participants`).pipe(
             map((res: any) => res.p_data?.participants || []),
             catchError(error => {
@@ -31,9 +31,25 @@ export class ParticipantsService {
         )
     }
 
-    deleteParticipant(id_participante: number):Observable<any>{
+    updateParticipant(
+        nombres: string,
+        cedula: string,
+        telefono: string,
+        correo: string,
+        direccion: string,
+        fecha_nacimiento: string,
+        id_participante: number | null
+    ): Observable<any> {
+        return this._http.put(`${environment.API_URL}/participants/update`, {
+            nombres, cedula, telefono, correo, direccion, fecha_nacimiento, id_participante
+        }).pipe(
+            
+        )
+    }
+
+    deleteParticipant(id_participante: number): Observable<any> {
         return this._http.request('delete', `${environment.API_URL}/participants/delete`, {
-            body: {id_participante}
+            body: { id_participante }
         })
     }
 }

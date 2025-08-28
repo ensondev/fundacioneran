@@ -97,12 +97,11 @@ export class DeliveriesService {
         try {
             await this.databaseService.query('BEGIN');
 
-            const updateEntregaQuery = `
-          UPDATE public.entregas
-          SET beneficiario_id = $1, donacion_id = $2
-          WHERE id_entrega = $3
-          RETURNING *;
-        `;
+            const updateEntregaQuery = `UPDATE public.entregas
+                SET beneficiario_id = $1, donacion_id = $2
+                WHERE id_entrega = $3
+                RETURNING *;`;
+                
             const result = await this.databaseService.query(updateEntregaQuery, [beneficiario_id, donacion_id, id_entrega]);
             const entrega = result.rows[0];
 

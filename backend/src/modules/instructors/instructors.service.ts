@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { InsertInstructorsDto } from './dto/insert-instructors.dto';
 import { DeleteInstructorsDto } from './dto/delete-instructors.dto';
+import { UpdateInventoryDto } from '../inventory/dto/update-inventory.dto';
+import { UpdateInstructorsDto } from './dto/update-instructors.dto';
 
 @Injectable()
 export class InstructorsService {
@@ -59,6 +61,37 @@ export class InstructorsService {
                 p_status: false,
                 p_data: {}
             });
+        }
+    }
+
+    async updateInstructor(dto: UpdateInstructorsDto){
+        const {nombres, cedula, telefono, correo, especialidad, id_instructor} = dto;
+        const query = `UPDATE public.instructores
+                    SET nombres = $1, cedula = $2, telefono = $3, correo = $4, especialidad = $5
+                    WHERE id_instructor = $6
+                    RETURNING nombres, cedula, telefono, correo, especialidad, id_instructor;`;
+        const values = [nombres, cedula, telefono, correo, especialidad, id_instructor];
+        try{
+            const result = await this.databaseService.query(query, values);
+            const instructor = result.rows[0];
+            return{
+                p_message: 'Instructor actualizado correctamente',
+                p_status: true,
+                p_data: {
+                    id_instructor: instructor.id_instructor,
+                    nombres: instructor.nombres,
+                    cedula: instructor.cedula,
+                    telefono: instructor. telefono,
+                    correo: instructor.correo,
+                    especialidad: instructor.especialidad
+                }
+            }
+        }catch(error){
+            return{
+                p_message: error.message,
+                p_status: false,
+                p_data: {}
+            }
         }
     }
 

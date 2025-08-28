@@ -20,8 +20,9 @@
         <div class="header-container">
             <h2>Registrar Venta</h2>
             <div class="acciones-box">
+                <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon
+                        [icon]="faFileCsv"></fa-icon></button>
                 <button class="btn-open-modal" (click)="abrirModal()">+ venta</button>
-                <!-- <button class="btn-open-modal" (click)="abrirModal()">+ Entrega</button> -->
             </div>
         </div>
         <div class="table-responsive">
@@ -83,8 +84,8 @@
                         </div>
                         <div class="form-group form-group-client">
                             <label>Cédula</label>
-                            <input type="text" formControlName="cedula_cliente" placeholder="Cédula del cliente" maxlength="10"
-                                required>
+                            <input type="text" formControlName="cedula_cliente" placeholder="Cédula del cliente"
+                                maxlength="10" required>
                         </div>
                     </div>
 

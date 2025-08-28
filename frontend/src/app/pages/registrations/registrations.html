@@ -11,11 +11,11 @@
     <div class="registrations-container">
         <div class="header-container">
             <h2>Lista de Inscripciones</h2>
-            <!-- <div class="acciones-box">
+            <div class="acciones-box">
                 <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon
                         [icon]="faFileCsv"></fa-icon></button>
-            </div> -->
-            <button class="btn-open-modal" (click)="abrirModal()">+ Inscripción</button>
+                <button class="btn-open-modal" (click)="abrirModal()">+ Inscripción</button>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="registrations-table">
@@ -42,8 +42,8 @@
                         @if (userRole === 'Administrador') {
                         <td>
                             <div class="action-buttons">
-                                <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(donor)"><fa-icon
-                                        [icon]="faPen"></fa-icon></button> -->
+                                <button title="editar" class="btn-editar" (click)="abrirEditModal(regi)"><fa-icon
+                                        [icon]="faPen"></fa-icon></button>
                                 <button class="btn-eliminar" (click)="deleteRegistration(regi.id_inscripcion)"><fa-icon
                                         [icon]="faTrash"></fa-icon></button>
                             </div>
@@ -99,43 +99,47 @@
     </div>
     }
 
-    <!-- Modal para editar donador -->
-    <!-- @if (mostrarEditModal) {
+    @if (mostrarEditModal) {
     <div class="overlay">
-        <div class="modal-container">
-            <div class="container-header-modal">
-                <p class="required-text">El campo con <span>*</span> es obligatorio</p>
+        <div class="modal-registrations-container">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Actualizar inscripción</h2>
             </div>
 
-            <form [formGroup]="editForm" (ngSubmit)="updateDonor()">
-                <h2>Editar Teléfono del Donador</h2>
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" [value]="selectedDonor.nombres" readonly class="readonly-input">
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-registrations" [formGroup]="form" (ngSubmit)="updateRegistration()">
+
+                <div class="form-group form-participant">
+                    <label>Participante <span>*</span></label>
+                    <select formControlName="participante_id" required>
+                        <option value="null" disabled>Seleccione un participante</option>
+                        @for (part of participants; track part.id_participante) {
+                        <option [value]="part.id_participante">{{ part.nombres }}</option>
+                        }
+                    </select>
                 </div>
 
-                <div class="form-group">
-                    <label>Cédula</label>
-                    <input type="text" [value]="selectedDonor.numero_identificacion" readonly class="readonly-input">
-                </div>
-
-                <div class="form-group">
-                    <label>Teléfono actual</label>
-                    <input type="text" [value]="selectedDonor.telefono" readonly class="readonly-input">
-                </div>
-
-                <div class="form-group">
-                    <label>Nuevo Teléfono <span>*</span></label>
-                    <input type="text" formControlName="telefono" placeholder="Ingrese el nuevo teléfono" required>
+                <div class="form-group form-participant">
+                    <label>Curso <span>*</span></label>
+                    <select formControlName="curso_id" required>
+                        <option value="null" disabled>Seleccione un curso</option>
+                        @for (cour of courses; track cour.id_curso) {
+                        <option [value]="cour.id_curso">{{ cour.nombre_materia }}</option>
+                        }
+                    </select>
                 </div>
 
                 <div class="button-container">
-                    <button type="submit" [disabled]="editForm.invalid">Actualizar teléfono</button>
+                    <button type="submit" [disabled]="form.invalid">Actualizar</button>
                     <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
-    } -->
+    }
 
 </main>

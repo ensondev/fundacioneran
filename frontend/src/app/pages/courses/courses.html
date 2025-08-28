@@ -23,10 +23,11 @@
                         <!-- <th>N°</th> -->
                         <th>Curso</th>
                         <th>Instructor</th>
-                        <th>Descripcion</th>
+                        <!-- <th>Descripcion</th> -->
                         <th>Fecha inicio</th>
                         <th>Fecha fin</th>
                         <th>Cupos disponibles</th>
+                        <th>Disponibilidad</th>
                         <th>Activo</th>
                         @if(userRole === 'Administrador'){
                         <th>Opciones</th>
@@ -39,22 +40,28 @@
                         <!-- <td>{{ cour.id_curso }}</td> -->
                         <td>{{ cour.nombre_materia }}</td>
                         <td>{{ cour.nombres }}</td>
-                        <td>{{ cour.descripcion }}</td>
-                        <td>{{ cour.fecha_inicio | date:'shortDate' }}</td>
-                        <td>{{ cour.fecha_fin | date:'shortDate' }}</td>
-                        <td>{{ cour.inscripciones_actuales }}/{{ cour.cupo_maximo }} @if(cour.inscripciones_actuales ==
-                            cour.cupo_maximo){Lleno}@else {disponible}</td>
-                        @if (cour.activo) {
-                        <td>En proceso</td>
+                        <!-- <td>{{ cour.descripcion }}</td> -->
+                        <td>{{ cour.fecha_inicio | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ cour.fecha_fin | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ cour.inscripciones_actuales }}/{{ cour.cupo_maximo }}</td>
+
+                        @if (cour.inscripciones_actuales == cour.cupo_maximo) {
+                        <td style="color: red;">lleno</td>
                         }@else {
-                        <td>Finalizado</td>
+                        <td style="color: green;">disponible</td>
+                        }
+
+                        @if (cour.activo) {
+                        <td style="color: rgb(255, 153, 0);">En proceso</td>
+                        }@else {
+                        <td style="color: red;">Finalizado</td>
                         }
 
                         @if (userRole === 'Administrador') {
                         <td>
                             <div class="action-buttons">
-                                <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(donor)"><fa-icon
-                                        [icon]="faPen"></fa-icon></button> -->
+                                <button title="editar" class="btn-editar" (click)="abrirEditModal(cour)"><fa-icon
+                                        [icon]="faPen"></fa-icon></button>
                                 <button class="btn-eliminar" (click)="deleteCourse(cour.id_curso)"><fa-icon
                                         [icon]="faTrash"></fa-icon></button>
                             </div>
@@ -163,6 +170,71 @@
                 <div class="button-container">
                     <button type="submit" [disabled]="formSubject.invalid">Registrar</button>
                     <button type="button" class="cancel-btn" (click)="cerrarModalSubject()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+
+    @if (mostrarModalEdit) {
+    <div class="overlay">
+        <div class="modal-container">
+
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Actualizar curso</h2>
+            </div>
+
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-courses" [formGroup]="form" (ngSubmit)="updateCourse()">
+
+                <div class="form-group form-categorie">
+                    <label>Curso <span>*</span></label>
+                    <select formControlName="materia_id" required>
+                        <option value="null" disabled>Seleccione un curso</option>
+                        @for (subj of subjects; track subj.id_materia) {
+                        <option [value]="subj.id_materia">{{ subj.nombre_materia }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group form-categorie">
+                    <label>Instructor <span>*</span></label>
+                    <select formControlName="instructor_id" required>
+                        <option value="null" disabled>Seleccione un instructor</option>
+                        @for (inst of instructors; track inst.id_instructor) {
+                        <option [value]="inst.id_instructor">{{ inst.nombres }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Descripcion <span>*</span></label>
+                    <input type="text" name="descripcion" formControlName="descripcion" required
+                        placeholder="descripcion del curso">
+                </div>
+
+                <div class="form-group">
+                    <label>Cupos <span>*</span></label>
+                    <input type="number" formControlName="cupo_maximo" placeholder="cupos disponibles" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de inicio:</label>
+                    <input type="date" formControlName="fecha_inicio" />
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de finalización:</label>
+                    <input type="date" formControlName="fecha_fin" />
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="form.invalid">Actualizar</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
                 </div>
             </form>
         </div>

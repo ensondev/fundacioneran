@@ -11,11 +11,11 @@
     <div class="instructors-container">
         <div class="header-container">
             <h2>Lista de instructores</h2>
-            <!-- <div class="acciones-box">
+            <div class="acciones-box">
                 <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon
                         [icon]="faFileCsv"></fa-icon></button>
-            </div> -->
-            <button class="btn-open-modal" (click)="abrirModal()">+ Instructor</button>
+                <button class="btn-open-modal" (click)="abrirModal()">+ Instructor</button>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="instructors-table">
@@ -53,8 +53,8 @@
                         @if (userRole === 'Administrador') {
                         <td>
                             <div class="action-buttons">
-                                <!-- <button title="editar" class="btn-editar" (click)="abrirEditModal(donor)"><fa-icon
-                                        [icon]="faPen"></fa-icon></button> -->
+                                <button title="editar" class="btn-editar" (click)="abrirEditModal(inst)"><fa-icon
+                                        [icon]="faPen"></fa-icon></button>
                                 <button class="btn-eliminar" (click)="deleteInstructor(inst.id_instructor)"><fa-icon
                                         [icon]="faTrash"></fa-icon></button>
                             </div>
@@ -85,8 +85,7 @@
 
                 <div class="form-group">
                     <label>Nombres completo <span>*</span></label>
-                    <input type="text" name="nombre" formControlName="nombres" required
-                        placeholder="nombres completo">
+                    <input type="text" name="nombre" formControlName="nombres" required placeholder="nombres completo">
                 </div>
 
                 <div class="form-group">
@@ -122,43 +121,56 @@
     </div>
     }
 
-    <!-- Modal para editar donador -->
-    <!-- @if (mostrarEditModal) {
+    @if (mostrarEditModal) {
     <div class="overlay">
-        <div class="modal-container">
-            <div class="container-header-modal">
-                <p class="required-text">El campo con <span>*</span> es obligatorio</p>
+        <div class="modal-instructors-container">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Actualizar instructor</h2>
             </div>
 
-            <form [formGroup]="editForm" (ngSubmit)="updateDonor()">
-                <h2>Editar Teléfono del Donador</h2>
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-instructors" [formGroup]="form" (ngSubmit)="updateInstructor()">
+
                 <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" [value]="selectedDonor.nombres" readonly class="readonly-input">
+                    <label>Nombres completo <span>*</span></label>
+                    <input type="text" name="nombre" formControlName="nombres" required placeholder="nombres completo">
                 </div>
 
                 <div class="form-group">
-                    <label>Cédula</label>
-                    <input type="text" [value]="selectedDonor.numero_identificacion" readonly class="readonly-input">
+                    <label>Documento de identidad <span>*</span></label>
+                    <input type="text" name="cedula" formControlName="cedula" required
+                        placeholder="documento de identidad">
                 </div>
 
                 <div class="form-group">
-                    <label>Teléfono actual</label>
-                    <input type="text" [value]="selectedDonor.telefono" readonly class="readonly-input">
+                    <label>Número telefónico <span>*</span></label>
+                    <input type="text" name="telefono" formControlName="telefono" placeholder="número telefónico"
+                        required>
                 </div>
 
                 <div class="form-group">
-                    <label>Nuevo Teléfono <span>*</span></label>
-                    <input type="text" formControlName="telefono" placeholder="Ingrese el nuevo teléfono" required>
+                    <label>Correo electrónico <span>*</span></label>
+                    <input type="email" name="correo" formControlName="correo" placeholder="correo electrónico"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Especialidad <span>*</span></label>
+                    <input type="text" name="direccion" formControlName="especialidad"
+                        placeholder="especialidad del instructor" required>
                 </div>
 
                 <div class="button-container">
-                    <button type="submit" [disabled]="editForm.invalid">Actualizar teléfono</button>
+                    <button type="submit" [disabled]="form.invalid">Actualizar</button>
                     <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
-    } -->
+    }
 
 </main>

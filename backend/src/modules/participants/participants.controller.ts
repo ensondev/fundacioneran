@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/authentication/auth/guard/auth.guard';
 import { ParticipantsService } from './participants.service';
 import { InsertParticipantsDto } from './dto/insert-participants.dto';
 import { DeleteParticipantsDto } from './dto/delete-participants.dto';
+import { UpdateParticipantsDto } from './dto/update-participants.dto';
 
 @ApiTags('Participantes')
 @Controller('participants')
@@ -29,6 +30,17 @@ export class ParticipantsController {
     @ApiResponse({ status: 500, description: 'Error interno del servidor' })
     async getParticipants(@Res() res) {
         return this.participantsService.getParticipants(res)
+    }
+
+    @Public()
+    @Put('update')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Actualizar participante' })
+    @ApiResponse({ status: 200, description: 'Participante actualizado correctamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    @ApiBody({ type: UpdateParticipantsDto })
+    async UpdateParticipant(@Body() dto: UpdateParticipantsDto) {
+        return this.participantsService.updateParticipant(dto);
     }
 
     @Public()
