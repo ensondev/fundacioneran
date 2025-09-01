@@ -1,0 +1,283 @@
+main {
+    padding: 20px;
+    width: 100vw;
+    height: calc(100vh - 110px);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.infants-container {
+    width: 100%;
+    margin-top: 10px;
+    background: white;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Estilos para el contenedor del encabezado */
+.header-container {
+    padding: 10px;
+    gap: 10px;
+    border-top: 3px solid #0d4b7a;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.header-container h2 {
+    margin-bottom: 10px;
+    padding-bottom: 0;
+    border-bottom: none;
+    color: #0a375e;
+    font-size: 19px;
+}
+
+.acciones-box {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-open-modal {
+    background-color: #0a375e;
+    color: white;
+    padding: 7px 20px;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+/* Estilos para la tabla de donadores */
+.table-responsive {
+    overflow-x: auto;
+    padding: 0 10px 10px 10px;
+    height: calc(100vh - 310px);
+}
+
+.infants-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.infants-table th {
+    background-color: #0a375e;
+    color: white;
+    font-weight: 500;
+    padding: 7px 15px;
+}
+
+.infants-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.infants-table td {
+    color: #333;
+    padding: 7px 15px;
+    font-weight: 500;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.infants-table tr:not(:last-child) td {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.infants-table tr:hover {
+    background-color: #f0f0f0;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Botones de acción */
+.btn-editar,
+.btn-eliminar {
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: #000;
+    background-color: transparent;
+}
+
+.btn-editar:hover {
+    color: #e0a800;
+}
+
+.btn-eliminar:hover {
+    color: red;
+}
+
+/* Estilos del modal - editar donador*/
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+/* =================================================== */
+/*FORMULARIO DONADORES UPDATE*/
+.modal-infant-container {
+    background-color: #fff;
+    border-radius: 0;
+    width: 100%;
+    max-width: 400px;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-infant-container .container-header-form {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.modal-infant-container .container-header-form .form-logo {
+    width: 64px;
+}
+
+.modal-infant-container .container-header-form h2 {
+    color: #0a375e;
+    font-size: 19px;
+}
+
+.modal-infant-container .form-infant {
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-container .form-infant label {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.modal-infant-container .form-infant .form-group {
+    margin-bottom: 10px;
+    /* display: flex;
+    flex-direction: column; */
+}
+
+.form-infant .button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* =================================================== */
+
+.container-header-modal .required-text {
+    color: #000;
+    font-size: 15px;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+.required-text span {
+    color: red;
+}
+
+
+.form-group label span {
+    color: #d32f2f;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 10px 10px;
+
+    background-color: #ececec;
+    border: 1px solid #e0e0e0;
+}
+
+button {
+    padding: 7px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+button[type="submit"] {
+    background-color: #0a375e;
+    color: white;
+    border: none;
+    flex: 1;
+}
+
+button[type="submit"]:hover {
+    background-color: #0d4b7a;
+}
+
+button[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.cancel-btn {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+    flex: 1;
+}
+
+.cancel-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.readonly-input {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    color: #666;
+    cursor: not-allowed;
+    padding: 8px 10px;
+    width: 100%;
+}
+
+.readonly-input:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #ddd;
+}
+
+@media (min-width: 1024px) {
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .table-responsive {
+        height: calc(100vh - 220px);
+    }
+}
+
+
+/* Animación opcional para el modal */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

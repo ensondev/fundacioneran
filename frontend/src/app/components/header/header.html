@@ -81,6 +81,12 @@
                     </li>
 
                     <li>
+                        <a (click)="closeMenu()" routerLink="/infants">
+                            <fa-icon [icon]="faChildren"></fa-icon><span>Infantes</span>
+                        </a>
+                    </li>
+
+                    <li>
                         <div class="menu-toggle" (click)="toggleSubmenu('inventario')">
                             <fa-icon [icon]="faBoxArchive"></fa-icon>
                             <span>Inventario</span>

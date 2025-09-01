@@ -3,6 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
+  faChildren,
   faIdCard,
   faBook,
   faHeart,
@@ -66,6 +67,7 @@ export class Header{
   faPrint = faPrint;
   faBook = faBook;
   faChalkboardUser = faChalkboardUser;
+  faChildren = faChildren;
 
   usuario: string = '';
   rol: string = '';

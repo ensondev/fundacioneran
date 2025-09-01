@@ -19,5 +19,6 @@ export const routes: Routes = [
     { path: 'participants', canActivate: [privateGuard], loadComponent: () => import('./pages/participants/participants') },
     { path: 'instructors', canActivate: [privateGuard], loadComponent: () => import('./pages/instructors/instructors') },
     { path: 'registrations', canActivate: [privateGuard], loadComponent: () => import('./pages/registrations/registrations')},
+    { path: 'infants', canActivate: [privateGuard], loadComponent: () => import('./pages/infants/infants')},
     { path: '**', redirectTo: 'home' }
 ];

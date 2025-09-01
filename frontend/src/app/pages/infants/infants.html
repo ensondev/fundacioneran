@@ -1,0 +1,209 @@
+<main>
+    <!-- <div class="container-filter">
+        <div class="search-container">
+            <input type="text" placeholder="Buscar donador por cédula" [(ngModel)]="searchCedula"
+                (keyup.enter)="searchByCedula()" maxlength="10">
+            <button class="btn-filter" (click)="searchByCedula()"><fa-icon
+                    [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
+            <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+        </div>
+    </div> -->
+    <div class="infants-container">
+        <div class="header-container">
+            <h2>Lista de niños/as</h2>
+            <div class="acciones-box">
+                <button class="btn-open-modal" (click)="generarReporteExcel()">Reporte <fa-icon
+                        [icon]="faFileCsv"></fa-icon></button>
+                <button class="btn-open-modal" (click)="abrirModal()">+ Infante</button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="infants-table">
+                <thead>
+                    <tr>
+                        <th>Infante</th>
+                        <th>Cédula</th>
+                        <!-- <th>Genero</th> -->
+                        <th>Fecha nacimiento</th>
+                        <th>Acudiente</th>
+                        <th>Cédula</th>
+                        <th>Teléfono</th>
+                        <th>Fecha registro</th>
+                        @if (userRole === 'Administrador') {
+                        <th>Opciones</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (infant of infants; track infant.id_infante) {
+                    <tr>
+                        <td>{{ infant.nombres }}</td>
+                        <td>{{ infant.cedula }}</td>
+                        <td>{{ infant.fecha_nacimiento | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ infant.nombre_acudiente }}</td>
+                        <td>{{ infant.cedula_acudiente }}</td>
+                        <td>{{ infant.telefono_acudiente }}</td>
+                        <td>{{ infant.fecha_registro | date:'dd/MM/yyyy' }}</td>
+                        @if(userRole === 'Administrador'){
+                        <td>
+                            <div class="action-buttons">
+                                <button title="editar" class="btn-editar" (click)="abrirEditModal(infant)"><fa-icon
+                                        [icon]="faPen"></fa-icon></button>
+                                <button class="btn-eliminar" (click)="deleteInfant(infant.id_infante)"><fa-icon
+                                        [icon]="faTrash"></fa-icon></button>
+                            </div>
+                        </td>
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (mostrarModal) {
+    <div class="overlay">
+        <div class="modal-infant-container">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Registrar infante</h2>
+            </div>
+
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-infant" [formGroup]="form" (ngSubmit)="insertInfant()">
+                <div class="container-infant">
+                    <div class="form-group">
+                        <label>Nombres completo <span>*</span></label>
+                        <input type="text" name="nombre" formControlName="nombres" required
+                            placeholder="nombres completo">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Documento de identidad <span>*</span></label>
+                        <input type="text" name="cedula" formControlName="cedula" required
+                            placeholder="documento de identidad">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Genero <span>*</span></label>
+                        <select formControlName="genero" name="genero">
+                            <option value="" disabled>Genero</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha de nacimiento:</label>
+                        <input type="date" formControlName="fecha_nacimiento" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombres completo <span>*</span></label>
+                    <input type="text" name="nombre" formControlName="nombre_acudiente" required
+                        placeholder="nombres completo del acudiente">
+                </div>
+
+                <div class="form-group">
+                    <label>Documento de identidad <span>*</span></label>
+                    <input type="text" name="cedula" formControlName="cedula_acudiente" required
+                        placeholder="documento de identidad del acudiente">
+                </div>
+
+                <div class="form-group">
+                    <label>Número telefónico <span>*</span></label>
+                    <input type="text" name="telefono" formControlName="telefono_acudiente"
+                        placeholder="número telefónico del acudiente" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Dirección <span>*</span></label>
+                    <input type="text" name="direccion" formControlName="direccion" placeholder="Dirección del infante"
+                        required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="form.invalid">Registrar</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+
+    @if (mostrarEditModal) {
+    <div class="overlay">
+        <div class="modal-infant-container">
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Actualizar infante</h2>
+            </div>
+
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-infant" [formGroup]="form" (ngSubmit)="updateInfant()">
+                <div class="form-group">
+                    <label>Nombres completo <span>*</span></label>
+                    <input type="text" name="nombre" formControlName="nombres" required placeholder="nombres completo">
+                </div>
+
+                <div class="form-group">
+                    <label>Documento de identidad <span>*</span></label>
+                    <input type="text" name="cedula" formControlName="cedula" required
+                        placeholder="documento de identidad">
+                </div>
+
+                <div class="form-group">
+                    <label>Genero <span>*</span></label>
+                    <select formControlName="genero" name="genero">
+                        <option value="null" disabled>Genero</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de nacimiento:</label>
+                    <input type="date" formControlName="fecha_nacimiento" />
+                </div>
+
+                <div class="form-group">
+                    <label>Nombres completo <span>*</span></label>
+                    <input type="text" name="nombre" formControlName="nombre_acudiente" required
+                        placeholder="nombres completo del acudiente">
+                </div>
+
+                <div class="form-group">
+                    <label>Documento de identidad <span>*</span></label>
+                    <input type="text" name="cedula" formControlName="cedula_acudiente" required
+                        placeholder="documento de identidad del acudiente">
+                </div>
+
+                <div class="form-group">
+                    <label>Número telefónico <span>*</span></label>
+                    <input type="text" name="telefono" formControlName="telefono_acudiente"
+                        placeholder="número telefónico del acudiente" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Dirección <span>*</span></label>
+                    <input type="text" name="direccion" formControlName="direccion" placeholder="Dirección del infante"
+                        required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="form.invalid">Actualizar</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarEditModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+
+</main>
