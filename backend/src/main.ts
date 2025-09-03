@@ -9,6 +9,7 @@ async function bootstrap() {
   const allowedOrigins = [
     'http://localhost:4200', // Angular local dev
     'https://fundacioneran-frontend.onrender.com', // tu frontend en producción
+    'https://fundacioneran.vercel.app',
   ];
 
   app.enableCors({
