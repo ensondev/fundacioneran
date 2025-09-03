@@ -3,6 +3,7 @@ import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { IS_PUBLIC_KEY } from "./auth.constants";
+import { provideCheckNoChangesConfig } from "@angular/core";
 
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
@@ -35,6 +36,7 @@ export class AuthGuard implements CanActivate {
         }
 
         try {
+            console.log(process.env.SECRET);
             const payload = await this.jwtService.verifyAsync(token, {
                 secret: process.env.SECRET,
             });
