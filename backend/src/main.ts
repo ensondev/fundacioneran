@@ -6,16 +6,34 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const allowedOrigins = [
-    'http://localhost:4200', // Angular local dev
-    'https://fundacioneran-frontend.onrender.com', // tu frontend en producción
+  /* const allowedOrigins = [
+    'http://localhost:4200',
+    'https://fundacioneran-frontend.onrender.com',
     'https://fundacioneran.vercel.app',
   ];
 
   app.enableCors({
-    origin: allowedOrigins, // reemplaza por tu URL real
-    credentials: true, // si usas cookies o autenticación con credenciales
+    origin: allowedOrigins,
+    credentials: true,
+  }); */
+
+  app.enableCors({
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        'http://localhost:4200',
+        'https://fundacioneran-frontend.onrender.com',
+        'https://fundacioneran.vercel.app',
+      ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS not allowed for origin: ${origin}`));
+      }
+    },
+    credentials: true,
   });
+
 
   // ✅ Aplica validaciones globales
   app.useGlobalPipes(
