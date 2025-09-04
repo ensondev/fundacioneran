@@ -63,6 +63,54 @@ export class ParticipantsService {
         }
     }
 
+    async getParticipantsParams(query: any, res) {
+        const { cedula, fecha_inicio, fecha_fin } = query;
+
+        let sql = `
+        SELECT id_participante, nombres, cedula, telefono, correo, direccion, fecha_nacimiento, fecha_registro
+        FROM public.participantes
+        WHERE 1=1
+    `;
+        const values: any[] = [];
+        let index = 1;
+
+        if (cedula && cedula.trim() !== '') {
+            sql += ` AND cedula = $${index}`;
+            values.push(cedula.trim());
+            index++;
+        }
+
+        if (fecha_inicio) {
+            sql += ` AND fecha_registro >= $${index}`;
+            values.push(fecha_inicio);
+            index++;
+        }
+
+        if (fecha_fin) {
+            sql += ` AND fecha_registro <= $${index}`;
+            values.push(fecha_fin);
+            index++;
+        }
+
+        try {
+            const result = await this.databaseSerevice.query(sql, values);
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    participants: result.rows,
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                p_message: error.message,
+                p_status: false,
+                p_data: {}
+            });
+        }
+    }
+
+
     async updateParticipant(dto: UpdateParticipantsDto) {
         const { nombres, cedula, telefono, correo, direccion, fecha_nacimiento, id_participante } = dto;
         const query = `UPDATE public.participantes
@@ -70,10 +118,10 @@ export class ParticipantsService {
                     WHERE id_participante = $7
                     RETURNING nombres, cedula, telefono, correo, direccion, fecha_nacimiento, id_participante;`;
         const values = [nombres, cedula, telefono, correo, direccion, fecha_nacimiento, id_participante];
-        try{
+        try {
             const result = await this.databaseSerevice.query(query, values);
             const participante = result.rows[0];
-            return{
+            return {
                 p_message: 'Participante actualizado correctamente',
                 p_status: true,
                 p_data: {
@@ -86,8 +134,8 @@ export class ParticipantsService {
                     fecha_nacimiento: participante.fecha_nacimiento
                 }
             }
-        }catch(error){
-            return{
+        } catch (error) {
+            return {
                 p_message: error.message,
                 p_status: false,
                 p_data: {}

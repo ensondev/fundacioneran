@@ -2,7 +2,7 @@ import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthStateService } from '../../shared/service/auth-state.service';
 import { NotificationService } from '../../services/notification.service';
 import { ParticipantsService } from '../../services/participants.service';
@@ -17,7 +17,7 @@ import {
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-participants',
-  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule],
+  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule, FormsModule],
   templateUrl: './participants.html',
   styleUrl: './participants.css'
 })
@@ -39,6 +39,9 @@ export default class Participants implements OnInit {
 
   userRole: string = '';
   selectedParticipants: any = null;
+  searchParticipant: string = '';
+  startDate: string = '';
+  endDate: string = '';
 
   isLoading = false;
   mostrarModal = false;
@@ -145,7 +148,31 @@ export default class Participants implements OnInit {
     });
   }
 
+  searchParticipants() {
+    const cedula = this.searchParticipant?.trim() || '';
+    const start = this.startDate || '';
+    const end = this.endDate || '';
 
+    this.participantsService.getParticipantsByParams(cedula, start, end).subscribe({
+      next: (response) => {
+        if (response.length === 0) {
+          this.notification.showError('No se encontraron participantes con esos criterios.');
+        } else {
+          this.participants = response;
+        }
+      },
+      error: () => {
+        this.notification.showError('Error al buscar participantes.');
+      }
+    });
+  }
+
+  clearSearch() {
+    this.searchParticipant = '';
+    this.startDate = '';
+    this.endDate = '';
+    this.participants = this.allParticipants;
+  }
 
   generarReporteExcel() {
     const data = this.participants.map(p => ({
@@ -161,12 +188,12 @@ export default class Participants implements OnInit {
 
     //Definir ancho para cada columna (en caracteres)
     worksheet['!cols'] = [
-      { wch: 5 },  
-      { wch: 35 }, 
-      { wch: 15 },  
-      { wch: 15 }, 
+      { wch: 5 },
       { wch: 35 },
-      { wch: 25 }, 
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 35 },
+      { wch: 25 },
     ];
 
     const workbook: XLSX.WorkBook = {

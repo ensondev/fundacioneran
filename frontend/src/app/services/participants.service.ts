@@ -31,6 +31,22 @@ export class ParticipantsService {
         )
     }
 
+    getParticipantsByParams(cedula: string, fecha_inicio: string, fecha_fin: string): Observable<any[]> {
+        return this._http.get(`${environment.API_URL}/participants/params`, {
+            params: {
+                cedula,
+                fecha_inicio,
+                fecha_fin
+            }
+        }).pipe(
+            map((res: any) => res.p_data?.participants || []),
+            catchError(error => {
+                console.error('Error en getParticipantsByParams:', error);
+                return of([]);
+            })
+        );
+    }
+
     updateParticipant(
         nombres: string,
         cedula: string,
@@ -43,7 +59,7 @@ export class ParticipantsService {
         return this._http.put(`${environment.API_URL}/participants/update`, {
             nombres, cedula, telefono, correo, direccion, fecha_nacimiento, id_participante
         }).pipe(
-            
+
         )
     }
 

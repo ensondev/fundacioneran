@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Query, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/authentication/auth/guard/auth.guard';
 import { ParticipantsService } from './participants.service';
@@ -31,6 +31,17 @@ export class ParticipantsController {
     async getParticipants(@Res() res) {
         return this.participantsService.getParticipants(res)
     }
+
+    @Public()
+    @Get('params')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Obtener participantes por cédula y fechas (filtro)' })
+    @ApiResponse({ status: 200, description: 'Participantes filtrados correctamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    async getParticipantsParams(@Query() query, @Res() res) {
+        return this.participantsService.getParticipantsParams(query, res);
+    }
+
 
     @Public()
     @Put('update')

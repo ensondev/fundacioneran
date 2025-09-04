@@ -1,13 +1,20 @@
 <main>
-    <!-- <div class="container-filter">
-    <div class="search-container">
-      <input type="text" placeholder="Buscar donador por cédula" [(ngModel)]="searchCedula"
-        (keyup.enter)="searchByCedula()">
-      <button class="btn-filter" (click)="searchByCedula()"><fa-icon
-          [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
-      <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+    <div class="container-filter">
+        <div class="search-container">
+
+            <input type="text" placeholder="Buscar participante por cédula" [(ngModel)]="searchParticipant" name="searchCedula" />
+
+            <input type="date" [(ngModel)]="startDate" name="startDate" />
+            <input type="date" [(ngModel)]="endDate" name="endDate" />
+
+            <button class="btn-filter" (click)="searchParticipants()">
+                <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
+            </button>
+            <button class="btn-clear" (click)="clearSearch()">
+                <fa-icon [icon]="faXmark"></fa-icon> Eliminar
+            </button>
+        </div>
     </div>
-  </div> -->
     <div class="participants-container">
         <div class="header-container">
             <h2>Lista de Participantes</h2>
