@@ -41,6 +41,20 @@ export class InfantsService {
         )
     }
 
+    getInfantsParams(cedula_infante: string, fecha_inicio: string, fecha_fin: string): Observable<any[]> {
+        return this._http.get(`${environment.API_URL}/infants/params`, {
+            params: {
+                cedula_infante, fecha_inicio, fecha_fin
+            }
+        }).pipe(
+            map((res: any) => res.p_data?.infantes || []),
+            catchError(error => {
+                console.error('Error en getInfantsParams:', error);
+                return of([]);
+            })
+        )
+    }
+
     updateInfant(
         nombres: string,
         cedula: string,
@@ -62,9 +76,9 @@ export class InfantsService {
         )
     }
 
-    deleteInfant(id_infante: number | null): Observable<any>{
+    deleteInfant(id_infante: number | null): Observable<any> {
         return this._http.delete(`${environment.API_URL}/infants/delete`, {
-            body: {id_infante}
+            body: { id_infante }
         })
     }
 }

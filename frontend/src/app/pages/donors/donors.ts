@@ -135,7 +135,6 @@ export default class Donors implements OnInit {
     }
 
     this.isLoading = true;
-    this.errorMessage = null;
 
     this.donorService.getDonorByCedula(this.searchCedula).subscribe({
       next: (donor) => {

@@ -430,18 +430,6 @@ export default class Deliveries implements OnInit {
     this.mostrarModal = false;
   }
 
-  /* abrirEditModal(deli: any) {
-    this.selectedDeliverie = deli;
-    this.form.patchValue({
-      nombres_beneficiario: deli.nombres_beneficiario,
-      cedula_beneficiario: deli.cedula_beneficiario,
-      direccion_beneficiario: deli.direccion_beneficiario,
-      telefono_beneficiario: deli.telefono_beneficiario,
-      id_donacion: deli.id_donacion
-    });
-    this.mostrarEditModal = true;
-  } */
-
   abrirEditModal(deli: any) {
     this.selectedDeliverie = deli;
     const productoExistente = this.products.find(p => p.id_donacion === deli.entrega.id_donacion);

@@ -3,6 +3,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { InsertInfantsDto } from './dto/insert-infants.dto';
 import { UpdateInfantsDto } from './dto/update-infants.dto';
 import { DeleteInfantsDto } from './dto/delete-infants.dto';
+import { resourceUsage } from 'process';
 
 @Injectable()
 export class InfantsService {
@@ -52,6 +53,57 @@ export class InfantsService {
             })
         }
     }
+
+    async getInfantsParams(query, res) {
+        const { cedula_infante, fecha_inicio, fecha_fin } = query; // ✅ CAMBIADO de req.body → query
+
+        let sqlQuery = `
+        SELECT id_infante, nombres, cedula, genero, fecha_nacimiento,
+               nombre_acudiente, cedula_acudiente, telefono_acudiente,
+               direccion, fecha_registro
+        FROM public.infantes
+        WHERE 1=1
+    `;
+        const values: any[] = [];
+        let index = 1;
+
+        if (cedula_infante && cedula_infante.trim() !== "") {
+            sqlQuery += ` AND cedula = $${index}`;
+            values.push(cedula_infante.trim());
+            index++;
+        }
+
+        if (fecha_inicio) {
+            sqlQuery += ` AND fecha_registro >= $${index}`;
+            values.push(fecha_inicio);
+            index++;
+        }
+
+        if (fecha_fin) {
+            sqlQuery += ` AND fecha_registro <= $${index}`;
+            values.push(fecha_fin);
+            index++;
+        }
+
+        try {
+            const result = await this.databaseService.query(sqlQuery, values);
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    infantes: result.rows
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                p_message: error.message,
+                p_status: false,
+                p_data: {}
+            });
+        }
+    }
+
+
 
     async updateInfant(dto: UpdateInfantsDto) {
         const { nombres, cedula, genero, fecha_nacimiento, nombre_acudiente, cedula_acudiente, telefono_acudiente, direccion, id_infante } = dto;

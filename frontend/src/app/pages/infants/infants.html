@@ -1,13 +1,21 @@
 <main>
-    <!-- <div class="container-filter">
+    <div class="container-filter">
         <div class="search-container">
-            <input type="text" placeholder="Buscar donador por cédula" [(ngModel)]="searchCedula"
-                (keyup.enter)="searchByCedula()" maxlength="10">
-            <button class="btn-filter" (click)="searchByCedula()"><fa-icon
-                    [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
-            <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+            <input type="text" placeholder="Buscar entrega por cédula" [(ngModel)]="searchCedula"
+                (keyup.enter)="searchDeliverieByCedula()" maxlength="10">
+
+            <!-- Nueva sección: filtro por fecha -->
+            <input type="date" [(ngModel)]="startDate" />
+            <input type="date" [(ngModel)]="endDate" />
+
+            <button class="btn-filter" (click)="searchDeliverieByCedula()">
+                <fa-icon [icon]="faMagnifyingGlass"></fa-icon>Filtrar
+            </button>
+            <button class="btn-clear" (click)="clearSearch()">
+                <fa-icon [icon]="faXmark"></fa-icon>Eliminar
+            </button>
         </div>
-    </div> -->
+    </div>
     <div class="infants-container">
         <div class="header-container">
             <h2>Lista de niños/as</h2>

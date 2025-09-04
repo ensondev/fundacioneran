@@ -46,6 +46,9 @@ export default class Infants implements OnInit {
   selectedInfants: any = null;
   mostrarModal = false;
   mostrarEditModal = false;
+  searchCedula: string = '';
+  startDate: string = '';
+  endDate: string = '';
 
   InfantsForm!: FormGroup;
 
@@ -143,6 +146,59 @@ export default class Infants implements OnInit {
         this.isLoading = false;
       }
     })
+  }
+
+  /* searchDeliverieByCedula() {
+    const cedula = this.searchCedula.trim().toLowerCase();
+    const start = this.startDate ? new Date(this.startDate) : null;
+    const end = this.endDate ? new Date(this.endDate) : new Date(); // si no hay fin, usamos hoy
+
+    const filtered = this.allInfants.filter(i => {
+      const matchesCedula = cedula ? i.cedula.toLowerCase().includes(cedula) : true;
+      const infantDate = new Date(i.fecha_registro);
+      let matchesDate = true;
+
+      if (start && !this.endDate) {
+        matchesDate = infantDate >= start && infantDate <= end;
+      } else if (start && this.endDate) {
+        matchesDate = infantDate >= start && infantDate <= end;
+      }
+
+      return matchesCedula && matchesDate;
+    });
+
+    if (filtered.length === 0) {
+      this.notification.showError('No se encontraron infantes con esos criterios.');
+    } else {
+      this.infants = filtered;
+    }
+  } */
+
+  searchDeliverieByCedula() {
+    const cedula = this.searchCedula?.trim() || '';
+    const start = this.startDate || '';
+    const end = this.endDate || '';
+
+    this.infantsService.getInfantsParams(cedula, start, end).subscribe({
+      next: (data) => {
+        if (data.length === 0) {
+          this.notification.showError('No se encontraron infantes con esos criterios.');
+        } else {
+          this.infants = data;
+        }
+      },
+      error: () => {
+        this.notification.showError('Error al buscar infantes.');
+      }
+    });
+  }
+
+
+  clearSearch() {
+    this.searchCedula = '';
+    this.startDate = '';
+    this.endDate = '';
+    this.infants = this.allInfants;
   }
 
   generarReporteExcel() {
