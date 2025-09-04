@@ -86,14 +86,73 @@ export class CoursesService {
         }
     }
 
-    async updateCourses(dto: UpdateCoursesDto){
-        const {materia_id, instructor_id, descripcion, fecha_inicio, fecha_fin, cupo_maximo, id_curso} = dto;
+    async getCoursesByMateria(materia_id: number, res) {
+        let query = `
+        SELECT 
+            c.id_curso,
+            c.materia_id,
+            m.nombre_materia,
+            c.instructor_id,
+            i.nombres,
+            c.descripcion,
+            c.fecha_inicio,
+            c.fecha_fin,
+            c.cupo_maximo,
+            c.activo,
+            COUNT(ins.id_inscripcion) AS inscripciones_actuales
+        FROM cursos c
+        JOIN materias m ON c.materia_id = m.id_materia
+        JOIN instructores i ON c.instructor_id = i.id_instructor
+        LEFT JOIN inscripciones ins ON ins.curso_id = c.id_curso
+        WHERE 1=1
+    `;
+        const values: any[] = [];
+
+        if (materia_id) {
+            query += ` AND c.materia_id = $1`;
+            values.push(materia_id);
+        }
+
+        query += `
+        GROUP BY 
+            c.id_curso,
+            c.materia_id,
+            m.nombre_materia,
+            c.instructor_id,
+            i.nombres,
+            c.descripcion,
+            c.fecha_inicio,
+            c.fecha_fin,
+            c.cupo_maximo,
+            c.activo`;
+
+        try {
+            const result = await this.databaseService.query(query, values);
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    courses: result.rows
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                p_message: error.message,
+                p_status: false,
+                p_data: {}
+            });
+        }
+    }
+
+
+    async updateCourses(dto: UpdateCoursesDto) {
+        const { materia_id, instructor_id, descripcion, fecha_inicio, fecha_fin, cupo_maximo, id_curso } = dto;
         const query = `UPDATE public.cursos
                     SET materia_id = $1, instructor_id = $2, descripcion = $3, fecha_inicio = $4, fecha_fin = $5, cupo_maximo = $6
                     WHERE id_curso = $7
                     RETURNING materia_id, instructor_id, descripcion, fecha_inicio, fecha_fin, cupo_maximo, id_curso;`;
         const values = [materia_id, instructor_id, descripcion, fecha_inicio, fecha_fin, cupo_maximo, id_curso];
-        try{
+        try {
             const result = await this.databaseService.query(query, values);
             const curso = result.rows[0];
             return {
@@ -109,7 +168,7 @@ export class CoursesService {
                     cupo_maximo: curso.cupo_maximo
                 }
             }
-        }catch(error){
+        } catch (error) {
             return {
                 p_message: error.message,
                 p_status: false,
@@ -118,17 +177,17 @@ export class CoursesService {
         }
     }
 
-    async updateAvailabilityCourse(dto: UpdateAvailabilityCoursesDto){
-        const { activo, id_curso} = dto;
+    async updateAvailabilityCourse(dto: UpdateAvailabilityCoursesDto) {
+        const { activo, id_curso } = dto;
         const query = `UPDATE public.cursos
                     SET activo = $1
                     WHERE id_curso = $2
                     RETURNING activo, id_curso;`;
         const values = [activo, id_curso];
-        try{
+        try {
             const result = await this.databaseService.query(query, values);
             const disponibilidad = result.rows[0];
-            return{
+            return {
                 p_message: 'activo del curso actualizado correctamente',
                 p_status: true,
                 p_data: {
@@ -136,7 +195,7 @@ export class CoursesService {
                     id_curso: disponibilidad.id_curso,
                 }
             }
-        }catch(error){
+        } catch (error) {
             return {
                 p_message: error.message,
                 p_status: false,

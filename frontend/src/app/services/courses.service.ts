@@ -31,6 +31,18 @@ export class CoursesService {
         )
     }
 
+    getCoursesByMateria(materia_id: number): Observable<any[]> {
+        return this._http.get(`${environment.API_URL}/courses/by-materia`, {
+            params: { materia_id }
+        }).pipe(
+            map((res: any) => res.p_data?.courses || []),
+            catchError(err => {
+                console.error('Error en getCoursesByMateria:', err);
+                return of([]);
+            })
+        );
+    }
+
     updateCourse(
         materia_id: number | null,
         instructor_id: number | null,

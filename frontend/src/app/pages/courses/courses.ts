@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthStateService } from '../../shared/service/auth-state.service';
 import { NotificationService } from '../../services/notification.service';
 import { CoursesService } from '../../services/courses.service';
@@ -17,7 +17,7 @@ import { SubjectService } from '../../services/subject.service';
 import { InstructorsService } from '../../services/instructors.service';
 @Component({
   selector: 'app-courses',
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule],
+  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule, FormsModule],
   templateUrl: './courses.html',
   styleUrl: './courses.css'
 })
@@ -43,6 +43,7 @@ export default class Courses implements OnInit {
   instructors: any[] = [];
 
   userRole: string = '';
+  searchCourses: number = 0;
 
   isLoading = false;
   mostrarModal = false;
@@ -257,6 +258,27 @@ export default class Courses implements OnInit {
         this.isLoading = false;
       }
     })
+  }
+
+  searchByCourses(){
+    const materia = this.searchCourses;
+
+    this.coursesService.getCoursesByMateria(materia).subscribe({
+      next: (response) => {
+        if (response.length === 0) {
+          this.notification.showError('No se encontraron cursos con esos criterios.');
+        } else {
+          this.courses = response;
+        }
+      }, error: (error) =>{
+        console.error('Error al buscar cursos');
+      }
+    })
+  }
+
+  clearSearch(){
+    this.searchCourses = 0;
+    this.courses = this.allCourses;
   }
 
   abrirModal() {

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Query, Res } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/authentication/auth/guard/auth.guard';
@@ -31,6 +31,16 @@ export class CoursesController {
     @ApiResponse({ status: 500, description: 'Error interno del servidor' })
     async getCourses(@Res() res) {
         return this.coursesService.getCourses(res);
+    }
+
+    @Public()
+    @Get('by-materia')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Obtener cursos por materia (filtro)' })
+    @ApiResponse({ status: 200, description: 'Cursos filtrados por materia' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    async getCoursesByMateria(@Query('materia_id') materia_id: number, @Res() res) {
+        return this.coursesService.getCoursesByMateria(materia_id, res);
     }
 
     @Public()

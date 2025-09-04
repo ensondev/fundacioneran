@@ -1,13 +1,19 @@
 <main>
-    <!-- <div class="container-filter">
-    <div class="search-container">
-      <input type="text" placeholder="Buscar donador por cédula" [(ngModel)]="searchCedula"
-        (keyup.enter)="searchByCedula()">
-      <button class="btn-filter" (click)="searchByCedula()"><fa-icon
-          [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
-      <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+    <div class="container-filter">
+        <div class="search-container">
+
+            <select name="searchCourses" [(ngModel)]="searchCourses">
+                <option value="0" disabled>Seleccione un curso</option>
+                @for (subj of subjects; track subj.id_materia) {
+                <option [value]="subj.id_materia">{{ subj.nombre_materia }}</option>
+                }
+            </select>
+
+            <button class="btn-filter" (click)="searchByCourses()"><fa-icon
+                    [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
+            <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+        </div>
     </div>
-  </div> -->
     <div class="course-container">
         <div class="header-container">
             <h2>Lista de Cursos</h2>
