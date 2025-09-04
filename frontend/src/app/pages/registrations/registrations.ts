@@ -76,6 +76,7 @@ export default class Registrations implements OnInit {
     this.loadRegistrations();
     this.loadParticipants();
     this.loadCourses();
+    this.loadSubject();
     const session = this.authStateService.getSession();
     this.userRole = session ? session.rol : '';
   }
