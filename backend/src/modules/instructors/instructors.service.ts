@@ -64,30 +64,77 @@ export class InstructorsService {
         }
     }
 
-    async updateInstructor(dto: UpdateInstructorsDto){
-        const {nombres, cedula, telefono, correo, especialidad, id_instructor} = dto;
+    async getInstructorsParams(query: any, res) {
+        const { cedula, fecha_inicio, fecha_fin } = query;
+
+        let sql = `
+        SELECT id_instructor, nombres, cedula, telefono, correo, especialidad, fecha_contratacion, activo
+        FROM public.instructores
+        WHERE 1=1
+    `;
+        const values: any[] = [];
+        let index = 1;
+
+        if (cedula && cedula.trim() !== '') {
+            sql += ` AND cedula = $${index}`;
+            values.push(cedula.trim());
+            index++;
+        }
+
+        if (fecha_inicio) {
+            sql += ` AND fecha_contratacion >= $${index}`;
+            values.push(fecha_inicio);
+            index++;
+        }
+
+        if (fecha_fin) {
+            sql += ` AND fecha_contratacion <= $${index}`;
+            values.push(fecha_fin);
+            index++;
+        }
+
+        try {
+            const result = await this.databaseService.query(sql, values);
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    instructores: result.rows
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                p_message: error.message,
+                p_status: false,
+                p_data: {}
+            });
+        }
+    }
+
+    async updateInstructor(dto: UpdateInstructorsDto) {
+        const { nombres, cedula, telefono, correo, especialidad, id_instructor } = dto;
         const query = `UPDATE public.instructores
                     SET nombres = $1, cedula = $2, telefono = $3, correo = $4, especialidad = $5
                     WHERE id_instructor = $6
                     RETURNING nombres, cedula, telefono, correo, especialidad, id_instructor;`;
         const values = [nombres, cedula, telefono, correo, especialidad, id_instructor];
-        try{
+        try {
             const result = await this.databaseService.query(query, values);
             const instructor = result.rows[0];
-            return{
+            return {
                 p_message: 'Instructor actualizado correctamente',
                 p_status: true,
                 p_data: {
                     id_instructor: instructor.id_instructor,
                     nombres: instructor.nombres,
                     cedula: instructor.cedula,
-                    telefono: instructor. telefono,
+                    telefono: instructor.telefono,
                     correo: instructor.correo,
                     especialidad: instructor.especialidad
                 }
             }
-        }catch(error){
-            return{
+        } catch (error) {
+            return {
                 p_message: error.message,
                 p_status: false,
                 p_data: {}
@@ -95,20 +142,20 @@ export class InstructorsService {
         }
     }
 
-    async deleteInstructor(dto: DeleteInstructorsDto){
-        const {id_instructor} = dto;
+    async deleteInstructor(dto: DeleteInstructorsDto) {
+        const { id_instructor } = dto;
         const query = `DELETE FROM public.instructores
                     WHERE id_instructor = $1;`;
         const values = [id_instructor];
-        try{
+        try {
             const result = await this.databaseService.query(query, values);
-            return{
+            return {
                 p_message: 'Instructor eliminado correctamente',
                 p_status: true,
                 p_data: {}
             }
-        }catch(error){
-            return{
+        } catch (error) {
+            return {
                 p_message: error.message,
                 p_status: false,
                 p_data: {}

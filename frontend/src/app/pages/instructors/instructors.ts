@@ -2,7 +2,7 @@ import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthStateService } from '../../shared/service/auth-state.service';
 import { NotificationService } from '../../services/notification.service';
 import { InstructorsService } from '../../services/instructors.service';
@@ -17,7 +17,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-instructors',
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule],
+  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule, FormsModule],
   templateUrl: './instructors.html',
   styleUrl: './instructors.css'
 })
@@ -36,6 +36,10 @@ export default class Instructors implements OnInit {
 
   allInstructors: any[] = [];
   instructors: any[] = [];
+  searchInstructor: string = '';
+  startDate: string = '';
+  endDate: string = '';
+
 
   userRole: string = '';
   selectedInstructors: any = null;
@@ -136,6 +140,32 @@ export default class Instructors implements OnInit {
         this.isLoading = false;
       }
     })
+  }
+
+  searchInstructors() {
+    const cedula = this.searchInstructor?.trim() || '';
+    const start = this.startDate || '';
+    const end = this.endDate || '';
+
+    this.instructorsService.getInstructorsByParams(cedula, start, end).subscribe({
+      next: (response) => {
+        if (response.length === 0) {
+          this.notification.showError('No se encontraron instructores con esos criterios.');
+        } else {
+          this.instructors = response;
+        }
+      },
+      error: () => {
+        this.notification.showError('Error al buscar instructores.');
+      }
+    });
+  }
+
+  clearSearch() {
+    this.searchInstructor = '';
+    this.startDate = '';
+    this.endDate = '';
+    this.instructors = this.allInstructors;
   }
 
   generarReporteExcel() {

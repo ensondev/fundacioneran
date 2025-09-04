@@ -31,6 +31,22 @@ export class InstructorsService {
         )
     }
 
+    getInstructorsByParams(cedula: string, fecha_inicio: string, fecha_fin: string): Observable<any[]> {
+        return this._http.get(`${environment.API_URL}/instructors/params`, {
+            params: {
+                cedula,
+                fecha_inicio,
+                fecha_fin
+            }
+        }).pipe(
+            map((res: any) => res.p_data?.instructores || []),
+            catchError(error => {
+                console.error('Error en getInstructorsByParams:', error);
+                return of([]);
+            })
+        );
+    }
+
     updateInstructor(
         nombres: string,
         cedula: string,

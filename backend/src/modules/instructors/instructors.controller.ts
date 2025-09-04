@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Query, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InstructorsService } from './instructors.service';
 import { Public } from 'src/authentication/auth/guard/auth.guard';
@@ -30,6 +30,16 @@ export class InstructorsController {
     @ApiResponse({ status: 500, description: 'Error interno del servidor' })
     async getParticipants(@Res() res) {
         return this.instructorsService.getInstructors(res)
+    }
+
+    @Public()
+    @Get('params')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Obtener instructores por parámetros (filtro)' })
+    @ApiResponse({ status: 200, description: 'Instructores obtenidos correctamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    async getInstructorsParams(@Query() query, @Res() res) {
+        return this.instructorsService.getInstructorsParams(query, res);
     }
 
     @Public()
