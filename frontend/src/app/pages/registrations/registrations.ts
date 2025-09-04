@@ -3,7 +3,7 @@ import * as FileSaver from 'file-saver';
 
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faTrash,
@@ -18,9 +18,10 @@ import { NotificationService } from '../../services/notification.service';
 import { RegistrationsService } from '../../services/registration.service';
 import { ParticipantsService } from '../../services/participants.service';
 import { CoursesService } from '../../services/courses.service';
+import { SubjectService } from '../../services/subject.service';
 @Component({
   selector: 'app-registrations',
-  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule],
+  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule, FormsModule],
   templateUrl: './registrations.html',
   styleUrl: './registrations.css'
 })
@@ -39,6 +40,7 @@ export default class Registrations implements OnInit {
   private registrationsService = inject(RegistrationsService);
   private participantsService = inject(ParticipantsService);
   private coursesService = inject(CoursesService);
+  private subjectService = inject(SubjectService);
 
   allRegistrations: any[] = [];
   registrations: any[] = [];
@@ -46,6 +48,15 @@ export default class Registrations implements OnInit {
   participants: any[] = [];
   allCourses: any[] = [];
   courses: any[] = [];
+  subjects: any[] = [];
+  allSubjects: any[] = [];
+
+  searchRegistration: string = '';
+  searchStatus: string = '';
+  searchCourses: number = 0;
+  startDate: string = '';
+  endDate: string = '';
+
 
   userRole: string = '';
   selectedRegistrations: any = null;
@@ -110,6 +121,21 @@ export default class Registrations implements OnInit {
         this.isLoading = false;
       }, error: (error) => {
         console.error('Error al cargar los cursos:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  loadSubject() {
+    this.isLoading = true;
+
+    this.subjectService.getSubject().subscribe({
+      next: (response) => {
+        this.allSubjects = response;
+        this.subjects = response;
+        this.isLoading = false;
+      }, error: (error) => {
+        console.error('Error al cargar las materias:', error);
         this.isLoading = false;
       }
     });
@@ -193,6 +219,38 @@ export default class Registrations implements OnInit {
       }
     });
   }
+
+  searchRegistrations() {
+    const cedula = this.searchRegistration;
+    const estado = this.searchStatus;
+    const id_materia = this.searchCourses;
+    const fecha_inicio = this.startDate;
+    const fecha_fin = this.endDate;
+
+    this.registrationsService.getRegistrationsByParams(cedula, estado, id_materia, fecha_inicio, fecha_fin).subscribe({
+      next: (response) => {
+        if (response.length === 0) {
+          this.notification.showError('No se encontraron resultados con esos filtros.');
+        }
+        this.registrations = response;
+      },
+      error: (error) => {
+        console.error('Error al buscar inscripciones', error);
+        this.notification.showError('Ocurrió un error al buscar las inscripciones.');
+      }
+    });
+  }
+
+  clearSearch() {
+    this.searchRegistration = '';
+    this.searchStatus = '';
+    this.searchCourses = 0;
+    this.startDate = '';
+    this.endDate = '';
+
+    this.registrations = this.allRegistrations;
+  }
+
 
   generarReporteExcel() {
     const data = this.registrations.map(r => ({

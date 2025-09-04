@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put, Query, Res } from '@nestjs/common';
 import { RegistrationsService } from './registrations.service';
 import { Public } from 'src/authentication/auth/guard/auth.guard';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -31,6 +31,17 @@ export class RegistrationsController {
     async getRegistrations(@Res() res) {
         return this.registrationsService.getRegistrations(res);
     }
+
+    @Public()
+    @Get('params')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Obtener inscripciones con filtros' })
+    @ApiResponse({ status: 200, description: 'Lista de inscripciones obtenida correctamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    async getRegistrationsByParams(@Query() query, @Res() res) {
+        return this.registrationsService.getRegistrationsByParams(query, res);
+    }
+
 
     @Public()
     @Put('update')

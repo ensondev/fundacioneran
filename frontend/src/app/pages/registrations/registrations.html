@@ -1,13 +1,35 @@
 <main>
-    <!-- <div class="container-filter">
-    <div class="search-container">
-      <input type="text" placeholder="Buscar donador por cédula" [(ngModel)]="searchCedula"
-        (keyup.enter)="searchByCedula()">
-      <button class="btn-filter" (click)="searchByCedula()"><fa-icon
-          [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
-      <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+    <div class="container-filter">
+        <div class="search-container">
+
+            <input type="text" placeholder="Buscar inscrito por cédula" [(ngModel)]="searchRegistration"
+                name="searchCedula" />
+
+            <select name="searchTransactions" [(ngModel)]="searchStatus">
+                <option value="" disabled>Estado</option>
+                <option value="En curso">En curso</option>
+                <option value="Finalizado">Finalizado</option>
+                <option value="Cancelado">Cancelado</option>
+            </select>
+
+            <select name="searchCourses" [(ngModel)]="searchCourses">
+                <option value="0" disabled>Buscar por curso</option>
+                @for (subj of subjects; track subj.id_materia) {
+                <option [value]="subj.id_materia">{{ subj.nombre_materia }}</option>
+                }
+            </select>
+
+            <input type="date" [(ngModel)]="startDate" name="startDate" />
+            <input type="date" [(ngModel)]="endDate" name="endDate" />
+
+            <button class="btn-filter" (click)="searchRegistrations()">
+                <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
+            </button>
+            <button class="btn-clear" (click)="clearSearch()">
+                <fa-icon [icon]="faXmark"></fa-icon> Eliminar
+            </button>
+        </div>
     </div>
-  </div> -->
     <div class="registrations-container">
         <div class="header-container">
             <h2>Lista de Inscripciones</h2>

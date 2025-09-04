@@ -31,6 +31,31 @@ export class RegistrationsService {
         )
     }
 
+    getRegistrationsByParams(
+        cedula: string,
+        estado: string,
+        id_materia: number,
+        fecha_inicio: string,
+        fecha_fin: string
+    ): Observable<any[]> {
+        return this._http.get(`${environment.API_URL}/registrations/params`, {
+            params: {
+                cedula,
+                estado,
+                id_materia,
+                fecha_inicio,
+                fecha_fin
+            }
+        }).pipe(
+            map((res: any) => res.p_data?.registrations || []),
+            catchError(error => {
+                console.error('Error en getRegistrationsByParams:', error);
+                return of([]);
+            })
+        );
+    }
+
+
     updateRegistration(
         participante_id: number | null,
         curso_id: number | null,

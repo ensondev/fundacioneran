@@ -132,6 +132,78 @@ export class RegistrationsService {
         }
     }
 
+    async getRegistrationsByParams(query: any, res) {
+        const { cedula, estado, id_materia, fecha_inicio, fecha_fin } = query;
+
+        let sql = `
+        SELECT 
+            i.id_inscripcion,
+            p.nombres,
+            p.cedula,
+            p.id_participante,
+            m.nombre_materia,
+            m.id_materia,
+            c.id_curso,
+            i.fecha_inscripcion,
+            i.estado_inscripcion
+        FROM inscripciones i
+        JOIN participantes p ON i.participante_id = p.id_participante
+        JOIN cursos c ON i.curso_id = c.id_curso
+        JOIN materias m ON c.materia_id = m.id_materia
+        WHERE 1=1
+    `;
+
+        const values: any[] = [];
+        let index = 1;
+
+        if (cedula && cedula.trim() !== '') {
+            sql += ` AND p.cedula = $${index}`;
+            values.push(cedula.trim());
+            index++;
+        }
+
+        if (estado && estado.trim() !== '') {
+            sql += ` AND i.estado_inscripcion = $${index}`;
+            values.push(estado.trim());
+            index++;
+        }
+
+        if (id_materia && id_materia !== '0') {
+            sql += ` AND m.id_materia = $${index}`;
+            values.push(id_materia);
+            index++;
+        }
+
+        if (fecha_inicio && fecha_inicio.trim() !== '') {
+            sql += ` AND i.fecha_inscripcion >= $${index}`;
+            values.push(fecha_inicio);
+            index++;
+        }
+
+        if (fecha_fin && fecha_fin.trim() !== '') {
+            sql += ` AND i.fecha_inscripcion <= $${index}`;
+            values.push(fecha_fin);
+            index++;
+        }
+
+        try {
+            const result = await this.databaseService.query(sql, values);
+            res.status(200).json({
+                p_message: null,
+                p_status: true,
+                p_data: {
+                    registrations: result.rows
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                p_message: error.message,
+                p_status: false,
+                p_data: {}
+            });
+        }
+    }
+
     async updateRegistration(dto: UpdateRegistrationsDto) {
         const { participante_id, curso_id, id_inscripcion } = dto;
         const query = `UPDATE public.inscripciones
