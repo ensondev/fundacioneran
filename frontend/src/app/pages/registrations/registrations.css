@@ -1,6 +1,6 @@
 main {
     padding: 20px;
-    width: 100vw;
+    width: 100dvw;
     height: calc(100dvh - 110px);
     margin: 0 auto;
     display: flex;
@@ -53,7 +53,7 @@ main {
 .table-responsive {
     overflow-x: auto;
     padding: 0 10px 10px 10px;
-    height: calc(100dvh - 510px);
+    height: calc(100dvh - 460px);
 }
 
 .registrations-table {

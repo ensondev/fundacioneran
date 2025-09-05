@@ -1,6 +1,6 @@
 main {
     padding: 20px;
-    width: 100vw;
+    width: 100dvw;
     height: calc(100dvh - 110px);
     margin: 0 auto;
     display: flex;
@@ -249,7 +249,7 @@ button[type="submit"]:disabled {
     }
 
     .table-responsive {
-        height: calc(100dvh - 230px);
+        height: calc(100dvh - 250px);
     }
 }
 

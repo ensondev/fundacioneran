@@ -2,11 +2,22 @@
     <div class="container-filter">
         <div class="search-container">
 
-            <input type="text" placeholder="Buscar instructor por cédula" [(ngModel)]="searchInstructor"
-                name="searchCedula" />
+            <div class="container-cedula">
+                <label for="">Filtrar instructores por elementos</label>
+                <input type="text" placeholder="Cédula del instructor" [(ngModel)]="searchInstructor"
+                    name="searchCedula" maxlength="10" />
+            </div>
 
-            <input type="date" [(ngModel)]="startDate" name="startDate" />
-            <input type="date" [(ngModel)]="endDate" name="endDate" />
+            <div class="container-date">
+                <div class="container-startDate">
+                    <label for="">Fecha inicio</label>
+                    <input type="date" [(ngModel)]="startDate" name="startDate" />
+                </div>
+                <div class="container-endDate">
+                    <label for="">Fecha fin (opcional)</label>
+                    <input type="date" [(ngModel)]="endDate" name="endDate" />
+                </div>
+            </div>
 
             <button class="btn-filter" (click)="searchInstructors()">
                 <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
@@ -69,6 +80,10 @@
                         </td>
                         }
 
+                    </tr>
+                    }@empty {
+                    <tr>
+                        <td colspan="9">No hay participantes registrados</td>
                     </tr>
                     }
 

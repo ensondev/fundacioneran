@@ -1,13 +1,17 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
-
-            <select name="searchCourses" [(ngModel)]="searchCourses">
-                <option value="0" disabled>Seleccione un curso</option>
-                @for (subj of subjects; track subj.id_materia) {
-                <option [value]="subj.id_materia">{{ subj.nombre_materia }}</option>
-                }
-            </select>
+            <div class="container-select">
+                <label for="">Filtrar cursos por elementos</label>
+                <div class="subcontainer-select">
+                    <select name="searchCourses" [(ngModel)]="searchCourses">
+                        <option value="0" disabled>Seleccione un curso</option>
+                        @for (subj of subjects; track subj.id_materia) {
+                        <option [value]="subj.id_materia">{{ subj.nombre_materia }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
 
             <button class="btn-filter" (click)="searchByCourses()"><fa-icon
                     [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
@@ -74,6 +78,10 @@
                         </td>
                         }
 
+                    </tr>
+                    }@empty {
+                    <tr>
+                        <td colspan="9">No hay cursos registrados</td>
                     </tr>
                     }
 

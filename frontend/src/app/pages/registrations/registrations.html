@@ -2,25 +2,39 @@
     <div class="container-filter">
         <div class="search-container">
 
-            <input type="text" placeholder="Buscar inscrito por cédula" [(ngModel)]="searchRegistration"
-                name="searchCedula" />
+            <div class="container-cedula">
+                <label for="">Filtrar Inscripciones por elementos</label>
+                <input type="text" placeholder="Cédula del inscrito" [(ngModel)]="searchRegistration"
+                    name="searchCedula" maxlength="10" />
+            </div>
 
-            <select name="searchTransactions" [(ngModel)]="searchStatus">
-                <option value="" disabled>Estado</option>
-                <option value="En Curso">En curso</option>
-                <option value="Finalizado">Finalizado</option>
-                <option value="Cancelado">Cancelado</option>
-            </select>
+            <div class="container-select">
+                <div class="subcontainer-select">
+                    <select name="searchTransactions" [(ngModel)]="searchStatus">
+                        <option value="" disabled>Estado</option>
+                        <option value="En Curso">En curso</option>
+                        <option value="Finalizado">Finalizado</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                    <select name="searchCourses" [(ngModel)]="searchCourses">
+                        <option value="0" disabled>Buscar por curso</option>
+                        @for (subj of subjects; track subj.id_materia) {
+                        <option [value]="subj.id_materia">{{ subj.nombre_materia }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
 
-            <select name="searchCourses" [(ngModel)]="searchCourses">
-                <option value="0" disabled>Buscar por curso</option>
-                @for (subj of subjects; track subj.id_materia) {
-                <option [value]="subj.id_materia">{{ subj.nombre_materia }}</option>
-                }
-            </select>
-
-            <input type="date" [(ngModel)]="startDate" name="startDate" />
-            <input type="date" [(ngModel)]="endDate" name="endDate" />
+            <div class="container-date">
+                <div class="container-startDate">
+                    <label for="">Fecha inicio</label>
+                    <input type="date" [(ngModel)]="startDate" name="startDate" />
+                </div>
+                <div class="container-endDate">
+                    <label for="">Fecha fin (opcional)</label>
+                    <input type="date" [(ngModel)]="endDate" name="endDate" />
+                </div>
+            </div>
 
             <button class="btn-filter" (click)="searchRegistrations()">
                 <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
