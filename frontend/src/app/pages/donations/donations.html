@@ -1,14 +1,19 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
-            <label for="">Buscar donación por cedula o rango de fecha</label>
+            <label for="">Filtrar donaciones por elementos</label>
             <input type="text" placeholder="Buscar donación por cédula" [(ngModel)]="searchCedula" name="searchCedula"
                 maxlength="10" />
 
-            <!-- <label for="">Buscar por rango de fecha</label> -->
             <div class="container-date">
-                <input type="date" [(ngModel)]="startDate" name="startDate" />
-                <input type="date" [(ngModel)]="endDate" name="endDate" />
+                <div class="container-startDate">
+                    <label for="">Fecha inicio</label>
+                    <input type="date" [(ngModel)]="startDate" name="startDate" />
+                </div>
+                <div class="container-endDate">
+                    <label for="">Fecha fin (opcional)</label>
+                    <input type="date" [(ngModel)]="endDate" name="endDate" />
+                </div>
             </div>
 
             <button class="btn-filter" (click)="searchDonationsByCedula()">
