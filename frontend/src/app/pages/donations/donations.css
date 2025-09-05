@@ -2,7 +2,6 @@ main {
     padding: 20px;
     width: 100dvw;
     height: calc(100dvh - 110px);
-    /* margin: 0 auto; */
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -11,7 +10,7 @@ main {
 .donations-container {
     width: 100%;
     margin-top: 10px;
-    background: white;
+    background: #fff;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
 }
 
@@ -52,8 +51,8 @@ main {
 /* Estilos para la tabla de donaciones */
 .table-responsive {
     overflow-x: auto;
-    padding: 0 10px 10px 10px;
-    height: calc(100dvh - 430px);
+    padding: 0 10px 0px 10px;
+    height: calc(100dvh - 420px);
 }
 
 .donations-table {
@@ -392,7 +391,7 @@ button[type="submit"]:disabled {
     /*FORMULARIO DONACIONES*/
 
     main {
-        height: calc(100vh - 120px);
+        height: calc(100vh - 110px);
     }
 
     .header-container {

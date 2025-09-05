@@ -51,7 +51,7 @@ main {
 .table-responsive {
     overflow-x: auto;
     padding: 0 10px 10px 10px;
-    height: calc(100dvh - 310px);
+    height: calc(100dvh - 337px);
 }
 
 .donors-table {

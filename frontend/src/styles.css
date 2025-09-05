@@ -28,19 +28,20 @@ img {
     flex-wrap: wrap;
 }
 
-.search-container label{
+.search-container label {
     font-weight: bold;
     color: #0a375e;
     font-size: 15px;
 }
 
-.container-filter .search-container select,
-.container-filter .search-container input {
+.search-container .container-select select,
+.search-container .container-cedula input,
+.search-container .container-date input {
     width: 100%;
     padding: 5px 20px;
 }
 
-.container-date{
+.container-date {
     display: flex;
     width: 100%;
     gap: 10px;
@@ -70,11 +71,27 @@ img {
 @media (min-width: 1024px) {
     .container-filter .search-container {
         flex-wrap: nowrap;
+        align-items: end;
+        width: 100%;
     }
 
-    /* .container-filter .search-container button {
-        width: auto;
-    } */
+    .container-cedula,
+    .container-date {
+        width: 100%;
+    }
+
+    .container-filter .search-container button {
+        width: 50%;
+        padding: 16px 10px;
+    }
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}

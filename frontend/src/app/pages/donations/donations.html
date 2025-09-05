@@ -1,9 +1,11 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
-            <label for="">Filtrar donaciones por elementos</label>
-            <input type="text" placeholder="Cédula del donador" [(ngModel)]="searchCedula" name="searchCedula"
-                maxlength="10" />
+            <div class="container-cedula">
+                <label for="">Filtrar donaciones por elementos</label>
+                <input type="text" placeholder="Cédula del donador" [(ngModel)]="searchCedula" name="searchCedula"
+                    maxlength="10" />
+            </div>
 
             <div class="container-date">
                 <div class="container-startDate">
@@ -23,8 +25,8 @@
                 <fa-icon [icon]="faXmark"></fa-icon> Limpiar
             </button>
         </div>
-
     </div>
+    
     <div class="donations-container">
         <div class="header-container">
             <h2>Registrar donación</h2>
