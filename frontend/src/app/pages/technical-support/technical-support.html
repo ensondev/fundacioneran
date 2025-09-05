@@ -1,12 +1,16 @@
 <main class="support-form-container">
 
   <div class="container-form-eran">
-    
+
     <div class="container-title">
       <h2>Soporte Técnico (Restablecer contraseña)</h2>
     </div>
 
     <div class="conteiner-form">
+      <div class="container-img">
+        <img src="/image/logoFundacion.png" alt="" draggable="false">
+      </div>
+
       <form [formGroup]="supportForm" (ngSubmit)="enviarMensaje()">
         <div class="form-group">
           <label for="usuario">Usuario</label>
@@ -16,7 +20,8 @@
 
         <div class="form-group">
           <label for="gmail">Correo</label>
-          <input type="email" placeholder="Correo donde recibira la respuesta" id="gmail" formControlName="gmail" required>
+          <input type="email" placeholder="Correo donde recibira la respuesta" id="gmail" formControlName="gmail"
+            required>
         </div>
 
         <div class="form-group">
@@ -29,9 +34,7 @@
         </button>
       </form>
 
-      <div class="container-img">
-        <img src="/image/logoFundacion.png" alt="" draggable="false">
-      </div>
+
     </div>
   </div>
 </main>
