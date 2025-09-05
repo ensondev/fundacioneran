@@ -1,7 +1,7 @@
 main {
     padding: 20px;
-    width: 100vw;
-    height: calc(100vh - 110px);
+    width: 100dvw;
+    height: calc(100dvh - 110px);
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -53,7 +53,7 @@ main {
 .table-responsive {
     overflow-x: auto;
     padding: 0 10px 10px 10px;
-    height: calc(100vh - 430px);
+    height: calc(100dvh - 420px);
 }
 
 .products-table {
@@ -269,7 +269,7 @@ button[type="submit"]:disabled {
 
 @media (min-width: 1024px) {
     .table-responsive {
-        height: calc(100vh - 230px);
+        height: calc(100vh - 250px);
     }
 
     .header-container {

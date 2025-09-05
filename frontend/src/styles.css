@@ -34,15 +34,29 @@ img {
     font-size: 15px;
 }
 
-.search-container .container-select select,
+.container-select .subcontainer-select select,
+.container-select .subcontainer-select-two select,
 .search-container .container-cedula input,
 .search-container .container-date input {
     width: 100%;
     padding: 5px 20px;
 }
 
+.container-startDate,
+.container-select{
+    width: 100%;
+}
+
+.subcontainer-select,
 .container-date {
     display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.subcontainer-select-two{
+    display: flex;
+    flex-direction: column;
     width: 100%;
     gap: 10px;
 }
@@ -75,6 +89,8 @@ img {
         width: 100%;
     }
 
+    .container-select,
+    .subcontainer-select,
     .container-cedula,
     .container-date {
         width: 100%;

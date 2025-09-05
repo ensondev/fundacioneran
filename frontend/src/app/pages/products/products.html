@@ -1,18 +1,31 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
-            <select [(ngModel)]="searchCategorie" name="searchCategorie">
-                <option value="" disabled>Buscar por categoría</option>
-                @for (cat of categories; track cat.nombre_categoria) {
-                <option [value]="cat.nombre_categoria">{{ cat.nombre_categoria }}</option>
-                }
-            </select>
-            <select name="searchClasification" [(ngModel)]="searchClasification">
-                <option value="" disabled>Clasificación</option>
-                <option [value]="true">Caducible</option>
-                <option [value]="false">Duradero</option>
-            </select>
-            <input type="date" [(ngModel)]="searchFechaCaducidad" name="searchFechaCaducidad" />
+
+            <div class="container-select">
+                <label for="">Filtrar productos por elementos</label>
+                <div class="subcontainer-select">
+                    <select [(ngModel)]="searchCategorie" name="searchCategorie">
+                        <option value="" disabled>Buscar por categoría</option>
+                        @for (cat of categories; track cat.nombre_categoria) {
+                        <option [value]="cat.nombre_categoria">{{ cat.nombre_categoria }}</option>
+                        }
+                    </select>
+                    <select name="searchClasification" [(ngModel)]="searchClasification">
+                        <option value="" disabled>Clasificación</option>
+                        <option [value]="true">Caducible</option>
+                        <option [value]="false">Duradero</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="container-date">
+                <div class="container-startDate">
+                    <label for="">Fecha unica</label>
+                    <input type="date" [(ngModel)]="searchFechaCaducidad" name="searchFechaCaducidad" />
+                </div>
+            </div>
+
             <button class="btn-filter" (click)="searchProdutsByCategorie()">
                 <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
             </button>
@@ -66,6 +79,10 @@
                             </div>
                         </td>
                         }
+                    </tr>
+                    }@empty {
+                    <tr>
+                        <td colspan="9">No hay productos registrados</td>
                     </tr>
                     }
                 </tbody>
@@ -129,7 +146,8 @@
 
                 <div class="form-group">
                     <label>Precio de venta <span>*</span></label>
-                    <input type="number" formControlName="precio_venta" step="0.01" required placeholder="precio del producto">
+                    <input type="number" formControlName="precio_venta" step="0.01" required
+                        placeholder="precio del producto">
                 </div>
 
                 <div class="button-container">
@@ -196,8 +214,8 @@
 
                 <div class="form-group">
                     <label>Precio de venta<span>*</span></label>
-                    <input type="number" formControlName="precio_venta" placeholder="precio del producto" step="0.01" min="0"
-                        required>
+                    <input type="number" formControlName="precio_venta" placeholder="precio del producto" step="0.01"
+                        min="0" required>
                 </div>
 
                 <div class="button-container">

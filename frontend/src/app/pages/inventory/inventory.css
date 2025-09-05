@@ -1,7 +1,7 @@
 main {
     padding: 20px;
-    width: 100vw;
-    height: calc(100vh - 110px);
+    width: 100dvw;
+    height: calc(100dvh - 110px);
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -56,7 +56,7 @@ main {
 .table-responsive {
     overflow-x: auto;
     padding: 0 10px 10px 10px;
-    height: calc(100vh - 390px);
+    height: calc(100dvh - 408px);
 }
 
 .products-inventory-table {

@@ -1,26 +1,32 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
-            <select [(ngModel)]="searchProduct" name="searchProduct">
-                <option value="" disabled>Buscar producto</option>
-                @for (prod of products; track prod.id_producto) {
-                <option [value]="prod.nombre_producto">{{ prod.nombre_producto }}</option>
-                }
-            </select>
 
-            <select [(ngModel)]="searchCategorie" name="searchCategorie">
-                <option value="" disabled>Buscar por categoría</option>
-                @for (cat of categories; track cat.id_categoria) {
-                <option [value]="cat.nombre_categoria">{{ cat.nombre_categoria }}</option>
-                }
-            </select>
+            <div class="container-select">
+                <label for="">Filtrar productos por elementos</label>
+                <div class="subcontainer-select-two">
+                    <select [(ngModel)]="searchProduct" name="searchProduct">
+                        <option value="" disabled>Buscar producto</option>
+                        @for (prod of products; track prod.id_producto) {
+                        <option [value]="prod.nombre_producto">{{ prod.nombre_producto }}</option>
+                        }
+                    </select>
 
-            <select [(ngModel)]="searchWarehouse" name="searchWarehouse">
-                <option value="" disabled>Buscar bodega</option>
-                @for (ware of warehouses; track ware.id_bodega) {
-                <option [value]="ware.nombre_bodega">{{ ware.nombre_bodega }}</option>
-                }
-            </select>
+                    <select [(ngModel)]="searchCategorie" name="searchCategorie">
+                        <option value="" disabled>Buscar por categoría</option>
+                        @for (cat of categories; track cat.id_categoria) {
+                        <option [value]="cat.nombre_categoria">{{ cat.nombre_categoria }}</option>
+                        }
+                    </select>
+
+                    <select [(ngModel)]="searchWarehouse" name="searchWarehouse">
+                        <option value="" disabled>Buscar bodega</option>
+                        @for (ware of warehouses; track ware.id_bodega) {
+                        <option [value]="ware.nombre_bodega">{{ ware.nombre_bodega }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
 
             <button class="btn-filter" (click)="searchProduts()">
                 <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
