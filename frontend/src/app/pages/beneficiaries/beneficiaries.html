@@ -7,7 +7,7 @@
             </div>
             <button class="btn-filter" (click)="searchByCedula()"><fa-icon
                     [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
-            <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+            <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Limpiar</button>
         </div>
     </div>
     <div class="beneficiaries-container">
@@ -51,6 +51,10 @@
                                         [icon]="faTrash"></fa-icon></button>
                             </div>
                         </td>
+                    </tr>
+                    }@empty {
+                    <tr>
+                        <td colspan="9">No hay beneficiarios registrados</td>
                     </tr>
                     }
                 </tbody>

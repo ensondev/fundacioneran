@@ -263,7 +263,7 @@ button[type="submit"]:disabled {
     }
 
     .table-responsive {
-        height: calc(100dvh - 230px);
+        height: calc(100dvh - 250px);
     }
 }
 

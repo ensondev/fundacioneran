@@ -1,18 +1,27 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
-            <input type="text" placeholder="Buscar entrega por cédula" [(ngModel)]="searchCedula"
-                (keyup.enter)="searchDeliverieByCedula()" maxlength="10">
+            <div class="container-cedula">
+                <label for="">Filtrar infantes por elementos</label>
+                <input type="text" placeholder="Buscar entrega por cédula" [(ngModel)]="searchCedula" maxlength="10">
+            </div>
 
-            <!-- Nueva sección: filtro por fecha -->
-            <input type="date" [(ngModel)]="startDate" />
-            <input type="date" [(ngModel)]="endDate" />
+            <div class="container-date">
+                <div class="container-startDate">
+                    <label for="">Fecha inicio</label>
+                    <input type="date" [(ngModel)]="startDate" name="startDate" />
+                </div>
+                <div class="container-endDate">
+                    <label for="">Fecha fin (opcional)</label>
+                    <input type="date" [(ngModel)]="endDate" name="endDate" />
+                </div>
+            </div>
 
             <button class="btn-filter" (click)="searchDeliverieByCedula()">
                 <fa-icon [icon]="faMagnifyingGlass"></fa-icon>Filtrar
             </button>
             <button class="btn-clear" (click)="clearSearch()">
-                <fa-icon [icon]="faXmark"></fa-icon>Eliminar
+                <fa-icon [icon]="faXmark"></fa-icon>Limpiar
             </button>
         </div>
     </div>
@@ -62,6 +71,10 @@
                             </div>
                         </td>
                         }
+                    </tr>
+                    }@empty {
+                    <tr>
+                        <td colspan="9">No hay infantes registrados</td>
                     </tr>
                     }
                 </tbody>
