@@ -28,10 +28,22 @@ img {
     flex-wrap: wrap;
 }
 
+.search-container label{
+    font-weight: bold;
+    color: #0a375e;
+    font-size: 15px;
+}
+
 .container-filter .search-container select,
 .container-filter .search-container input {
     width: 100%;
     padding: 5px 20px;
+}
+
+.container-date{
+    display: flex;
+    width: 100%;
+    gap: 10px;
 }
 
 .container-filter .search-container button {
