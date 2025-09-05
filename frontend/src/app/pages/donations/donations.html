@@ -2,7 +2,7 @@
     <div class="container-filter">
         <div class="search-container">
             <label for="">Filtrar donaciones por elementos</label>
-            <input type="text" placeholder="Buscar donación por cédula" [(ngModel)]="searchCedula" name="searchCedula"
+            <input type="text" placeholder="Cédula del donador" [(ngModel)]="searchCedula" name="searchCedula"
                 maxlength="10" />
 
             <div class="container-date">
@@ -20,7 +20,7 @@
                 <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
             </button>
             <button class="btn-clear" (click)="clearSearch()">
-                <fa-icon [icon]="faXmark"></fa-icon> Eliminar
+                <fa-icon [icon]="faXmark"></fa-icon> Limpiar
             </button>
         </div>
 

@@ -1,11 +1,11 @@
 <main>
   <div class="container-filter">
     <div class="search-container">
-      <input type="text" placeholder="Buscar donador por cédula" [(ngModel)]="searchCedula"
-        (keyup.enter)="searchByCedula()" maxlength="10">
+      <label for="">Filtrar donaciones por elementos</label>
+      <input type="text" placeholder="Cédula del donador" [(ngModel)]="searchCedula" maxlength="10">
       <button class="btn-filter" (click)="searchByCedula()"><fa-icon
           [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
-      <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+      <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Limpiar</button>
     </div>
   </div>
   <div class="donors-container">

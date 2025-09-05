@@ -1,7 +1,7 @@
 main {
     padding: 20px;
     width: 100vw;
-    height: calc(100vh - 110px);
+    height: calc(100dvh - 110px);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -51,7 +51,7 @@ main {
 .table-responsive {
     overflow-x: auto;
     padding: 0 10px 10px 10px;
-    height: calc(100vh - 310px);
+    height: calc(100dvh - 310px);
 }
 
 .donors-table {
