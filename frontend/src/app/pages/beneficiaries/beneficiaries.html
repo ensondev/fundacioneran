@@ -1,8 +1,10 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
-            <input type="text" placeholder="Buscar beneficiario por cédula" [(ngModel)]="searchCedula"
-                (keyup.enter)="searchByCedula()">
+            <div class="container-cedula">
+                <label for="">Filtrar beneficiarios por elementos</label>
+                <input type="text" placeholder="Cédula del beneficiario" [(ngModel)]="searchCedula" maxlength="10">
+            </div>
             <button class="btn-filter" (click)="searchByCedula()"><fa-icon
                     [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
             <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
