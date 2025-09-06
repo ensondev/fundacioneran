@@ -1,11 +1,21 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
+            <div class="container-cedula">
+                <label for="">Filtrar ventas por elementos</label>
+                <input type="text" placeholder="Cédula del cliente" [(ngModel)]="searchCedula" name="searchCedula" />
+            </div>
 
-            <input type="text" placeholder="Buscar venta por cédula" [(ngModel)]="searchCedula" name="searchCedula" />
-
-            <input type="date" [(ngModel)]="startDate" name="startDate" />
-            <input type="date" [(ngModel)]="endDate" name="endDate" />
+            <div class="container-date">
+                <div class="container-startDate">
+                    <label for="">Fecha inicio</label>
+                    <input type="date" [(ngModel)]="startDate" name="startDate" />
+                </div>
+                <div class="container-endDate">
+                    <label for="">Fecha fin</label>
+                    <input type="date" [(ngModel)]="endDate" name="endDate" />
+                </div>
+            </div>
 
             <button class="btn-filter" (click)="searchSalesMade()">
                 <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
