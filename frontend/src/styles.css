@@ -43,6 +43,7 @@ img {
 }
 
 .container-startDate,
+.container-endDate,
 .container-select{
     width: 100%;
 }
