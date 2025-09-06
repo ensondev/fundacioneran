@@ -1,6 +1,6 @@
 main {
-    width: 100vw;
-    height: calc(100vh - 110px);
+    width: 100dvw;
+    height: calc(100dvh - 110px);
     padding: 20px 20px 0 20px;
 }
 

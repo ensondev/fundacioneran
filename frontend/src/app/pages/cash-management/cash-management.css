@@ -82,7 +82,7 @@ main {
 .table-responsive {
     overflow-x: auto;
     padding: 0 10px 10px 10px;
-    height: calc(100vh - 560px);
+    height: calc(100dvh - 563px);
 }
 
 .cash-table {
@@ -289,16 +289,16 @@ button[type="submit"]:disabled {
 
 /*VERSION DESTOCK*/
 @media (min-width: 1024px) {
-    main {
-        height: calc(100vh - 120px);
-    }
+    /* main {
+        height: calc(100vh - 110px);
+    } */
 
     .resumen-boxes {
         gap: 90px;
     }
 
     .table-responsive {
-        height: calc(100vh - 300px);
+        height: calc(100vh - 304px);
     }
 
     .header-container {

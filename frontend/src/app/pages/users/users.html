@@ -1,10 +1,13 @@
 <main>
     <div class="container-filter">
         <div class="search-container">
-            <input type="text" placeholder="Buscar usuario" [(ngModel)]="searchUser" name="searchUser">
+            <div class="container-cedula">
+                <label for="">Filtrar usuarios por elementos</label>
+                <input type="text" placeholder="Nombre de usuario" [(ngModel)]="searchUser" name="searchUser">
+            </div>
             <button class="btn-filter" (click)="searchByUser()"><fa-icon
                     [icon]="faMagnifyingGlass"></fa-icon>Filtrar</button>
-            <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Eliminar</button>
+            <button class="btn-clear" (click)="clearSearch()"><fa-icon [icon]="faXmark"></fa-icon>Limpiar</button>
         </div>
     </div>
     <div class="users-container">
@@ -44,6 +47,10 @@
                             </div>
                         </td>
                         }
+                    </tr>
+                    }@empty {
+                    <tr>
+                        <td colspan="9">No hay usuarios registrados</td>
                     </tr>
                     }
                 </tbody>

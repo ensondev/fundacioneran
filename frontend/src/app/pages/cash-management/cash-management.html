@@ -1,18 +1,33 @@
 <main class="caja-container">
     <div class="container-filter">
         <div class="search-container">
-            <select name="searchTransactions" [(ngModel)]="searchTransactions">
-                <option value="" disabled>Clasificación</option>
-                <option value="Ingreso">Ingreso</option>
-                <option value="Egreso">Egreso</option>
-            </select>
-            <input type="date" [(ngModel)]="startDate" />
-            <input type="date" [(ngModel)]="endDate" />
+            <div class="container-select">
+                <label for="">Filtrar transacciones por elementos</label>
+                <div class="subcontainer-select">
+                    <select name="searchTransactions" [(ngModel)]="searchTransactions">
+                        <option value="" disabled>Clasificación</option>
+                        <option value="Ingreso">Ingreso</option>
+                        <option value="Egreso">Egreso</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="container-date">
+                <div class="container-startDate">
+                    <label for="">Fecha inicio</label>
+                    <input type="date" [(ngModel)]="startDate" name="startDate" />
+                </div>
+                <div class="container-endDate">
+                    <label for="">Fecha fin (opcional)</label>
+                    <input type="date" [(ngModel)]="endDate" name="endDate" />
+                </div>
+            </div>
+
             <button class="btn-filter" (click)="searchTransaction()">
                 <fa-icon [icon]="faMagnifyingGlass"></fa-icon> Filtrar
             </button>
             <button class="btn-clear" (click)="clearSearch()">
-                <fa-icon [icon]="faXmark"></fa-icon> Eliminar
+                <fa-icon [icon]="faXmark"></fa-icon> Limpiar
             </button>
         </div>
     </div>
