@@ -44,10 +44,16 @@ export default class Users implements OnInit {
   UsersForm!: FormGroup;
 
   form = this._formBuilder.group({
+    nombres_completo: this._formBuilder.nonNullable.control('', Validators.required),
+    apellidos_completos: this._formBuilder.nonNullable.control('', Validators.required),
     nombre_usuario: this._formBuilder.nonNullable.control('', Validators.required),
+    fecha_nacimiento: this._formBuilder.nonNullable.control('', Validators.required),
+    genero: this._formBuilder.nonNullable.control('', Validators.required),
+    numero_telefono: this._formBuilder.nonNullable.control('', Validators.required),
+    correo: this._formBuilder.nonNullable.control('', Validators.required),
     rol_usuario: this._formBuilder.nonNullable.control('', Validators.required),
     password: this._formBuilder.nonNullable.control('', Validators.required),
-    cuenta_activa: this._formBuilder.nonNullable.control(true, Validators.required),
+    /* cuenta_activa: this._formBuilder.nonNullable.control(true, Validators.required), */
   })
 
   formEdit = this._formBuilder.group({
@@ -82,13 +88,13 @@ export default class Users implements OnInit {
   submitUser() {
     if (this.form.invalid) return;
 
-    const { nombre_usuario, rol_usuario, password } = this.form.getRawValue();
+    const { nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password } = this.form.getRawValue();
 
     this.isLoading = true;
     this.errorMessage = null;
     this.successMessage = null;
 
-    this.userService.createUser(nombre_usuario, rol_usuario, password).subscribe({
+    this.userService.createUser(nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password).subscribe({
       next: (response) => {
         this.notification.showSuccess('Usuario creado correctamente');
         this.cerrarModal();
@@ -187,7 +193,7 @@ export default class Users implements OnInit {
     this.userService.getUserName(this.searchUser).subscribe({
       next: (user) => {
         console.log(user)
-        if(user.length === 0){
+        if (user.length === 0) {
           this.loadUsers();
           this.notification.showError('No se encontraron usuarios con ese nombre.');
         }

@@ -3,7 +3,7 @@ import { privateGuard, publicGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
     { path: 'auth', canActivate: [publicGuard], loadChildren: () => import('./auth/auth.routes') },
-    { path: 'users', canActivate: [privateGuard], loadComponent: () => import('../app/pages/users/users') },
+    { path: 'users', canActivate: [publicGuard], loadComponent: () => import('../app/pages/users/users') },
     { path: 'home', canActivate: [privateGuard], loadComponent: () => import('./pages/home/home') },
     { path: 'donors', canActivate: [privateGuard], loadComponent: () => import('./pages/donors/donors') },
     { path: 'donations', canActivate: [privateGuard], loadComponent: () => import('./pages/donations/donations') },
@@ -18,7 +18,8 @@ export const routes: Routes = [
     { path: 'courses', canActivate: [privateGuard], loadComponent: () => import('./pages/courses/courses') },
     { path: 'participants', canActivate: [privateGuard], loadComponent: () => import('./pages/participants/participants') },
     { path: 'instructors', canActivate: [privateGuard], loadComponent: () => import('./pages/instructors/instructors') },
-    { path: 'registrations', canActivate: [privateGuard], loadComponent: () => import('./pages/registrations/registrations')},
-    { path: 'infants', canActivate: [privateGuard], loadComponent: () => import('./pages/infants/infants')},
+    { path: 'registrations', canActivate: [privateGuard], loadComponent: () => import('./pages/registrations/registrations') },
+    { path: 'infants', canActivate: [privateGuard], loadComponent: () => import('./pages/infants/infants') },
+    { path: 'my-profile', canActivate: [privateGuard], loadComponent: () => import('./pages/profile/profile') },
     { path: '**', redirectTo: 'home' }
 ];

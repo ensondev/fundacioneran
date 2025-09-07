@@ -13,7 +13,9 @@
                 <p>{{ iniciales }}</p>
             </div>
             <div class="container-information">
-                <h3>{{ usuario }}</h3>
+                <a class="my-profile" (click)="closeMenu()" routerLink="/my-profile">
+                    <h3>{{ usuario }}</h3>
+                </a>
                 <p>{{ rol }}</p>
             </div>
         </div>

@@ -164,6 +164,15 @@ main {
     border-radius: 20px 20px 0 0;
 }
 
+.container-name{
+    display: flex;
+    gap: 10px;
+}
+
+.container-date .form-group {
+    width: 50%;
+}
+
 .modal-container-users .form-users label {
     font-weight: bold;
     font-size: 15px;
@@ -200,7 +209,7 @@ main {
 .form-group input {
     width: 100%;
     padding: 10px 10px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     background-color: #ececec;
     border: 1px solid #e0e0e0;
 }

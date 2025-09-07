@@ -20,7 +20,9 @@
                 <thead>
                     <tr>
                         <!-- <th>N°</th> -->
+                        <th>Nombres</th>
                         <th>Usuario</th>
+                        <th>Correo</th>
                         <th>Rol</th>
                         <th>Activo</th>
                         <th>Fecha</th>
@@ -73,9 +75,49 @@
 
             <form class="form-users" (ngSubmit)="submitUser()" [formGroup]="form">
 
+                <div class="container-date-user">
+                    <div class="container-name">
+                        <div class="form-group">
+                            <label>Nombres completo <span>*</span></label>
+                            <input type="text" formControlName="nombres_completo" placeholder="nombres completo"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label>Apellidos completo <span>*</span></label>
+                            <input type="text" formControlName="apellidos_completos" placeholder="apellidos completo"
+                                required>
+                        </div>
+                    </div>
+                    <div class="container-date">
+                        <div class="form-group">
+                            <label>Fecha de nacimiento:</label>
+                            <input type="date" formControlName="fecha_nacimiento" />
+                        </div>
+                        <div class="form-group">
+                            <label>Genero <span>*</span></label>
+                            <select formControlName="genero" name="genero">
+                                <option value="" disabled>Genero</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label>Nombre de usuario <span>*</span></label>
                     <input type="text" formControlName="nombre_usuario" placeholder="nombre de usuario" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Número telefónico <span>*</span></label>
+                    <input type="text" name="telefono" formControlName="numero_telefono" placeholder="número telefónico"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Correo <span>*</span></label>
+                    <input type="text" formControlName="correo" placeholder="correo@gmail.com" required>
                 </div>
 
                 <div class="form-group form-select">

@@ -28,6 +28,11 @@ header{
     margin-left: 30px;
 }
 
+.my-profile{
+  text-decoration: none;
+  color: #ffffff;
+}
+
 /*PARTE DEL MENU HAMBURGUESA*/
 
 .sidebar {

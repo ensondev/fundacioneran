@@ -9,9 +9,25 @@ import { environment } from "../../environments/environment";
 export class UsersService {
     private _http = inject(HttpClient);
 
-    createUser(nombre_usuario: string, rol_usuario: string, password: string): Observable<any> {
+    createUser(
+        nombres_completo: string,
+        apellidos_completos: string,
+        nombre_usuario: string,
+        fecha_nacimiento: string,
+        genero: string,
+        numero_telefono: string,
+        correo: string,
+        rol_usuario: string, 
+        password: string
+    ): Observable<any> {
         return this._http.post(`${environment.API_URL}/auth/register`, {
+            nombres_completo,
+            apellidos_completos,
             nombre_usuario,
+            fecha_nacimiento,
+            genero,
+            numero_telefono,
+            correo,
             rol_usuario,
             password
         }).pipe(
