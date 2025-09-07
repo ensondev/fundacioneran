@@ -69,16 +69,15 @@ export default class Users implements OnInit {
 
   loadUsers() {
     this.isLoading = true;
-    this.errorMessage = null;
 
     this.userService.getUsers().subscribe({
       next: (user) => {
         this.users = user;
         this.allUsers = user;
+        console.log('Usuarios recibidos:', this.users); // 👈
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error al cargar los usuarios. Intente nuevamente.';
         console.error('Error al cargar los usuarios:', error);
         this.isLoading = false;
       }
@@ -97,7 +96,7 @@ export default class Users implements OnInit {
     this.userService.createUser(nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password).subscribe({
       next: (response) => {
         console.log(response)
-        
+
         this.notification.showSuccess('Usuario creado correctamente');
         this.cerrarModal();
         this.loadUsers();

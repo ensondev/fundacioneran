@@ -13,7 +13,8 @@ export class UsersService {
     //CREATE => Esta realizado en el apartado de Auth
 
     async getAllUsers(res) {
-        const query = `SELECT id_usuario, nombre_usuario, rol_usuario, password, cuenta_activa, fecha_creacion FROM public.usuarios;`;
+        const query = `SELECT id_usuario, nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, cuenta_activa, fecha_creacion, fecha_actualizacion
+                    FROM public.usuarios;`;
         const value = [];
         try {
             const result = await this.databaseService.query(query, value);
@@ -34,7 +35,7 @@ export class UsersService {
 
     async getUserName(req, res) {
         const { nombre_usuario } = req.body;
-        const query = `SELECT id_usuario, nombre_usuario, rol_usuario, cuenta_activa, fecha_creacion
+        const query = `SELECT id_usuario, nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, cuenta_activa, fecha_creacion, fecha_actualizacion
                     FROM public.usuarios
                     WHERE nombre_usuario = $1;`
         const value = [nombre_usuario];
