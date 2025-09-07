@@ -97,6 +97,11 @@ export default class Users implements OnInit {
     this.userService.createUser(nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password).subscribe({
       next: (response) => {
         console.log(response)
+        if (!response.p_status) {
+          this.notification.showError(response.p_message || 'Error desconocido');
+          this.isLoading = false;
+          return;
+        }
         this.notification.showSuccess('Usuario creado correctamente');
         this.cerrarModal();
         this.loadUsers();

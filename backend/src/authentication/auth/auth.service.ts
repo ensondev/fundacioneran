@@ -17,7 +17,7 @@ export class AuthService {
         const { nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password } = dto;
         const hashedPassword = await encrypt(password);
         const query = `INSERT INTO public.usuarios (nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password, cuenta_activa, fecha_creacion, fecha_actualizacion)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now(), now())
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, now(), now())
                     RETURNING id_usuario, nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, cuenta_activa, fecha_creacion, fecha_actualizacion;`;
         const values = [nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, hashedPassword, true];
         try {
@@ -58,6 +58,7 @@ export class AuthService {
                 }
             }
         } catch (error) {
+            console.error('Error al registrar usuario:', error); // <-- NUEVO
             return {
                 p_message: error.message,
                 p_status: false,
