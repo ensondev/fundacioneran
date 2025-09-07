@@ -51,7 +51,7 @@ export class UsersService {
 
     getUserName(nombre_usuario: string): Observable<any> {
         return this._http.post(`${environment.API_URL}/users/name`, { nombre_usuario }).pipe(
-            map((res: any) => res.p_data.users || res),
+            /* map((res: any) => res.p_data.users || res), */
             catchError(err => {
                 console.error('Error en createUser:', err);
                 return throwError(() => err);
@@ -63,6 +63,9 @@ export class UsersService {
         return this._http.put(`${environment.API_URL}/users/update`, data);
     }
 
+    updatePassword(password: string, nombre_usuario: string): Observable<any> {
+        return this._http.put(`${environment.API_URL}/users/update-password`, { nombre_usuario});
+    }
 
     deleteUser(id_usuario: number): Observable<any> {
         return this._http.request('delete', `${environment.API_URL}/users/delete`, {

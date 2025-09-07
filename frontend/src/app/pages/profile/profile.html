@@ -4,28 +4,68 @@
             <div class="circle-profile">
                 <h3>{{ iniciales }}</h3>
             </div>
+
             <div class="container-profile-information">
-                <p>{{ usuario }}</p>
+                <h2>{{ usuario }}</h2>
 
-                <div class="container-name">
+                <div class="container-data">
+                    <label for="">Nombres y Apellidos</label>
                     <div class="info-gruop">
-                        <label for="">Nombres</label>
-                        <p> {{ usuario}}</p>
+                        <p> {{ nombres }} {{ apellidos}}</p>
                     </div>
-                    <div class="info-gruop">
-                        <label for="">Apellidos</label>
-                        <p> {{ usuario}}</p>
-                    </div>
-                </div>
 
-                <div class="info-gruop">
                     <label for="">Fecha nacimiento</label>
-                    <p> {{ usuario}}</p>
+                    <div class="info-gruop">
+                        <p> {{ fecha_nacimiento | date:'dd/MM/yyyy'}}</p>
+                    </div>
+
+                    <label for="">Correo</label>
+                    <div class="info-gruop">
+                        <p> {{ correo}}</p>
+                    </div>
+
+                    <label for="">telefono</label>
+                    <div class="info-gruop">
+                        <p> {{ telefono}}</p>
+                    </div>
+
+                    <label for="">Posición</label>
+                    <div class="info-gruop">
+                        <p> {{ rol}}</p>
+                    </div>
+
                 </div>
-
-                <p>{{ rol }}</p>
+                <button class="btn-open-modal" (click)="abrirModal()">Actualizar contraseña</button>
             </div>
-
         </div>
     </div>
+
+    @if (mostrarModal) {
+        <div class="overlay">
+        <div class="modal-container-users">
+
+            <div class="container-header-form">
+                <img class="form-logo" src="/image/logo_foundation.png" alt="" draggable="false">
+                <h2>Actualizar contraseña</h2>
+            </div>
+
+            <div class="container-header-modal">
+                <p class="required-text">Todos los campos con <span>*</span> son obligatorios</p>
+            </div>
+
+            <form class="form-users" (ngSubmit)="updatePassword()" [formGroup]="form">
+
+                <div class="form-group">
+                    <label>Password<span>*</span></label>
+                    <input type="password" formControlName="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" [disabled]="form.invalid">Registrar</button>
+                    <button type="button" class="cancel-btn" (click)="cerrarModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
 </main>

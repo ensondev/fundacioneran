@@ -3,6 +3,7 @@ import { DeleteUsersDto } from 'src/modules/users/dto/delete-users.dto';
 import { UpdateUsersDto } from 'src/modules/users/dto/update-users.dto';
 import { encrypt } from 'src/authentication/auth/libs/bcrypt';
 import { DatabaseService } from 'src/database/database.service';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -50,6 +51,7 @@ export class UsersService {
         } catch (error) {
             res.status(500).json({
                 p_message: error.message,
+                p_status: false,
                 p_data: {}
             });
         }
@@ -104,6 +106,32 @@ export class UsersService {
                 p_message: error.message,
                 p_data: {}
             };
+        }
+    }
+
+    async updatePassword(dto: UpdatePasswordDto){
+        const { password, nombre_usuario} = dto;
+
+        const hashedPassword = await encrypt(password);
+
+        const query = `UPDATE public.usuarios
+                    SET password = $1
+                    WHERE nombre_usuario = $2;`;
+        const values = [hashedPassword, nombre_usuario];
+
+        try{
+            const result = await this.databaseService.query(query, values);
+            return{
+                p_message: 'Contraseña actualizada correctamente',
+                p_status: true,
+                p_data: {}
+            }
+        }catch(error){
+            return{
+                p_message: error.message,
+                p_status: false,
+                p_data: {}
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateUsersDto } from 'src/modules/users/dto/update-users.dto';
 import { Public } from 'src/authentication/auth/guard/auth.guard';
 import { DeleteUsersDto } from 'src/modules/users/dto/delete-users.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @ApiTags('Usuarios')
 @Controller('users')
@@ -39,6 +40,17 @@ export class UsersController {
     @ApiBody({ type: UpdateUsersDto })
     async updateUsers(@Body() dto: UpdateUsersDto) {
         return this.usersService.updateUsers(dto);
+    }
+
+    @Public()
+    @Put('update-password')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Actualizar contraseña' })
+    @ApiResponse({ status: 200, description: 'Contraseña actualizada correctamente' })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+    @ApiBody({ type: UpdatePasswordDto })
+    async updatePassword(@Body() dto: UpdatePasswordDto) {
+        return this.usersService.updatePassword(dto);
     }
 
     @Public()
