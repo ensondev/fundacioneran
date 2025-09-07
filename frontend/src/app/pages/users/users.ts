@@ -53,7 +53,7 @@ export default class Users implements OnInit {
     correo: this._formBuilder.nonNullable.control('', Validators.required),
     rol_usuario: this._formBuilder.nonNullable.control('', Validators.required),
     password: this._formBuilder.nonNullable.control('', Validators.required),
-    /* cuenta_activa: this._formBuilder.nonNullable.control(true, Validators.required), */
+    cuenta_activa: this._formBuilder.nonNullable.control(true, Validators.required),
   })
 
   formEdit = this._formBuilder.group({
@@ -89,7 +89,7 @@ export default class Users implements OnInit {
     if (this.form.invalid) return;
 
     const { nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password } = this.form.getRawValue();
-    console.log(nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password)
+
     this.isLoading = true;
     this.errorMessage = null;
     this.successMessage = null;
@@ -97,11 +97,7 @@ export default class Users implements OnInit {
     this.userService.createUser(nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password).subscribe({
       next: (response) => {
         console.log(response)
-        if (!response.p_status) {
-          this.notification.showError(response.p_message || 'Error desconocido');
-          this.isLoading = false;
-          return;
-        }
+        
         this.notification.showSuccess('Usuario creado correctamente');
         this.cerrarModal();
         this.loadUsers();

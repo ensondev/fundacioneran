@@ -19,9 +19,9 @@ export class RegisterUsersDto {
     @Matches(/^[a-zA-Z0-9_]+$/, { message: 'El nombre de usuario solo puede contener letras, números y guiones bajos (_)' })
     nombre_usuario: string;
 
-    @ApiProperty({ description: 'Fecha de nacimiento del usuario', example: '2025-12-31', required: false })
+    @ApiProperty({ description: 'Fecha de nacimiento del usuario', example: '2025-12-31' })
     @IsDateString()
-    fecha_nacimiento?: string;
+    fecha_nacimiento: string;
 
     @ApiProperty({ description: 'Ingresar genero del usuario', examples: ['Masculino', 'Femenino'] })
     @IsString()
