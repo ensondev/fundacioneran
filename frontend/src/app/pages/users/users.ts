@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, numberAttribute, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -54,12 +54,18 @@ export default class Users implements OnInit {
     rol_usuario: this._formBuilder.nonNullable.control('', Validators.required),
     password: this._formBuilder.nonNullable.control('', Validators.required),
     cuenta_activa: this._formBuilder.nonNullable.control(true, Validators.required),
-  })
+  });
 
   formEdit = this._formBuilder.group({
+    nombres_completo: this._formBuilder.nonNullable.control('', Validators.required),
+    apellidos_completos: this._formBuilder.nonNullable.control('', Validators.required),
     nombre_usuario: this._formBuilder.nonNullable.control('', Validators.required),
+    fecha_nacimiento: this._formBuilder.nonNullable.control('', Validators.required),
+    genero: this._formBuilder.nonNullable.control('', Validators.required),
+    numero_telefono: this._formBuilder.nonNullable.control('', Validators.required),
+    correo: this._formBuilder.nonNullable.control('', Validators.required),
     password: this._formBuilder.nonNullable.control(''),
-  })
+  });
 
   ngOnInit(): void {
     this.loadUsers();
@@ -114,7 +120,13 @@ export default class Users implements OnInit {
   abrirEditModal(user: any) {
     this.selectedUsers = user;
     this.formEdit.patchValue({
+      nombres_completo: user.nombres_completo,
+      apellidos_completos: user.apellidos_completos,
       nombre_usuario: user.nombre_usuario,
+      fecha_nacimiento: user.fecha_nacimiento,
+      genero: user.genero,
+      numero_telefono: user.numero_telefono,
+      correo: user.correo
     });
     this.formEdit.get('password')?.setValue('');
     this.mostrarEditModal = true;
@@ -129,12 +141,11 @@ export default class Users implements OnInit {
   updateSubmit() {
     if (this.formEdit.invalid || !this.selectedUsers) return;
 
-    const { nombre_usuario, password } = this.formEdit.getRawValue();
+    const { nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, password } = this.formEdit.getRawValue();
     const id_usuario = this.selectedUsers.id_usuario;
 
     const payload: any = {
-      nombre_usuario,
-      id_usuario
+      nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, id_usuario
     };
 
     if (password.trim() !== '') {
@@ -142,8 +153,6 @@ export default class Users implements OnInit {
     }
 
     this.isLoading = true;
-    this.errorMessage = null;
-    this.successMessage = null;
 
     this.userService.updateUser(payload).subscribe({
       next: (response) => {
@@ -154,7 +163,7 @@ export default class Users implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        this.notification.showError('Usuario actualizado correctamente');
+        this.notification.showError('Error al actualizar el usuario');
         console.error('Error al actualizar el usuario:', err);
         this.isLoading = false;
       }

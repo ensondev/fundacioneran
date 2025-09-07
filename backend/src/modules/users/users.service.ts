@@ -15,9 +15,8 @@ export class UsersService {
     async getAllUsers(res) {
         const query = `SELECT id_usuario, nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, cuenta_activa, fecha_creacion, fecha_actualizacion
                     FROM public.usuarios;`;
-        const value = [];
         try {
-            const result = await this.databaseService.query(query, value);
+            const result = await this.databaseService.query(query, []);
             res.status(200).json({
                 p_message: null,
                 p_status: true,
@@ -57,7 +56,7 @@ export class UsersService {
     }
 
     async updateUsers(dto: UpdateUsersDto) {
-        const { nombre_usuario, password, id_usuario } = dto;
+        const { nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, password, id_usuario } = dto;
         console.log('DTO recibido:', dto); // 👈 Para debug
 
         let query: string;
@@ -68,19 +67,19 @@ export class UsersService {
                 const hashedPassword = await encrypt(password);
                 query = `
                 UPDATE public.usuarios
-                SET nombre_usuario = $1, password = $2, fecha_actualizacion = now()
-                WHERE id_usuario = $3
-                RETURNING nombre_usuario, fecha_actualizacion;
+                SET nombres_completo = $1, apellidos_completos = $2, nombre_usuario = $3, fecha_nacimiento = $4, genero = $5, numero_telefono = $6, correo = $7, password = $8, fecha_actualizacion = now()
+                WHERE id_usuario = $9
+                RETURNING nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, fecha_actualizacion;
             `;
-                values = [nombre_usuario, hashedPassword, id_usuario];
+                values = [nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, hashedPassword, id_usuario];
             } else {
                 query = `
                 UPDATE public.usuarios
-                SET nombre_usuario = $1, fecha_actualizacion = now()
-                WHERE id_usuario = $2
-                RETURNING nombre_usuario, fecha_actualizacion;
+                SET nombres_completo = $1, apellidos_completos = $2, nombre_usuario = $3, fecha_nacimiento = $4, genero = $5, numero_telefono = $6, correo = $7, fecha_actualizacion = now()
+                WHERE id_usuario = $8
+                RETURNING nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, fecha_actualizacion;
             `;
-                values = [nombre_usuario, id_usuario];
+                values = [nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, id_usuario];
             }
 
             const result = await this.databaseService.query(query, values);
@@ -90,7 +89,13 @@ export class UsersService {
                 p_message: 'Usuario actualizado correctamente',
                 p_status: true,
                 p_data: {
+                    nombres: userUpdate.nombres_completo,
+                    apellidos: userUpdate.apellidos_completos,
                     usuario: userUpdate.nombre_usuario,
+                    fecha_nacimiento: userUpdate.fecha_nacimiento,
+                    genero: userUpdate.genero,
+                    telefono: userUpdate.numero_telefono,
+                    correo: userUpdate.correo,
                     actualizado: userUpdate.fecha_actualizacion
                 }
             };
