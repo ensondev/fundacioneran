@@ -45,17 +45,14 @@ export default class Profile implements OnInit {
 
   loadUserData() {
     this.isLoading = true;
-    console.log(this.usuario)
     this.usersService.getUserName(this.usuario).subscribe({
       next: (response) => {
-        console.log(response)
         if (response.p_status === true) {
           this.nombres = response.p_data.users[0].nombres_completo;
           this.apellidos = response.p_data.users[0].apellidos_completos;
           this.fecha_nacimiento = response.p_data.users[0].fecha_nacimiento;
           this.correo = response.p_data.users[0].correo;
           this.telefono = response.p_data.users[0].numero_telefono;
-          console.log("FECHA: ", this.fecha_nacimiento)
         } else {
           console.error('No se encontró el usuario o error en la respuesta');
         }
