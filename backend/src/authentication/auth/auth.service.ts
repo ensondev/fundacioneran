@@ -16,15 +16,14 @@ export class AuthService {
     async register(dto: RegisterUsersDto) {
         const { nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password } = dto;
         const hashedPassword = await encrypt(password);
-        const query = `INSERT INTO public.usuarios (
-                    nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password, cuenta_activa, fecha_creacion, fecha_actualizacion)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9 now(), now())
+        const query = `INSERT INTO public.usuarios (nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password, cuenta_activa, fecha_creacion, fecha_actualizacion)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now(), now())
                     RETURNING id_usuario, nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, cuenta_activa, fecha_creacion, fecha_actualizacion;`;
         const values = [nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, hashedPassword, true];
         try {
             const result = await this.databaseService.query(query, values);
             const newUser = result.rows[0];
-            
+
             const payload = {
                 sub: newUser.id_usuario,
                 nombres: newUser.nombres_completo,
@@ -46,6 +45,12 @@ export class AuthService {
                 p_message: 'Usuario registrado correctamente',
                 p_status: true,
                 p_data: {
+                    nombres: newUser.nombres_completo,
+                    apellidos: newUser.apellidos_completos,
+                    fecha_nacimiento: newUser.fecha_nacimiento,
+                    genero: newUser.genero,
+                    numero_telefono: newUser.numero_telefono,
+                    correo: newUser.correo,
                     usuario: newUser.nombre_usuario,
                     rol: newUser.rol_usuario,
                     creado: newUser.fecha_creacion,

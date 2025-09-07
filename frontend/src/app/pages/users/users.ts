@@ -89,13 +89,14 @@ export default class Users implements OnInit {
     if (this.form.invalid) return;
 
     const { nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password } = this.form.getRawValue();
-
+    console.log(nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password)
     this.isLoading = true;
     this.errorMessage = null;
     this.successMessage = null;
 
     this.userService.createUser(nombres_completo, apellidos_completos, nombre_usuario, fecha_nacimiento, genero, numero_telefono, correo, rol_usuario, password).subscribe({
       next: (response) => {
+        console.log(response)
         this.notification.showSuccess('Usuario creado correctamente');
         this.cerrarModal();
         this.loadUsers();
